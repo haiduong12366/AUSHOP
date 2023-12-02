@@ -37,7 +37,7 @@ public class KhachHang implements Serializable {
 	@Column(name = "sdt" , columnDefinition = "varchar(10)")
 	private String  sdt;
 	
-	@Column(name = "diaChi" , columnDefinition = "nvarchar(200)")
+	@Column(name = "diaChi" , columnDefinition = "nvarchar(100)")
 	private String  diaChi;
 	
 	@Column(columnDefinition = "bit")

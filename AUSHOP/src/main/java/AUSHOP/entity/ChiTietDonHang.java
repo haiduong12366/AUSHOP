@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,8 +36,7 @@ public class ChiTietDonHang implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int maChiTietDH;
 
-	@JsonIgnore
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "maDH")
 	private DonHang maDH;
 	
@@ -50,4 +50,6 @@ public class ChiTietDonHang implements Serializable{
 
     private int soLuong;
 
+    @Column(columnDefinition = "float")
+    private Float tong;
 }

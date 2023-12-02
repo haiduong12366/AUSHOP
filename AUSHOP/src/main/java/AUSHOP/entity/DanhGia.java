@@ -26,14 +26,15 @@ public class DanhGia implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-    @Id
-    @JsonIgnore
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int maDanhGia;
+ 
     @ManyToOne
     @JoinColumn(name = "maKhachHang")
     private KhachHang maKhachHang;
 
-    @Id
-    @JsonIgnore
+  
     @ManyToOne
     @JoinColumn(name = "maSP")
     private SanPham maSP;

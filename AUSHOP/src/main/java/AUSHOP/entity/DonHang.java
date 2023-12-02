@@ -29,14 +29,14 @@ public class DonHang implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int maDH;
 
-	@JsonIgnore
+	
     @ManyToOne
     @JoinColumn(name = "maKhachHang")
     private KhachHang maKhachHang;
 
-    @ManyToOne
+	@OneToOne
     @JoinColumn(name = "maPT")
-    private ThanhToan thanhToan;
+    private ThanhToan maPT;
 
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
@@ -46,7 +46,7 @@ public class DonHang implements Serializable{
     @Column(name = "diaChiGiaoHang", columnDefinition = "nvarchar(200)")
     private String diaChiGiaoHang;
     
-    @Column(name = "tinhTrang", columnDefinition = "nvarchar(100)")
+    @Column(name = "tinhTrang", columnDefinition = "nvarchar(20)")
     private String tinhTrang;
     
     @Column(columnDefinition = "float")

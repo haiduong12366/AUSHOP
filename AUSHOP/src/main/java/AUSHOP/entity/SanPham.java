@@ -26,11 +26,12 @@ public class SanPham implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int  maSP;
 	
+	@ManyToOne
+	@JoinColumn(name = "maLoaiSP")
+	private LoaiSanPham maLoaiSP;
+	
 	@Column(name = "tenSP" , columnDefinition = "nvarchar(100) not null")
 	private String  tenSP;
-	
-	@Column(name = "tieuDe" , columnDefinition = "nvarchar(100)")
-	private String  tieuDe;
 	
 	@Column(name = "moTa" , columnDefinition = "nvarchar(500)")
 	private String  moTa;
@@ -38,25 +39,28 @@ public class SanPham implements Serializable {
 	@Column(columnDefinition = "date")
 	private Date ngaynhaphang;
 	
-	private int  donGia;
+	@Column(columnDefinition = "float")
+	private float donGia;
 	
-	private int  slTonKho;
+	@Column(columnDefinition = "float")
+	private float discount;
 	
 	@Column(name = "hinhAnh" , columnDefinition = "varchar(300)")
 	private String  hinhAnh;	
 
+	private int  slTonKho;
 	
-	@JsonIgnore
+	@Column(name = "tinhTrang" , columnDefinition = "bit")
+	private String  tinhTrang;	
+	
+	
 	@OneToMany(mappedBy = "maSP", cascade = CascadeType.ALL)
 	private Set<DanhGia> DanhGia;
 	
-	@JsonIgnore
+
 	@OneToMany(mappedBy = "maSP", cascade = CascadeType.ALL)
 	private Set<ChiTietDonHang> ChiTietDonHang;
 	
+
 	
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "maLoaiSP")
-	private LoaiSanPham maLoaiSP;
 }

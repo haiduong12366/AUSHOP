@@ -77,10 +77,10 @@
 							<span th:if="${category.isEdit}">Sửa</span>
 							<span th:if="${!category.isEdit}">Thêm</span>
 						</button>
-					<span th:if="${!category.isEdit}">
+
 						<button class="btn btn-success ml-2" formaction="/admin/categories/reset" formmethod="post" >Làm
 							mới</button>
-					</span>
+
 					</div>
 				</div>
 			</form>

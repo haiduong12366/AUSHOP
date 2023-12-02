@@ -42,20 +42,41 @@ public class NhaCungCapController {
 		NhaCungCapModel n = new NhaCungCapModel();
 		n.setEdit(false);
 		List<LoaiSanPham> l =loaiSanPhamRepository.findAll();
-		model.addAttribute("menuCa", "menu");
 		model.addAttribute("loaisanpham", l);
+		model.addAttribute("menuCa", "menu");
+		
 		model.addAttribute("category", n);
 		
 		return "/admin/addCategory";
 	}
 
 	@PostMapping("/reset")
-	public String reset(ModelMap model) {
-		model.addAttribute("category", new NhaCungCapModel());
-		
-		// set active front-end
+	public String reset(ModelMap model, @Valid @ModelAttribute("category") NhaCungCapModel dto,
+			BindingResult result) {
 		model.addAttribute("menuCa", "menu");
-		return "/admin/addCategory";
+		if (result.hasErrors()) {
+
+			return"admin/addCategory";
+		}
+		if(dto.isEdit()) {
+			List<LoaiSanPham> l =loaiSanPhamRepository.findAll();
+			Optional<NhaCungCap> opt = capRepository.findById(dto.getMaNhaCC());
+			NhaCungCap entity = opt.get();
+			BeanUtils.copyProperties(entity, dto);
+			dto.setMaLoaiSP(entity.getMaLoaiSP().getMaLoaiSP());
+			dto.setEdit(true);
+			model.addAttribute("loaisanpham", l);
+			model.addAttribute("category", dto);
+			return "/admin/addCategory";
+		}
+		else {
+			List<LoaiSanPham> l =loaiSanPhamRepository.findAll();
+			NhaCungCapModel n = new NhaCungCapModel();
+			n.setEdit(false);
+			model.addAttribute("loaisanpham", l);
+			model.addAttribute("category", n);
+			return "/admin/addCategory";
+		}
 	}
 
 	boolean checkCategory(String tenNhaCC) {
@@ -82,8 +103,9 @@ public class NhaCungCapController {
 			model.addAttribute("menuCa", "menu");
 			return new ModelAndView("admin/addCategory", model);
 		}
-
+		Optional<LoaiSanPham> l = loaiSanPhamRepository.findById(dto.getMaLoaiSP());
 		NhaCungCap c = new NhaCungCap();
+		c.setMaLoaiSP(l.get());
 		BeanUtils.copyProperties(dto, c);
 		capRepository.save(c);
 		if (dto.isEdit()) {
