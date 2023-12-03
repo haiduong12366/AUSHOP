@@ -30,6 +30,10 @@ public class SanPham implements Serializable {
 	@JoinColumn(name = "maLoaiSP")
 	private LoaiSanPham maLoaiSP;
 	
+	@ManyToOne
+	@JoinColumn(name = "maNhaCC")
+	private NhaCungCap maNhaCC;
+	
 	@Column(name = "tenSP" , columnDefinition = "nvarchar(100) not null")
 	private String  tenSP;
 	

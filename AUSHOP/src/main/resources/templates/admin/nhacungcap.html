@@ -45,7 +45,6 @@
 					<th>SĐT nhà cung cấp</th>
 					<th>Email nhà cung cấp</th>
 					<th>Địa chỉ nhà cung cấp</th>
-					<th>Mã loại sản phẩm</th>
 					<th>Hành Động</th>
 				</tr>
 			</thead>
@@ -57,7 +56,6 @@
 					<td th:text="${item.emailNhaCC}"></td>
 					
 					<td th:text="${item.diaChiNhaCC}"></td>
-					<td th:text="${item.maLoaiSP.maLoaiSP}"></td>
 					<td width="20%" class="text-center"><a th:data-maNhaCC="${item.maNhaCC}" th:data-tenNhaCC="${item.tenNhaCC}" style="cursor: pointer;color: #007bff;"
 						onclick="showConfigModalDialog(this.getAttribute('data-maNhaCC'), this.getAttribute('data-tenNhaCC'))"
 						><span

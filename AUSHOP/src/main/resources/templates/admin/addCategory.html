@@ -7,7 +7,7 @@
 
 <body>
 	<div layout:fragment="content" class="col-lg-10 my-4"
-		style="min-height: 650px; border: 1px solid rgba(128, 128, 128, 0.212);">
+		style="min-height: 600px; border: 1px solid rgba(128, 128, 128, 0.212);">
 		<div class="row">
 			<div class="col">
 				<form th:action="@{/admin/categories}">
@@ -59,15 +59,7 @@
 								cung cấp</small>
 							<small th:if="${error}" th:text="${error}" class="text-danger"></small>
 						</div>
-						<div class="form-group">
-
-							<label >Mã loại sản phẩm</label> <select class="form-control"
-								name="maLoaiSP" id="maLoaiSP" th:field="*{maLoaiSP}">
-								<option th:each="item : ${loaisanpham}"
-									th:selected="${item.maLoaiSP == maLoaiSP}"
-									th:value="${item.maLoaiSP}">[[${item.tenLoaiSP}]]</option>
-							</select>
-						</div>
+						
 					</div>
 				</div>
 				<div class="row">

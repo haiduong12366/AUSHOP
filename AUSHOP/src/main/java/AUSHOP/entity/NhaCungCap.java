@@ -1,6 +1,7 @@
 package AUSHOP.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.*;
 import lombok.*;
@@ -32,11 +33,8 @@ public class NhaCungCap implements Serializable {
 	@Column(name = "diaChiNhaCC" , columnDefinition = "nvarchar(100)")
 	private String  diaChiNhaCC;
 	
-	
-	@ManyToOne
-	@JoinColumn(name = "maLoaiSP")
-	private LoaiSanPham maLoaiSP;
-
+	@OneToMany(mappedBy = "maNhaCC", cascade = CascadeType.ALL)
+	private Set<SanPham> SanPham;
 
 
 }

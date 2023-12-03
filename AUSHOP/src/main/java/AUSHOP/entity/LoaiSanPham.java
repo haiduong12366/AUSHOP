@@ -25,10 +25,6 @@ public class LoaiSanPham implements Serializable {
 	
 	@Column(name = "tenLoaiSP" , columnDefinition = "nvarchar(100)")
 	private String tenLoaiSP;
-
-	
-	@OneToMany(mappedBy = "maLoaiSP", cascade = CascadeType.ALL)
-	private Set<NhaCungCap> NhaCungCap;
 	
 	
 	@OneToMany(mappedBy = "maLoaiSP", cascade = CascadeType.ALL)

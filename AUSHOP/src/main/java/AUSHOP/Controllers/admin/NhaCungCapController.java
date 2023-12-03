@@ -55,25 +55,19 @@ public class NhaCungCapController {
 			BindingResult result) {
 		model.addAttribute("menuCa", "menu");
 		if (result.hasErrors()) {
-
 			return"admin/addCategory";
 		}
 		if(dto.isEdit()) {
-			List<LoaiSanPham> l =loaiSanPhamRepository.findAll();
 			Optional<NhaCungCap> opt = capRepository.findById(dto.getMaNhaCC());
 			NhaCungCap entity = opt.get();
 			BeanUtils.copyProperties(entity, dto);
-			dto.setMaLoaiSP(entity.getMaLoaiSP().getMaLoaiSP());
 			dto.setEdit(true);
-			model.addAttribute("loaisanpham", l);
 			model.addAttribute("category", dto);
 			return "/admin/addCategory";
 		}
 		else {
-			List<LoaiSanPham> l =loaiSanPhamRepository.findAll();
 			NhaCungCapModel n = new NhaCungCapModel();
 			n.setEdit(false);
-			model.addAttribute("loaisanpham", l);
 			model.addAttribute("category", n);
 			return "/admin/addCategory";
 		}
@@ -103,9 +97,7 @@ public class NhaCungCapController {
 			model.addAttribute("menuCa", "menu");
 			return new ModelAndView("admin/addCategory", model);
 		}
-		Optional<LoaiSanPham> l = loaiSanPhamRepository.findById(dto.getMaLoaiSP());
 		NhaCungCap c = new NhaCungCap();
-		c.setMaLoaiSP(l.get());
 		BeanUtils.copyProperties(dto, c);
 		capRepository.save(c);
 		if (dto.isEdit()) {
@@ -125,10 +117,8 @@ public class NhaCungCapController {
 		if (opt.isPresent()) {
 			NhaCungCap entity = opt.get();
 			BeanUtils.copyProperties(entity, dto);
-			dto.setMaLoaiSP(entity.getMaLoaiSP().getMaLoaiSP());
 			dto.setEdit(true);
-			List<LoaiSanPham> l =loaiSanPhamRepository.findAll();
-			model.addAttribute("loaisanpham", l);
+
 			model.addAttribute("category", dto);
 			
 			return new ModelAndView("/admin/addCategory", model);
