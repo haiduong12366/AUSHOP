@@ -53,3 +53,4 @@ public class ChiTietDonHang implements Serializable{
     @Column(columnDefinition = "float")
     private Float tong;
 }
+
