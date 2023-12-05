@@ -42,7 +42,6 @@ public class NhaCungCapController {
 		NhaCungCapModel n = new NhaCungCapModel();
 		n.setEdit(false);
 		List<LoaiSanPham> l =loaiSanPhamRepository.findAll();
-		model.addAttribute("loaisanpham", l);
 		model.addAttribute("menuCa", "menu");
 		
 		model.addAttribute("category", n);
@@ -72,7 +71,16 @@ public class NhaCungCapController {
 			return "/admin/addCategory";
 		}
 	}
-
+	boolean checkCategory(int MaNhaCC, String tenNhaCC) {
+		List<NhaCungCap> list = capRepository.findAll();
+		for (NhaCungCap item : list) {
+			if (item.getTenNhaCC().equalsIgnoreCase(tenNhaCC) && item.getMaNhaCC() != MaNhaCC) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	boolean checkCategory(String tenNhaCC) {
 		List<NhaCungCap> list = capRepository.findAll();
 		for (NhaCungCap item : list) {
@@ -90,13 +98,25 @@ public class NhaCungCapController {
 
 			return new ModelAndView("admin/addCategory");
 		}
-		if (!checkCategory(dto.getTenNhaCC()) && !dto.isEdit()) {
-			model.addAttribute("error", "Nhãn hiệu này đã tồn tại!");
+		if(dto.isEdit()) {
+			if (!checkCategory(dto.getTenNhaCC())) {
+				model.addAttribute("error", "Nhãn hiệu này đã tồn tại!");
 
-			// set active front-end
-			model.addAttribute("menuCa", "menu");
-			return new ModelAndView("admin/addCategory", model);
+				// set active front-end
+				model.addAttribute("menuCa", "menu");
+				return new ModelAndView("admin/addCategory", model);
+			}
 		}
+		else {
+			if (!checkCategory(dto.getMaNhaCC(),dto.getTenNhaCC())) {
+				model.addAttribute("error", "Nhãn hiệu này đã tồn tại!");
+
+				// set active front-end
+				model.addAttribute("menuCa", "menu");
+				return new ModelAndView("admin/addCategory", model);
+			}
+		}
+		
 		NhaCungCap c = new NhaCungCap();
 		BeanUtils.copyProperties(dto, c);
 		capRepository.save(c);

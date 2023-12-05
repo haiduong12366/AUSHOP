@@ -2,7 +2,9 @@ package AUSHOP.Model;
 
 import org.hibernate.validator.constraints.Length;
 
+import AUSHOP.entity.SanPham;
 
+import java.util.Set;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -17,8 +19,8 @@ public class LoaiSanPhamModel {
 
 	private int maLoaiSP;
 	@NotEmpty
-	@Length(min=5)
 	private String tenLoaiSP;
-	
-	private Boolean isEdit = false; //true: update //false: insert
+	private Set<SanPham> SanPham;
+
+	private boolean isEdit = false; 
 }

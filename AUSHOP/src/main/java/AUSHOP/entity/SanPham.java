@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import javax.persistence.*;
 import lombok.*;
@@ -43,11 +43,9 @@ public class SanPham implements Serializable {
 	@Column(columnDefinition = "date")
 	private Date ngaynhaphang;
 	
-	@Column(columnDefinition = "float")
-	private float donGia;
+	private double donGia;
 	
-	@Column(columnDefinition = "float")
-	private float discount;
+	private double discount;
 	
 	@Column(name = "hinhAnh" , columnDefinition = "varchar(300)")
 	private String  hinhAnh;	
@@ -55,7 +53,7 @@ public class SanPham implements Serializable {
 	private int  slTonKho;
 	
 	@Column(name = "tinhTrang" , columnDefinition = "bit")
-	private String  tinhTrang;	
+	private boolean  tinhTrang;	
 	
 	
 	@OneToMany(mappedBy = "maSP", cascade = CascadeType.ALL)
