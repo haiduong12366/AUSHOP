@@ -1,79 +1,50 @@
 package AUSHOP.entity;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "KhachHang")
-@Data
-
-@AllArgsConstructor
-
-@NoArgsConstructor
-
-public class KhachHang implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class KhachHang {
 
 	@Id
+	@Column(name = "maKhachHang")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int maKhachHang;
+	private Long id;
+	private String username;
+	@Email
+	private String email;
+	@Column(length = 60, columnDefinition = "nvarchar(50) not null")
+	private String hoTen;
+	private String passwd;
+	private boolean enabled;
 	
-	@Column(name = "email" , columnDefinition = "varchar(50)")
-	private String  email;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "users_roles",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id")
+			)
+	private Set<AppRole> UserRole = new HashSet<>();
 	
-	@Column(name = "hoTen" , columnDefinition = "nvarchar(50)")
-	private String  hoTen;
-	
-	@Column(name = "sdt" , columnDefinition = "varchar(10)")
-	private String  sdt;
-	
-	@Column(name = "diaChi" , columnDefinition = "nvarchar(100)")
-	private String  diaChi;
-	
-	@Column(columnDefinition = "bit")
-	private Boolean gioiTinh;
-	
-	@Column(name = "hinhanhKH" , columnDefinition = "varchar(1000)")
-	private String  hinhanhKH;
-	
-	@Column(name = "passwd" , columnDefinition = "varchar(32)")
-	private String  passwd;
-	
-	public int tongChiTieu;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
-	@Column(columnDefinition = "Datetime")
-    private Date ngayDangKy;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
-	@Column(columnDefinition = "Datetime")
-    private Date last_login;
-	
-	@Column(name = "is_admin" , columnDefinition = "bit")
-	private Boolean is_admin;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "maKhachHang", cascade = CascadeType.ALL)
-	private Set<DonHang> DonHang;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "maKhachHang", cascade = CascadeType.ALL)
-	private Set<DanhGia> DanhGia;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "maKhachHang", cascade = CascadeType.ALL)
-	private Set<UserRole> UserRole;
-
 }
