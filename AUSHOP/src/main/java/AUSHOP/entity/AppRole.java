@@ -26,14 +26,12 @@ public class AppRole implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Column(name = "roleId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int roleId;
-	
-    @Column(name = "name", columnDefinition = "nvarchar(100)")
+	private Long roleId;
+
+	@Column(name = "name", columnDefinition = "nvarchar(100)")
 	private String name;
-	
-	@OneToOne
-	@JoinColumn(name="roleId")
-	private UserRole UserRole;
+
 
 }
