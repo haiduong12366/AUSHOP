@@ -49,8 +49,7 @@ public class DonHang implements Serializable{
     @Column(name = "tinhTrang", columnDefinition = "nvarchar(20)")
     private String tinhTrang;
     
-    @Column(columnDefinition = "float")
-    private Float tongTien;
+    private double tongTien;
 
     @JsonIgnore
 	@OneToMany(mappedBy = "maDH", cascade = CascadeType.ALL)
