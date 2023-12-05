@@ -29,8 +29,8 @@ public class AppRole implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int roleId;
 	
-    @Column(name = "ten", columnDefinition = "nvarchar(100)")
-	private String ten;
+    @Column(name = "name", columnDefinition = "nvarchar(100)")
+	private String name;
 	
 	@OneToOne
 	@JoinColumn(name="roleId")
