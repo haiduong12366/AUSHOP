@@ -4,16 +4,12 @@ import java.util.Date;
 import java.util.Set;
 
 
+import AUSHOP.entity.AppRole;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import AUSHOP.entity.DanhGia;
 import AUSHOP.entity.DonHang;
-import AUSHOP.entity.KhachHang;
-import AUSHOP.entity.UserRole;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -29,6 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class KhachHangModel{
 	private int maKhachHang;
+	private String username;
 	private String  email;
 	private String  hoTen;
 	@Pattern(regexp = "^0\\d{9}$")
@@ -43,13 +40,13 @@ public class KhachHangModel{
 	@DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
 	private Date ngayDangKy;
 	@Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
+	@DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
 	private Date last_login;
-	private Boolean is_admin;
+	private boolean enabled;
 	private Set<DonHang> DonHang;
 	private Set<DanhGia> DanhGia;
-	private Set<UserRole> UserRole;
+	private Set<AppRole> UserRole;
 	private boolean isEdit;
-	
+
 
 }

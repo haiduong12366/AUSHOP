@@ -28,38 +28,38 @@ public class AuthController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private RoleRepository roleRepository;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@PostMapping("/signin")
 	public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
 		Authentication authentication = authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(
 				loginDto.getUsernameOrEmail(), loginDto.getPassword()));
-		
+
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		return new ResponseEntity<>("Vo roi em",HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto){
-		
+
 		//kiểm tra username tồn tại chưa
 		if (userRepository.existsByUsername(signUpDto.getUsername())) {
-			return new ResponseEntity<>("ten tai khoan co r cung",HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Tên tài khoản đã tồn tại",HttpStatus.BAD_REQUEST);
 		}
-		
+
 		// kiểm tra email
 		if (userRepository.existsByEmail(signUpDto.getEmail())) {
-			return new ResponseEntity<>("email co r cung",HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Email đã tồn tại",HttpStatus.BAD_REQUEST);
 		}
-		
+
 		// lưu acc mới
 		KhachHang user = new KhachHang();
 		user.setHoTen(signUpDto.getName());
@@ -67,13 +67,13 @@ public class AuthController {
 		user.setEmail(signUpDto.getEmail());
 		user.setEnabled(true);
 		user.setPasswd(passwordEncoder.encode(signUpDto.getPassword()));
-		
+
 		AppRole roles = roleRepository.findByName("USER").get();
 		user.setUserRole(Collections.singleton(roles));
-		
+
 		userRepository.save(user);
-		
-		return new ResponseEntity<>("dang ky duoc r e", HttpStatus.OK);
-		
+
+		return new ResponseEntity<>("Đăng ký thành công", HttpStatus.OK);
+
 	}
 }
