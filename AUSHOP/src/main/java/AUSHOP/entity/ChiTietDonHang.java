@@ -45,12 +45,10 @@ public class ChiTietDonHang implements Serializable{
 	@JoinColumn(name = "maSP")
 	private SanPham maSP;
     
-    @Column(columnDefinition = "float")
-    private Float donGia;
+    private double donGia;
 
     private int soLuong;
 
-    @Column(columnDefinition = "float")
-    private Float tong;
+    private double tong;
 }
 

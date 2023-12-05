@@ -7,6 +7,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -15,82 +18,184 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import AUSHOP.Model.LoaiSanPhamModel;
+import AUSHOP.Model.NhaCungCapModel;
 import AUSHOP.entity.LoaiSanPham;
+import AUSHOP.entity.NhaCungCap;
+import AUSHOP.repository.LoaiSanPhamRepository;
 import AUSHOP.services.ILoaiSanPhamService;
 
 @Controller
-@RequestMapping("admin/loaisanpham")
+@RequestMapping("/admin/loaisanpham")
 public class LoaiSanPhamController {
 
 	@Autowired
-	ILoaiSanPhamService loaispService;
-	
-	@RequestMapping("")
-	public String list(ModelMap model) {
-		
-		List<LoaiSanPham> list = loaispService.findAll();
-		model.addAttribute("loaisanpham",list);
-		return "admin/LoaiSanPham/listLoaiSanPham";
+	LoaiSanPhamRepository loaiSanPhamRepository;
+
+	@GetMapping("/add")
+	public String add(ModelMap model) {
+		LoaiSanPhamModel n = new LoaiSanPhamModel();
+		model.addAttribute("menuLa", "menu");
+
+		model.addAttribute("category", n);
+
+		return "/admin/addLoaiSanPham";
 	}
-	
-	@GetMapping("edit/{maLoaiSP}")
-	public ModelAndView edit(ModelMap model, @PathVariable("maLoaiSP") Integer maLoaiSP) {
-		Optional<LoaiSanPham> optLoaiSanPham = loaispService.findById(maLoaiSP);
-		LoaiSanPhamModel loaispModel = new LoaiSanPhamModel();
-		// kiểm tra sự tồn tại của category
-		if (optLoaiSanPham.isPresent()) {
-			LoaiSanPham entity = optLoaiSanPham.get();
-			// copy từ entity sang cateModel
-			BeanUtils.copyProperties(entity, loaispModel);
-			loaispModel.setIsEdit(true);
-			// đẩy dữ liệu ra view
-			model.addAttribute("loaisanpham", loaispModel);
-			return new ModelAndView("admin/LoaiSanPham/addOrEditLoaiSanPham", model);
+
+	@PostMapping("/reset")
+	public String reset(ModelMap model, @Valid @ModelAttribute("category") LoaiSanPhamModel dto, BindingResult result) {
+		model.addAttribute("menuLa", "menu");
+		if (result.hasErrors()) {
+			return "admin/addLoaiSanPham";
 		}
-		model.addAttribute("message", "Category is not existed!!!!");
-		return new ModelAndView("forward:/admin/LoaiSanPham", model);
+		if (dto.isEdit()) {
+			Optional<LoaiSanPham> opt = loaiSanPhamRepository.findById(dto.getMaLoaiSP());
+			LoaiSanPham entity = opt.get();
+			BeanUtils.copyProperties(entity, dto);
+			dto.setEdit(true);
+			model.addAttribute("category", dto);
+			return "/admin/addLoaiSanPham";
+		} else {
+			LoaiSanPhamModel n = new LoaiSanPhamModel();
+			model.addAttribute("category", n);
+			return "/admin/addLoaiSanPham";
+		}
 	}
-	
-	@PostMapping("saveOrUpdate")
-	public ModelAndView saveOrUpdate(ModelMap model, @Valid @ModelAttribute("loaisanpham") LoaiSanPhamModel cateMdoel,
+
+	boolean checkCategory(int MaLoaiSP, String tenLoaiSP) {
+		List<LoaiSanPham> list = loaiSanPhamRepository.findAll();
+		for (LoaiSanPham item : list) {
+			if (item.getTenLoaiSP().equalsIgnoreCase(tenLoaiSP) && item.getMaLoaiSP() != MaLoaiSP) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	boolean checkCategory(String tenLoaiSP) {
+		List<LoaiSanPham> list = loaiSanPhamRepository.findAll();
+		for (LoaiSanPham item : list) {
+			if (item.getTenLoaiSP().equalsIgnoreCase(tenLoaiSP) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+	@PostMapping("/add")
+	public ModelAndView addd(ModelMap model, @Valid @ModelAttribute("category") LoaiSanPhamModel dto,
 			BindingResult result) {
 		if (result.hasErrors()) {
-			return new ModelAndView("admin/LoaiSanPham/addOrEditLoaiSanPham");
+			model.addAttribute("menuLa", "menu");
+
+			return new ModelAndView("admin/addLoaiSanPham");
+		}
+		if (dto.isEdit()) {
+			if (!checkCategory(dto.getMaLoaiSP(), dto.getTenLoaiSP())) {
+				model.addAttribute("error", "Loại sản phẩm này đã tồn tại!");
+
+				// set active front-end
+				model.addAttribute("menuLa", "menu");
+				return new ModelAndView("admin/addLoaiSanPham", model);
+			}
+		} else {
+			if (!checkCategory(dto.getTenLoaiSP())) {
+				model.addAttribute("error", "Loại sản phẩm này đã tồn tại!");
+
+				// set active front-end
+				model.addAttribute("menuLa", "menu");
+				return new ModelAndView("admin/addLoaiSanPham", model);
+			}
 		}
 
-		LoaiSanPham entity = new LoaiSanPham();
-		// copy từ Model sang Entity
-		BeanUtils.copyProperties(cateMdoel, entity);
-		// gọi hàm save trong service
-		loaispService.save(entity);
-		// đưa thông báo về cho biến message
-		String message = "";
-		if (cateMdoel.getIsEdit() == true) {
-			message = "Category is Edited!!!!!!!!";
+		LoaiSanPham c = new LoaiSanPham();
+		BeanUtils.copyProperties(dto, c);
+		loaiSanPhamRepository.save(c);
+		if (dto.isEdit()) {
+			model.addAttribute("message", "Sửa thành công!");
 		} else {
-			message = "Category is saved!!!!!!!!";
+			model.addAttribute("message", "Thêm thành công!");
 		}
-		model.addAttribute("message", message);
-		// redirect về URL controller
-		return new ModelAndView("forward:/admin/LoaiSanPham", model);
+		model.addAttribute("menuLa", "menu");
+		return new ModelAndView("forward:/admin/loaisanpham", model);
 	}
-	
-	@GetMapping("add")
-	public String add(ModelMap model) {
-		LoaiSanPhamModel cateModel = new LoaiSanPhamModel();
-		cateModel.setIsEdit(false);
-		// chuyển dữ liệu từ model vào biến category để đưa lên view
-		model.addAttribute("loaisanpham", cateModel);
-		return "admin/LoaiSanPham/addOrEditLoaiSanPham";
+
+	@GetMapping("/edit/{id}")
+	public ModelAndView edit(@PathVariable("id") Integer id, ModelMap model) {
+		Optional<LoaiSanPham> opt = loaiSanPhamRepository.findById(id);
+		model.addAttribute("menuLa", "menu");
+		LoaiSanPhamModel dto = new LoaiSanPhamModel();
+		if (opt.isPresent()) {
+			LoaiSanPham entity = opt.get();
+			BeanUtils.copyProperties(entity, dto);
+			dto.setEdit(true);
+			model.addAttribute("category", dto);
+
+			return new ModelAndView("/admin/addLoaiSanPham", model);
+		}
+
+		model.addAttribute("error", "Không tồn tại thương hiệu này!");
+		return new ModelAndView("forward:/admin/loaisanpham", model);
 	}
-	
-	@GetMapping("delete/{maLoaiSP}")
-	public ModelAndView delet(ModelMap model, @PathVariable("maLoaiSP") Integer maLoaiSP) {
-		loaispService.deleteById(maLoaiSP);
-		model.addAttribute("message", "Category is deleted!!!!");
-		return new ModelAndView("forward:/admin/LoaiSanPham", model);
+
+	@GetMapping("/delete/{id}")
+	public ModelAndView delete(@PathVariable("id") Integer id, ModelMap model) {
+		Optional<LoaiSanPham> opt = loaiSanPhamRepository.findById(id);
+		if (opt.isPresent()) {
+
+			loaiSanPhamRepository.delete(opt.get());
+			model.addAttribute("message", "Xoá thành công!");
+
+		} else {
+			model.addAttribute("error", "Loại sản phẩm này không tồn tại!");
+		}
+
+		model.addAttribute("menuLa", "menu");
+		return new ModelAndView("forward:/admin/loaisanpham", model);
 	}
+
+	@GetMapping("/search")
+	public String search(ModelMap model, @RequestParam(name = "tenLoaiSP", required = false) String tenLoaiSP,
+			@RequestParam("size") Optional<Integer> size) {
+		int pageSize = size.orElse(5);
+		Pageable pageable = PageRequest.of(0, pageSize);
+		Page<LoaiSanPham> list = loaiSanPhamRepository.findBytenLoaiSPContaining(tenLoaiSP, pageable);
+		model.addAttribute("loaisanpham", list);
+		model.addAttribute("tenLoaiSP", tenLoaiSP);
+
+		model.addAttribute("menuLa", "menu");
+		return "admin/loaisanpham";
+	}
+
+	@RequestMapping("/page")
+	public String page(ModelMap model, @RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size,
+			@RequestParam(name = "tenLoaiSP", required = false) String tenLoaiSP) {
+		int currentPage = page.orElse(0);
+		int pageSize = size.orElse(5);
+		if (tenLoaiSP.equalsIgnoreCase("null")) {
+			tenLoaiSP = "";
+		}
+		Pageable pageable = PageRequest.of(currentPage, pageSize);
+		Page<LoaiSanPham> list = loaiSanPhamRepository.findBytenLoaiSPContaining(tenLoaiSP, pageable);
+		model.addAttribute("loaisanpham", list);
+		model.addAttribute("tenLoaiSP", tenLoaiSP);
+
+		model.addAttribute("menuLa", "menu");
+		return "admin/loaisanpham";
+	}
+
+	@RequestMapping("")
+	public String list(ModelMap model, @RequestParam("size") Optional<Integer> size) {
+		int pageSize = size.orElse(5);
+		Pageable pageable = PageRequest.of(0, pageSize);
+		Page<LoaiSanPham> list = loaiSanPhamRepository.findAll(pageable);
+		model.addAttribute("loaisanpham", list);
+
+		model.addAttribute("menuLa", "menu");
+		return "admin/loaisanpham";
+	}
+
 }

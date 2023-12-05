@@ -21,8 +21,6 @@ public class NhaCungCapModel {
 	private String  sdtNhaCC;
 	
 	private String  diaChiNhaCC;
-	
-	private int maLoaiSP;
-	
+		
 	private boolean isEdit;
 }

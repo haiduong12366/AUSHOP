@@ -1,5 +1,6 @@
 package AUSHOP.repository;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,5 @@ public interface DonHangRepository extends JpaRepository<DonHang, Integer> {
 	Page<DonHang> findByStatus(int status, Pageable pageable);
 	
 	Page<DonHang> findByMaDH (int id, Pageable pageable);
+
 }

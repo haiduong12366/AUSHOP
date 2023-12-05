@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/dashboard.html}">
+
+<head>
+</head>
+
+<body>
+	<div layout:fragment="content" class="col-lg-10 my-4"
+		style="min-height: 600px; border: 1px solid rgba(128, 128, 128, 0.212);">
+		<div class="row">
+			<div class="col">
+				<form th:action="@{/admin/products}" method="get">
+					<button class="btn btn-primary float-right m-3">Danh sách
+						sản phẩm</button>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<form th:action="@{/admin/products/add}" class="col" method="post"
+				enctype="multipart/form-data" th:object="${product}">
+				<div class="row">
+					<div class="col-7 ml-3">
+						<div class="form-group" th:if="*{maSP}">
+							<label for="maSP">Mã sản phẩm</label> <input type="text"
+								class="form-control" name="maSP" th:field="*{maSP}"
+								readonly="readonly" id="maSP">
+						</div>
+						<div class="form-group">
+							<label for="tenSP">Tên sản phẩm</label> <input type="text"
+								name="tenSP" th:field=*{tenSP} id="tenSP"
+								class="form-control"> <small
+								th:if="${#fields.hasErrors('tenSP')}" class="text-danger">Hãy
+								nhập tên sản phẩm</small> <small th:if="${error}" class="text-danger">Sản
+								phẩm này đã tồn tại</small>
+						</div>
+						<div class="form-group">
+							<label for="slTonKho">Số lượng</label> <input type="text"
+								name="slTonKho" id="slTonKho" th:field=*{slTonKho}
+								class="form-control"> <small
+								th:if="${#fields.hasErrors('slTonKho')}" class="text-danger">Hãy
+								nhập vào số lượng sản phẩm</small>
+						</div>
+						<div class="form-group">
+							<label for="donGia">Đơn giá</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="donGia"
+									th:field=*{donGia} name="donGia">
+								<div class="input-group-append">
+									<span class="input-group-text">VND</span>
+								</div>
+							</div>
+							<small th:if="${#fields.hasErrors('donGia')}"
+								class="text-danger">Hãy nhập đúng giá sản phẩm</small>
+						</div>
+						<div class="form-group">
+							<label for="discount">Giảm giá</label>
+							<div class="input-group">
+								<input type="text" name="discount" th:field="*{discount}"
+									class="form-control" id="discount">
+								<div class="input-group-append">
+									<span class="input-group-text">%</span>
+								</div>
+							</div>
+							<small th:if="${#fields.hasErrors('discount')}"
+								class="text-danger">Hãy nhập đúng % giảm giá</small>
+						</div>
+						<div class="form-group">
+							<label for="maNhaCC">Hãng</label> <select class="form-control"
+								name="maNhaCC" th:field=*{maNhaCC} id="maNhaCC">
+								<option th:each="item : ${categories}"
+									th:selected="${item.maNhaCC == product.maNhaCC}"
+									th:value="${item.maNhaCC}">[[${item.tenNhaCC}]]</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="maLoaiSP">Loại:</label> <select class="form-control"
+								name="maLoaiSP" th:field=*{maLoaiSP} id="maLoaiSP">
+								<option th:each="item : ${loaisanpham}"
+									th:selected="${item.maLoaiSP == product.maLoaiSP}"
+									th:value="${item.maLoaiSP}">[[${item.tenLoaiSP}]]</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-3 offset-1">
+						<div class="text-center">
+							<img th:src="@{'/getproduct/'+${photo}}" width="90%" id="img"
+								class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}">
+							<div class="form-group">
+								<label for="productPhoto">Hình ảnh</label> <input type="file"
+									name="photo" id="productPhoto" class="form-control-file" accept="image/*" onchange="readURL(this);">
+								<input hidden="hidden" name="hinhAnh" th:value="*{hinhAnh}" />
+							</div>
+						</div>
+
+						<div class="form-group mt-4">
+							<label for="tinhTrang">Trạng thái</label>
+							<select
+								class="form-control" name="" th:field=*{tinhTrang} id="tinhTrang">
+								<option th:selected="*{tinhTrang==false}" value="0">Hàng mới</option>
+								<option th:selected="*{tinhTrang==true}" value="1">Hàng cũ</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col m-3">
+						<div class="form-group">
+							<label for="moTa">Mô tả sản phẩm</label>
+							<textarea class="form-control" name="moTa"
+								th:field="*{moTa}" id="moTa" rows="5"></textarea>
+							<small th:if="${#fields.hasErrors('moTa')}"
+								class="text-danger">Hãy nhập mô tả sản phẩm</small>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col m-3">
+					<input type="hidden" th:field="*{edit}"/>
+						<button class="btn btn-primary">
+							<span th:if="${product.isEdit}">Sửa</span> <span
+								th:if=${!product.isEdit}>Thêm</span>
+						</button>
+						<button class="btn btn-success ml-2"
+							formaction="/admin/products/add" formmethod="get">Làm
+							mới</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>
