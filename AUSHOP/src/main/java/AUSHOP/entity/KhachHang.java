@@ -40,7 +40,7 @@ public class KhachHang {
 
 	@Column(name = "hinhanhKH" , columnDefinition = "varchar(1000)")
 	private String  hinhanhKH;
-	@Column(name = "passwd" , columnDefinition = "varchar(32)")
+	@Column(name = "passwd" , columnDefinition = "varchar(200)")
 	private String  passwd;
 	public int tongChiTieu;
 
@@ -70,6 +70,6 @@ public class KhachHang {
 			joinColumns = @JoinColumn(name = "maKhachHang"),
 			inverseJoinColumns = @JoinColumn(name = "roleId")
 	)
-	private Set<AppRole> UserRole = new HashSet<>();
+	private Set<AppRole> UserRole;
 
 }

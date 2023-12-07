@@ -24,14 +24,14 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class KhachHangModel{
-	private int maKhachHang;
+	private Long id;
 	private String username;
 	private String  email;
 	private String  hoTen;
 	@Pattern(regexp = "^0\\d{9}$")
 	private String  sdt;
 	private String  diaChi;
-	private Boolean gioiTinh;
+	private boolean gioiTinh;
 	private String  hinhanhKH;
 	@Length(min = 6)
 	private String  passwd;

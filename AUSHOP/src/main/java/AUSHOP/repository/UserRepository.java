@@ -2,6 +2,8 @@ package AUSHOP.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +22,6 @@ public interface UserRepository extends JpaRepository<KhachHang, Long>{
 	Optional<KhachHang> findByUsername(String username);
 	Boolean existsByUsername(String username);
 	Boolean existsByEmail(String email);
+
+	public Page<KhachHang> findByHoTenContaining(String HoTen, Pageable pageable);
 }
