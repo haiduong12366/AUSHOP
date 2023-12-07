@@ -17,5 +17,8 @@ public interface DonHangRepository extends JpaRepository<DonHang, Integer> {
 	Page<DonHang> findByStatus(int status, Pageable pageable);
 	
 	Page<DonHang> findByMaDH (int id, Pageable pageable);
+	
+	@Query(value="select * from don_hang where ma_khach_hang = ?1 and tinh_trang = ?2", nativeQuery = true)
+	Page<DonHang> findByMaKhachHang (Long id, int trangthai, Pageable pageble);
 
 }
