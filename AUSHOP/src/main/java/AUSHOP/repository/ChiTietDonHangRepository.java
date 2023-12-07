@@ -13,6 +13,7 @@ public interface ChiTietDonHangRepository extends JpaRepository<ChiTietDonHang, 
 
 	@Query(value = "select * from chi_tiet_don_hang where madh = ?", nativeQuery = true)
 	List<ChiTietDonHang> findByMaDH(int id);
+	
   List<ChiTietDonHang> findBymaSP(Integer id);
 
 
