@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import AUSHOP.entity.KhachHang;
 import AUSHOP.repository.NhaCungCapRepository;
 import AUSHOP.repository.SanPhamRepository;
 import AUSHOP.repository.UserRepository;
@@ -47,7 +48,7 @@ public class CartController {
 		model.addAttribute("isLogin", isLogin);
 		
 		if(principal!=null) {
-			Optional<Customer> c = customerRepository.FindByEmail(principal.getName());
+			Optional<KhachHang> c = customerRepository.FindByEmail(principal.getName());
 			Optional<UserRole> uRole = userRoleRepository.findByCustomerId(Long.valueOf(c.get().getCustomerId()));
 			if(uRole.get().getAppRole().getName().equals("ROLE_ADMIN")) {
 				return new ModelAndView("forward:/admin/customers", model);
