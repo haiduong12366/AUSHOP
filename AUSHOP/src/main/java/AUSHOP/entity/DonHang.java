@@ -38,9 +38,7 @@ public class DonHang implements Serializable{
     @JoinColumn(name = "maPT")
     private ThanhToan maPT;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
-    @Column(columnDefinition = "Datetime")
+    @Column(columnDefinition = "Date")
     private Date ngayDatHang;
     
     @Column(name = "diaChiGiaoHang", columnDefinition = "nvarchar(200)")

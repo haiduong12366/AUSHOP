@@ -69,8 +69,8 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="item : ${customers}" th:if="${item.enabled}">
-					<td class="text-center" th:text="${item.id}"></td>
+				<tr th:each="item : ${customers}" th:unless="${item.is_admin}">
+					<td class="text-center" th:text="${item.maKhachHang}"></td>
 					<td><img th:src="@{'/getcustomer/'+${item.hinhanhKH}}"
 						width="80px" /></td>
 					<td th:text="${item.hoTen}"></td>
@@ -81,11 +81,11 @@
 					<td th:text="${item.diaChi}"></td>
 					<td class="text-center"
 						th:text="${#dates.format(item.ngayDangKy, 'dd-MM-yyyy')}"></td>
-					<td class="text-center"><a th:data-id="${item.id}" th:data-name="${item.hoTen}" style="cursor: pointer;color: #007bff;"
+					<td class="text-center"><a th:data-id="${item.maKhachHang}" th:data-name="${item.hoTen}" style="cursor: pointer;color: #007bff;"
 						onclick="showConfigModalDialog(this.getAttribute('data-id'), this.getAttribute('data-name'))"
 						><span
 							class="fa fa-trash"></span></a> \ <a
-						th:href="@{'/admin/customers/edit/'+${item.id}}"><span
+						th:href="@{'/admin/customers/edit/'+${item.maKhachHang}}"><span
 							class="fa fa-edit"></span></a></td>
 				</tr>
 			</tbody> 

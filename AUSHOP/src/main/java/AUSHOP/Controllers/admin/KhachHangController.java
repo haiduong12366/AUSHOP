@@ -15,8 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 import AUSHOP.Model.KhachHangModel;
 import AUSHOP.entity.AppRole;
 import AUSHOP.entity.KhachHang;
+import AUSHOP.repository.KhachHangRepository;
 import AUSHOP.repository.RoleRepository;
-import AUSHOP.repository.UserRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +43,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @RequestMapping("/admin/customers")
 public class KhachHangController {
 	@Autowired
-	UserRepository khachHangRepository;
+	KhachHangRepository khachHangRepository;
 
 	@Autowired
 	RoleRepository appRoleRepository;
@@ -78,7 +78,7 @@ public class KhachHangController {
 			@RequestParam("passwd") String passwd) throws IOException {
 		dto.setPasswd(bCryptPasswordEncoder.encode(passwd));
 		if(dto.isEdit()) {
-			if(passwd.equals(khachHangRepository.findById(dto.getId()).get().getPasswd())) {
+			if(passwd.equals(khachHangRepository.findById(dto.getMaKhachHang()).get().getPasswd())) {
 				System.out.println("trung   ajaja");
 				dto.setPasswd(passwd);
 			}
@@ -107,7 +107,6 @@ public class KhachHangController {
 		KhachHang c = new KhachHang();
 		BeanUtils.copyProperties(dto, c);
 		c.setNgayDangKy(new Date());
-		c.setEnabled(true);
 
 		if (photo.getOriginalFilename().equals("")) {
 			if (image.equals("")) {
@@ -119,8 +118,7 @@ public class KhachHangController {
 			c.setHinhanhKH(photo.getOriginalFilename());
 			upload(photo, "uploads/customers");
 		}
-		AppRole roles = appRoleRepository.findByName("USER").get();
-		c.setUserRole(Collections.singleton(roles));
+
 		khachHangRepository.save(c);
 		
 		
@@ -137,7 +135,7 @@ public class KhachHangController {
 	}
 
 	@RequestMapping("/edit/{id}")
-	public ModelAndView edit(ModelMap model, @PathVariable("id") Long id) {
+	public ModelAndView edit(ModelMap model, @PathVariable("id") Integer id) {
 
 		Optional<KhachHang> opt = khachHangRepository.findById(id);
 		if (opt.isPresent()) {
@@ -158,14 +156,13 @@ public class KhachHangController {
 	}
 
 	@RequestMapping("/delete/{id}")
-	public ModelAndView delete(ModelMap model, @PathVariable("id") Long id) {
+	public ModelAndView delete(ModelMap model, @PathVariable("id") Integer id) {
 
 		Optional<KhachHang> opt = khachHangRepository.findById(id);
 		if (opt.isPresent()) {
 //			customerRepository.deleteById(id);
 //			customerRepository.SetStatus(id);
 			KhachHang c = opt.get();
-			c.setEnabled(false);
 			khachHangRepository.save(c);
 			model.addAttribute("message", "Xoá thành công!");
 		} else {

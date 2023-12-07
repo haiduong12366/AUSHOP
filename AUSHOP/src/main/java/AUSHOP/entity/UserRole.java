@@ -16,20 +16,20 @@ import java.io.Serializable;
 
 public class UserRole implements Serializable {
 
+
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "roleId")
-	private AppRole roleId;
-
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "maKhachHang")
 	private KhachHang maKhachHang;
+	
+	@ManyToOne
+	@JoinColumn(name = "roleId")
+	private AppRole roleId;
 
 }

@@ -22,7 +22,7 @@ import java.util.Set;
 @NoArgsConstructor
 
 public class KhachHangModel{
-	private Long id;
+	private int maKhachHang;
 	private String username;
 	private String  email;
 	private String  hoTen;
@@ -40,11 +40,7 @@ public class KhachHangModel{
 	private Date ngayDangKy;
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
-//	private Date last_login;
-	private Boolean is_admin;
-	private Set<DonHang> DonHang;
-	private Set<DanhGia> DanhGia;
-	private Set<UserRole> UserRole;
-	private boolean isEdit;
+	private boolean is_admin;
+	private boolean isEdit = false;
 
 }

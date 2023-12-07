@@ -40,7 +40,7 @@ public class KhachHang implements Serializable {
 	private String  diaChi;
 
 	@Column(columnDefinition = "bit")
-	private Boolean gioiTinh;
+	private boolean gioiTinh;
 
 	@Column(name = "hinhanhKH" , columnDefinition = "varchar(1000)")
 	private String  hinhanhKH;
@@ -51,9 +51,7 @@ public class KhachHang implements Serializable {
 
 	public int tongChiTieu;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
-	@Column(columnDefinition = "Datetime")
+	@Column(columnDefinition = "Date")
 	private Date ngayDangKy;
 
 //	@Temporal(TemporalType.TIMESTAMP)

@@ -32,8 +32,6 @@ public class AppRole implements Serializable{
 	@Column(name = "ten", columnDefinition = "nvarchar(100)")
 	private String ten;
 
-	@OneToOne
-	@JoinColumn(name="roleId")
-	private UserRole UserRole;
+
 
 }

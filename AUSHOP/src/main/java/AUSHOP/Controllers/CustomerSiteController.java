@@ -33,7 +33,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-
 @Controller
 public class CustomerSiteController {
 
@@ -100,25 +99,25 @@ public class CustomerSiteController {
 	}
 
 	@PostMapping("/confirmOtpRegister")
-	public ModelAndView confirmRegister(ModelMap model, @ModelAttribute("KhachHang") KhachHangModel dto, @RequestParam("passwd") String passwd,
-			@RequestParam("otp") String otp) {
+	public ModelAndView confirmRegister(ModelMap model, @ModelAttribute("KhachHang") KhachHangModel dto,
+			@RequestParam("passwd") String passwd, @RequestParam("otp") String otp) {
 		if (otp.equals(String.valueOf(session.getAttribute("otp")))) {
 			dto.setPasswd(bCryptPasswordEncoder.encode(passwd));
 			KhachHang kh = new KhachHang();
 			BeanUtils.copyProperties(dto, kh);
 			kh.setNgayDangKy(new Date());
 			kh.setIs_admin(false);
-			kh.setHinhanhKH("user.png");      
+			kh.setHinhanhKH("user.png");
 			khachHangRepository.save(kh);
 			Optional<AppRole> a = appRoleRepository.findById(2);
-			UserRole urole = new UserRole(0, a.get(), kh);
+			UserRole urole = new UserRole(0, kh, a.get());
 			userRoleRepository.save(urole);
-			
+
 			session.removeAttribute("otp");
 			model.addAttribute("message", "Đăng kí thành công");
 			return new ModelAndView("/site/login");
 		}
-		
+
 		model.addAttribute("KhachHang", dto);
 		model.addAttribute("error", "Mã OTP không đúng, hãy thử lại!");
 		return new ModelAndView("/site/confirmOtpRegister", model);
@@ -167,7 +166,8 @@ public class CustomerSiteController {
 	@PostMapping("/changePassword")
 	public ModelAndView changeForm(ModelMap model,
 			@Valid @ModelAttribute("changePassword") ChangePasswordModel changePassword, BindingResult result,
-			@RequestParam("email") String email, @RequestParam("newPasswd") String newPasswd, @RequestParam("confirmPasswd") String confirmPasswd) {
+			@RequestParam("email") String email, @RequestParam("newPasswd") String newPasswd,
+			@RequestParam("confirmPasswd") String confirmPasswd) {
 		if (result.hasErrors()) {
 
 			model.addAttribute("newPasswd", newPasswd);
@@ -215,13 +215,13 @@ public class CustomerSiteController {
 
 		model.addAttribute("KhachHang", khachHangRepository.findByEmail(principal.getName()).get());
 
-		//model.addAttribute("totalCartItems", shoppingCartService.getCount());
+		// model.addAttribute("totalCartItems", shoppingCartService.getCount());
 		return new ModelAndView("/site/editProfile");
 	}
 
 	@PostMapping("/KhachHang/editProfile")
-	public ModelAndView edit(ModelMap model, @Valid @ModelAttribute("KhachHang") KhachHangModel dto, BindingResult result,
-			@RequestParam("photo") MultipartFile photo, Principal principal) throws IOException {
+	public ModelAndView edit(ModelMap model, @Valid @ModelAttribute("KhachHang") KhachHangModel dto,
+			BindingResult result, @RequestParam("photo") MultipartFile photo, Principal principal) throws IOException {
 		/*
 		 * if (result.hasErrors()) { model.addAttribute("totalCartItems",
 		 * shoppingCartService.getCount()); return new ModelAndView("/site/editProfile",
@@ -233,7 +233,7 @@ public class CustomerSiteController {
 			kh.setHinhanhKH(photo.getOriginalFilename());
 		}
 		kh.setHoTen(dto.getHoTen());
-		kh.setGioiTinh(dto.getGioiTinh());
+		kh.setGioiTinh(dto.isGioiTinh());
 		kh.setSdt(dto.getSdt());
 		kh.setDiaChi(dto.getDiaChi());
 

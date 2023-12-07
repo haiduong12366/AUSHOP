@@ -42,8 +42,8 @@ public class UserDetailService implements UserDetailsService {
 		System.out.println("Found User: " + userOpt.get());
 
 		Optional<UserRole> urole = userRoleRepository
-				.findByMaKhachHang(Integer.valueOf(userOpt.get().getMaKhachHang()));
-
+				.findByMaKhachHang(userOpt.get().getMaKhachHang());
+		System.out.println(urole.get().getRoleId().getRoleId());
 		Optional<AppRole> arole = appRoleRepository.findById(urole.get().getRoleId().getRoleId());
 
 		List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
