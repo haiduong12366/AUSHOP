@@ -45,6 +45,7 @@ public class KhachHang implements Serializable {
 	@Column(name = "hinhanhKH" , columnDefinition = "varchar(1000)")
 	private String  hinhanhKH;
 
+
 	@Column(name = "passwd" , columnDefinition = "varchar(1000)")
 	private String  passwd;
 
@@ -74,5 +75,6 @@ public class KhachHang implements Serializable {
 //	@JsonIgnore
 //	@OneToMany(mappedBy = "maKhachHang", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //	private Set<UserRole> UserRole;
+
 
 }

@@ -20,15 +20,18 @@ import java.util.Set;
 @AllArgsConstructor
 
 @NoArgsConstructor
-public class KhachHangModel {
-	private int maKhachHang;
-	private String email;
-	private String hoTen;
+
+public class KhachHangModel{
+	private Long id;
+	private String username;
+	private String  email;
+	private String  hoTen;
 	@Pattern(regexp = "^0\\d{9}$")
-	private String sdt;
-	private String diaChi;
-	private Boolean gioiTinh;
-	private String hinhanhKH;
+	private String  sdt;
+	private String  diaChi;
+	private boolean gioiTinh;
+	private String  hinhanhKH;
+
 	@Length(min = 6)
 	private String passwd;
 	public int tongChiTieu;
