@@ -66,7 +66,7 @@ public class AccountController {
 		
 		KhachHang kh = khachhangRepository.findInfoByEmail(principal.getName()).get();
 		if (!photo.getOriginalFilename().equals("")) {
-			upload(photo,"D:/uploads/customers");
+			upload(photo,"/uploads/customers");
 			kh.setHinhanhKH(photo.getOriginalFilename());
 		}
 		kh.setHoTen(dto.getHoTen());
