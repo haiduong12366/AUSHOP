@@ -1,14 +1,11 @@
 package AUSHOP.services;
 
-import java.io.IOException;
-
-import javax.mail.MessagingException;
-
-
-
 import AUSHOP.Model.MailInfoModel;
 
-public interface ISendMailService {
+import javax.mail.MessagingException;
+import java.io.IOException;
+
+public interface SendMailService {
 
 	void run();
 

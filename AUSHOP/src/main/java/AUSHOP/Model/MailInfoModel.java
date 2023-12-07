@@ -1,6 +1,5 @@
 package AUSHOP.Model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ public class MailInfoModel {
 	String attachments;
 
 	public MailInfoModel(String to, String subject, String body) {
-		this.from = "AUSHOP Shop <>";
+		this.from = "AUSHOP <letanhuy19122003@gmail.com>";
 		this.to = to;
 		this.subject = subject;
 		this.body = body;
