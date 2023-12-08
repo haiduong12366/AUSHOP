@@ -40,7 +40,7 @@ public class ChiTietDonHang implements Serializable{
 	@JoinColumn(name = "maDH")
 	private DonHang maDH;
 	
-    @JsonIgnore
+    
 	@ManyToOne
 	@JoinColumn(name = "maSP")
 	private SanPham maSP;

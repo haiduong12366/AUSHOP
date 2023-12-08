@@ -66,11 +66,9 @@ public class AccountController {
 		
 		KhachHang kh = khachhangRepository.findByEmail(principal.getName()).get();
 		if (!photo.getOriginalFilename().equals("")) {
-<<<<<<< Updated upstream
+
 			upload(photo,"/uploads/customers");
-=======
-			upload(photo,"uploads/customers");
->>>>>>> Stashed changes
+
 			kh.setHinhanhKH(photo.getOriginalFilename());
 		}
 		kh.setHoTen(dto.getHoTen());
