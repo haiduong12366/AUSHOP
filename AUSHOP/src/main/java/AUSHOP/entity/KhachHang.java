@@ -1,34 +1,38 @@
 package AUSHOP.entity;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "KhachHang")
-public class KhachHang {
+
+public class KhachHang implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "maKhachHang")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Column(name = "username" , columnDefinition = "varchar(50)")
-	private String username;
-	@Email
-	private String email;
-	@Column(length = 60, columnDefinition = "nvarchar(50) not null")
-	private String hoTen;
+	private int maKhachHang;
+
+	@Column(name = "email" , columnDefinition = "varchar(50)")
+	private String  email;
+
+	@Column(name = "hoTen" , columnDefinition = "nvarchar(50)")
+	private String  hoTen;
+
 	@Column(name = "sdt" , columnDefinition = "varchar(10)")
 	private String  sdt;
 
@@ -36,40 +40,39 @@ public class KhachHang {
 	private String  diaChi;
 
 	@Column(columnDefinition = "bit")
-	private Boolean gioiTinh;
+	private boolean gioiTinh;
 
 	@Column(name = "hinhanhKH" , columnDefinition = "varchar(1000)")
 	private String  hinhanhKH;
-	@Column(name = "passwd" , columnDefinition = "varchar(32)")
+
+
+	@Column(name = "passwd" , columnDefinition = "varchar(1000)")
 	private String  passwd;
+
 	public int tongChiTieu;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
-	@Column(columnDefinition = "Datetime")
+	@Column(columnDefinition = "Date")
 	private Date ngayDangKy;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
-	@Column(columnDefinition = "Datetime")
-	private Date last_login;
-	private boolean enabled;
+//	@Temporal(TemporalType.TIMESTAMP)
+//    @DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
+//	@Column(columnDefinition = "Datetime")
+//    private Date last_login;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "maKhachHang", cascade = CascadeType.ALL)
-	private Set<DonHang> DonHang;
+	@Column(name = "is_admin" , columnDefinition = "bit")
+	private Boolean is_admin;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "maKhachHang", cascade = CascadeType.ALL)
-	private Set<DanhGia> DanhGia;
+//	@JsonIgnore
+//	@OneToMany(mappedBy = "maKhachHang", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//	private Set<DonHang> DonHang;
+//
+//	@JsonIgnore
+//	@OneToMany(mappedBy = "maKhachHang", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//	private Set<DanhGia> DanhGia;
+//
+//	@JsonIgnore
+//	@OneToMany(mappedBy = "maKhachHang", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//	private Set<UserRole> UserRole;
 
-
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(
-			name = "UserRole",
-			joinColumns = @JoinColumn(name = "maKhachHang"),
-			inverseJoinColumns = @JoinColumn(name = "roleId")
-	)
-	private Set<AppRole> UserRole = new HashSet<>();
 
 }

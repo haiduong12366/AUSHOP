@@ -10,9 +10,6 @@ import org.springframework.stereotype.Repository;
 import AUSHOP.entity.AppRole;
 
 @Repository
-public interface RoleRepository extends JpaRepository<AppRole, Long> {
+public interface RoleRepository extends JpaRepository<AppRole, Integer> {
 
-	@Query("SELECT u FROM AppRole u WHERE u.name = :name")
-	public AppRole getUserByName(@Param("name") String name);
-	Optional<AppRole> findByName(String name);
 }

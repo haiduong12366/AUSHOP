@@ -41,7 +41,7 @@ public class AccountController {
 	@RequestMapping("")
 	public ModelAndView thongtinadmin (ModelMap model,Principal principal) {
 	
-		KhachHang kh = khachhangRepository.findInfoByEmail(principal.getName()).get();
+		KhachHang kh = khachhangRepository.findByEmail(principal.getName()).get();
 		model.addAttribute("user", kh);
 		
 		return new ModelAndView("/admin/thongtin",model);
@@ -50,7 +50,7 @@ public class AccountController {
 	@GetMapping("/edit")
 	public ModelAndView getEdit(ModelMap model, Principal principal) {
 		
-		model.addAttribute("info", khachhangRepository.findInfoByEmail(principal.getName()).get());
+		model.addAttribute("info", khachhangRepository.findByEmail(principal.getName()).get());
 		
 		return new ModelAndView("/admin/edit",model);
 	}
@@ -64,7 +64,7 @@ public class AccountController {
 			//return new ModelAndView("/admin/", model);
 		}
 		
-		KhachHang kh = khachhangRepository.findInfoByEmail(principal.getName()).get();
+		KhachHang kh = khachhangRepository.findByEmail(principal.getName()).get();
 		if (!photo.getOriginalFilename().equals("")) {
 <<<<<<< Updated upstream
 			upload(photo,"/uploads/customers");

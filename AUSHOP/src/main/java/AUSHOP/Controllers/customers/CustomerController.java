@@ -57,19 +57,15 @@ public class CustomerController {
 	@RequestMapping("/khachhang/thongtin")
 	public ModelAndView thongtin (ModelMap model, Principal principal) {
 		
-		Optional<KhachHang> kh = khachhangRepository.findInfoByEmail(principal.getName());
+		Optional<KhachHang> kh = khachhangRepository.findByEmail(principal.getName());
 		model.addAttribute("user", kh.get());
 		
-		Page<DonHang> list0 = donhangRepository.findByMaKhachHang(kh.get().getId(), 0, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
+		Page<DonHang> list0 = donhangRepository.findByMaKhachHang(kh.get().getMaKhachHang(), 0, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
 		model.addAttribute("orders0", list0);
 		
-<<<<<<< Updated upstream
-		Page<DonHang> list1 = donhangRepository.findByMaKhachHang(kh.get().getId(), 1, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
-		model.addAttribute("oders1", list1);
-=======
 		Page<DonHang> list1 = donhangRepository.findByMaKhachHang(kh.get().getMaKhachHang(), 1, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
 		model.addAttribute("orders1", list1);
->>>>>>> Stashed changes
+
 		
 		Page<DonHang> list2 = donhangRepository.findByMaKhachHang(kh.get().getMaKhachHang(), 2, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
 		model.addAttribute("orders2", list2);

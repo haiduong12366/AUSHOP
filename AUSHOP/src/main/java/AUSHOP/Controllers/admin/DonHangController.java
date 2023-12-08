@@ -22,7 +22,7 @@ import AUSHOP.entity.SanPham;
 import AUSHOP.repository.ChiTietDonHangRepository;
 import AUSHOP.repository.DonHangRepository;
 import AUSHOP.repository.SanPhamRepository;
-import AUSHOP.services.ISendMailService;
+import AUSHOP.services.SendMailService;
 
 @Controller
 @RequestMapping("/admin/donhang")
@@ -38,7 +38,7 @@ public class DonHangController {
 	ChiTietDonHangRepository chitietdonhangRepository;
 
 	@Autowired
-	ISendMailService sendmailService;
+	SendMailService sendmailService;
 
 	@RequestMapping("")
 	public ModelAndView donhang(ModelMap model) {
