@@ -72,7 +72,131 @@
 					</tbody>
 				</table>
 			</div>
-
+			
+			<script>
+				function showConfigModalDialog(id) {
+					$('#id').text(id);
+					$('#yesOption').attr('href', '/khachhang/huy/' + id);
+					$('#configmationId').modal('show');
+				}
+			</script>
+			
+			<!-- Modal -->
+			<div class="modal" tabindex="-1" role="dialog" id="configmationId">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Xác nhận</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p>
+								Bạn có muốn huỷ đơn hàng có mã "<span id="id"></span>" ?
+							</p>
+						</div>
+						<div class="modal-footer">
+							<a id="yesOption" type="button" class="btn btn-danger">Có</a>
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">Không</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-12 mt-5">
+				<h5 style="text-decoration-line: underline;">Danh sách đơn hàng
+					chờ thanh toán:</h5>
+				<h5 class="text-center" th:if="${orders1.totalElements==0}"
+					style="font-size: 18px;">Bạn chưa có đơn hàng nào chờ thanh
+					toán!</h5>
+				<table class="table table-bordered"
+					th:unless="${orders1.totalElements==0}">
+					<thead>
+						<tr class="text-center">
+							<th>STT</th>
+							<th>Mã hoá đơn</th>
+							<th>Tổng tiền</th>
+							<th>Ngày mua</th>
+							<th>Chi tiết</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-center" th:each="item, count : ${orders1}">
+							<th th:text="${count.index + 1}"></th>
+							<th th:text="${item.maDH}"></th>
+							<th
+								th:text="${#numbers.formatDecimal(item.tongTien, 1, 'DEFAULT', 0, 'DEFAULT')}+' VNĐ'"></th>
+							<th th:text="${#dates.format(item.ngayDatHang, 'dd-MM-yyyy')}"></th>
+							<th><a th:href="@{'/khachhang/chitiet/'+${item.maDH}}"><span
+									class="fa fa-info-circle">Chi tiết</span></a>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="col-12 mt-5 mb-5">
+				<h5 style="text-decoration-line: underline;">Danh sách đơn hàng đã mua:</h5>
+				<h5 class="text-center" th:if="${orders2.totalElements==0}"
+					style="font-size: 18px;">Bạn chưa thanh toán đơn hàng nào!</h5>
+				<table class="table table-bordered"
+					th:unless="${orders2.totalElements==0}">
+					<thead>
+						<tr class="text-center">
+							<th>STT</th>
+							<th>Mã hoá đơn</th>
+							<th>Tổng tiền</th>
+							<th>Ngày mua</th>
+							<th>Chi tiết</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-center" th:each="item, count : ${orders2}"
+							th:if="${item.tinhTrang!=0}">
+							<th th:text="${count.index + 1}"></th>
+							<th th:text="${item.maDH}"></th>
+							<th
+								th:text="${#numbers.formatDecimal(item.tongTien, 1, 'DEFAULT', 0, 'DEFAULT')}+' VNĐ'"></th>
+							<th th:text="${#dates.format(item.ngayDatHang, 'dd-MM-yyyy')}"></th>
+							<th><a th:href="@{'/khachhang/chitiet/'+${item.maDH}}"><span
+									class="fa fa-info-circle">Chi tiết</span></a></th>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="col-12 mt-5 mb-5">
+				<h5 style="text-decoration-line: underline;">Danh sách đơn hàng đã huỷ:</h5>
+				<h5 class="text-center" th:if="${orders3.totalElements==0}"
+					style="font-size: 18px;">Bạn không có đơn hàng bị huỷ!</h5>
+				<table class="table table-bordered"
+					th:unless="${orders3.totalElements==0}">
+					<thead>
+						<tr class="text-center">
+							<th>STT</th>
+							<th>Mã hoá đơn</th>
+							<th>Tổng tiền</th>
+							<th>Ngày mua</th>
+							<th>Chi tiết</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-center" th:each="item, count : ${orders3}"
+							th:if="${item.tinhTrang!=0}">
+							<th th:text="${count.index + 1}"></th>
+							<th th:text="${item.maDH}"></th>
+							<th
+								th:text="${#numbers.formatDecimal(item.tongTien, 1, 'DEFAULT', 0, 'DEFAULT')}+' VNĐ'"></th>
+							<th th:text="${#dates.format(item.ngayDatHang, 'dd-MM-yyyy')}"></th>
+							<th><a th:href="@{'/khachhang/chitiet/'+${item.maDH}}"><span
+									class="fa fa-info-circle">Chi tiết</span></a></th>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
 		</div>
 	</div>
 </body>
