@@ -1,10 +1,303 @@
 package AUSHOP.Controllers;
 
+import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import AUSHOP.entity.KhachHang;
+import AUSHOP.entity.LoaiSanPham;
+import AUSHOP.entity.SanPham;
+import AUSHOP.entity.UserRole;
+import AUSHOP.repository.KhachHangRepository;
+import AUSHOP.repository.LoaiSanPhamRepository;
+import AUSHOP.repository.SanPhamRepository;
+import AUSHOP.repository.UserRoleRepository;
+import AUSHOP.services.ShoppingCartService;
+
+
+
 
 @Controller
 public class HomeController {
-	public String name() {
-		return "index";
+	@Autowired
+	SanPhamRepository productRepository;
+
+	@Autowired
+	LoaiSanPhamRepository categoryRepository;
+
+	@Autowired
+	ShoppingCartService shoppingCartService;
+
+	@Autowired
+	KhachHangRepository customerRepository;
+
+	@Autowired
+	UserRoleRepository userRoleRepository;
+
+	@RequestMapping(value = {"/shop"})
+	public ModelAndView shop(ModelMap model, Principal principal) {
+		boolean isLogin = false;
+		if (principal != null) {
+			isLogin = true;
+		}
+		model.addAttribute("isLogin", isLogin);
+
+		if(principal!=null) {
+			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(c.get().getMaKhachHang()));
+			if(uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
+				return new ModelAndView("forward:/admin/customers", model);
+			}
+		}
+
+		Page<SanPham> listP = productRepository.findAll(PageRequest.of(0, 6));
+
+		int totalPage = listP.getTotalPages();
+		if (totalPage > 0) {
+			int start = 1;
+			int end = Math.min(2, totalPage);
+			List<Integer> pageNumbers = IntStream.rangeClosed(start, end).boxed().collect(Collectors.toList());
+			model.addAttribute("pageNumbers", pageNumbers);
+		}
+		model.addAttribute("totalCartItems", shoppingCartService.getCount());
+		List<LoaiSanPham> listC = categoryRepository.findAll();
+		model.addAttribute("categories", listC);
+		model.addAttribute("products", listP);
+		model.addAttribute("slide", true);
+		return new ModelAndView("/site/index", model);
+	}
+	@RequestMapping("/shop/item/{id}")
+	public ModelAndView item(ModelMap model, @PathVariable("id") int id,
+							 Principal principal) {
+
+		boolean isLogin = false;
+		if (principal != null) {
+			System.out.println(principal.getName());
+			isLogin = true;
+		}
+		model.addAttribute("isLogin", isLogin);
+
+		if (principal != null) {
+			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(c.get().getMaKhachHang()));
+			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
+				return new ModelAndView("forward:/admin/customers", model);
+			}
+		}
+
+		Optional<SanPham> p = productRepository.findById(id);
+		String cateName = productRepository.getTenLoaiSP(id);
+		String supName = productRepository.getTenNhaCC(id);
+
+		// random item product
+//		Long quantity = productRepository.count();
+//		int index = (int) (Math.random() * (quantity / 6));
+//		if (index > quantity - 6) {
+//			index -= 6;
+//		}
+		//Page<SanPham> productSuggest = productRepository.findAll(PageRequest.of(index, 6));
+		Page<SanPham> productSameCate = productRepository.ListSanPhamCungLoai(id, PageRequest.of(0, 6));
+		Page<SanPham> productSameSup = productRepository.ListSanPhamCungNhaCC(id, PageRequest.of(0, 6));
+		if (p.isPresent()) {
+			model.addAttribute("product", p.get());
+			model.addAttribute("cateName", cateName);
+			model.addAttribute("supName", supName);
+			model.addAttribute("productSameCate", productSameCate);
+			model.addAttribute("productSameSup", productSameSup);
+			List<LoaiSanPham> listC = categoryRepository.findAll();
+			model.addAttribute("categories", listC);
+			model.addAttribute("totalCartItems", shoppingCartService.getCount());
+			return new ModelAndView("/site/item", model);
+		} else {
+			model.addAttribute("message", "Sản phẩm đã bị xoá !");
+		}
+		model.addAttribute("totalCartItems", shoppingCartService.getCount());
+		return new ModelAndView("forward:/shop", model);
+	}
+	@RequestMapping("/shop/brand/{id}")
+	public ModelAndView brand(ModelMap model, @PathVariable("id") int categoryId, Principal principal) {
+		boolean isLogin = false;
+		if (principal != null) {
+			System.out.println(principal.getName());
+			isLogin = true;
+		}
+		model.addAttribute("isLogin", isLogin);
+
+		if (principal != null) {
+			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(c.get().getMaKhachHang()));
+			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
+				return new ModelAndView("forward:/admin/customers", model);
+			}
+		}
+
+		Page<SanPham> listP = productRepository.findAllProductByCategoryId(categoryId, PageRequest.of(0, 6));
+
+		System.out.println(listP.getTotalElements());
+		int totalPage = listP.getTotalPages();
+		if (totalPage > 0) {
+			int start = 1;
+			int end = Math.min(2, totalPage);
+			List<Integer> pageNumbers = IntStream.rangeClosed(start, end).boxed().collect(Collectors.toList());
+			model.addAttribute("pageNumbers", pageNumbers);
+		}
+		model.addAttribute("totalCartItems", shoppingCartService.getCount());
+		List<LoaiSanPham> listC = categoryRepository.findAll();
+		model.addAttribute("categories", listC);
+		model.addAttribute("brand", categoryId);
+		model.addAttribute("products", listP);
+		model.addAttribute("slide", true);
+		return new ModelAndView("/site/index", model);
+	}
+
+	@RequestMapping("/shop/page")
+	public ModelAndView page(ModelMap model, @RequestParam("page") Optional<Integer> page,
+							 @RequestParam("name") String name, @RequestParam("filter") Optional<Integer> filter,
+							 @RequestParam("brand") int brand, Principal principal) {
+
+		boolean isLogin = false;
+		if (principal != null) {
+			System.out.println(principal.getName());
+			isLogin = true;
+		}
+		model.addAttribute("isLogin", isLogin);
+
+		if (principal != null) {
+			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(c.get().getMaKhachHang()));
+			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
+				return new ModelAndView("forward:/admin/customers", model);
+			}
+		}
+
+		int currentPage = page.orElse(0);
+		int filterPage = filter.orElse(0);
+
+		Pageable pageable = PageRequest.of(currentPage, 6);
+
+		if (brand != -1) {
+			if (filterPage == 0) {
+				pageable = PageRequest.of(currentPage, 6);
+			} else if (filterPage == 1) {
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "ngaynhaphang"));
+			} else if (filterPage == 2) {
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
+			} else if (filterPage == 3) {
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "don_gia"));
+			} else if (filterPage == 4) {
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "don_gia"));
+			}
+		} else {
+			if (filterPage == 0) {
+				pageable = PageRequest.of(currentPage, 6);
+			} else if (filterPage == 1) {
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "ngaynhaphang"));
+			} else if (filterPage == 2) {
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
+			} else if (filterPage == 3) {
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "don_gia"));
+			} else if (filterPage == 4) {
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "don_gia"));
+			}
+		}
+
+		Page<SanPham> listP = null;
+		if (brand == -1) {
+			listP = productRepository.findBytenSPContaining(name, pageable);
+		} else {
+			listP = productRepository.findAllProductByCategoryId(brand, pageable);
+		}
+
+		int totalPage = listP.getTotalPages();
+		if (totalPage > 0) {
+			int start = Math.max(1, currentPage - 2);
+			int end = Math.min(currentPage + 2, totalPage);
+			if (totalPage > 5) {
+				if (end == totalPage) {
+					start = end - 5;
+				} else if (start == 1) {
+					end = start + 5;
+				}
+			}
+			List<Integer> pageNumbers = IntStream.rangeClosed(start, end).boxed().collect(Collectors.toList());
+			model.addAttribute("pageNumbers", pageNumbers);
+		}
+
+		model.addAttribute("totalCartItems", shoppingCartService.getCount());
+		List<LoaiSanPham> listC = categoryRepository.findAll();
+		model.addAttribute("categories", listC);
+		model.addAttribute("brand", brand);
+		model.addAttribute("filter", filterPage);
+		model.addAttribute("name", name);
+		model.addAttribute("products", listP);
+		model.addAttribute("slide", true);
+		return new ModelAndView("/site/index", model);
+	}
+
+	@RequestMapping("/shop/search")
+	public ModelAndView search(ModelMap model, @RequestParam("name") String name,
+							   @RequestParam("filter") Optional<Integer> filter, Principal principal) {
+
+		boolean isLogin = false;
+		if (principal != null) {
+			System.out.println(principal.getName());
+			isLogin = true;
+		}
+		model.addAttribute("isLogin", isLogin);
+
+		if (principal != null) {
+			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(c.get().getMaKhachHang()));
+			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
+				return new ModelAndView("forward:/admin/customers", model);
+			}
+		}
+
+		int filterPage = filter.orElse(0);
+		Pageable pageable = PageRequest.of(0, 6);
+
+		if (filterPage == 0) {
+			pageable = PageRequest.of(0, 6);
+		} else if (filterPage == 1) {
+			pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "ngaynhaphang"));
+		} else if (filterPage == 2) {
+			pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
+		} else if (filterPage == 3) {
+			pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "don_gia"));
+		} else if (filterPage == 4) {
+			pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.ASC, "don_gia"));
+		}
+		Page<SanPham> listP = productRepository.findBytenSPContaining(name, pageable);
+
+		int totalPage = listP.getTotalPages();
+		if (totalPage > 0) {
+			int start = 1;
+			int end = Math.min(2, totalPage);
+			List<Integer> pageNumbers = IntStream.rangeClosed(start, end).boxed().collect(Collectors.toList());
+			model.addAttribute("pageNumbers", pageNumbers);
+		}
+		model.addAttribute("totalCartItems", shoppingCartService.getCount());
+
+		model.addAttribute("name", name);
+		List<LoaiSanPham> listC = categoryRepository.findAll();
+		model.addAttribute("categories", listC);
+		model.addAttribute("filter", filterPage);
+		model.addAttribute("products", listP);
+		model.addAttribute("slide", true);
+		return new ModelAndView("/site/index", model);
 	}
 }
