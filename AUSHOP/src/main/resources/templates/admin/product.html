@@ -39,9 +39,9 @@
 			</div>
 		</div>
 		<div style="display: flex">
-			<label class="mt-4 pt-1" style="max-width: 10%" th:unless="${products.totalElements==0}">Nhà cung cấp:</label>
+			<label class="mt-4 pt-1" style="max-width: 10%" >Nhà cung cấp:</label>
 			<form class="col-2 mt-4" th:action="@{/admin/products/page}"
-				method="get" th:unless="${products.totalElements==0}">
+				method="get" >
 				<input hidden="hidden" name="tenSP" th:value="${tenSP}" /> <input
 					hidden="hidden" name="page" th:value="0" /> <input
 					hidden="hidden" name="size" th:value="${products.size}" /> 
@@ -56,9 +56,9 @@
 						th:selected="${brand==item.maNhaCC}">[[${item.tenNhaCC}]]</option>
 				</select>
 			</form>
-			<label class="mt-4 pt-1" style="max-width: 10%" th:unless="${products.totalElements==0}">Loại sản phẩm:</label>
+			<label class="mt-4 pt-1" style="max-width: 10%" >Loại sản phẩm:</label>
 			<form class="col-2 mt-4" th:action="@{/admin/products/page}"
-				method="get" th:unless="${products.totalElements==0}">
+				method="get" >
 				<input hidden="hidden" name="tenSP" th:value="${tenSP}" />
 				<input hidden="hidden" name="brand" th:value="${brand}" /> <input
 					hidden="hidden" name="page" th:value="0" /> <input
@@ -73,7 +73,7 @@
 				</select>
 			</form>
 			<form class="col-2 mt-4" th:action="@{/admin/products/page}"
-				method="get" th:unless="${products.totalElements==0}">
+				method="get" >
 				<input hidden="hidden" name="brand" th:value="${brand}" />
 				<input hidden="hidden" name="type" th:value="${type}" /> <input
 					hidden="hidden" name="tenSP" th:value="${tenSP}" /> <input
