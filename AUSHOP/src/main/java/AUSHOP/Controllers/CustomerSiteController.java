@@ -77,7 +77,7 @@ public class CustomerSiteController {
 
 	@PostMapping("/register")
 	public String register(ModelMap model, @Valid @ModelAttribute("KhachHang") KhachHangModel dto, BindingResult result,
-			@RequestParam("passwd") String passwd) {
+						   @RequestParam("passwd") String passwd) {
 		if (result.hasErrors()) {
 			return "/site/register";
 		}
@@ -100,7 +100,7 @@ public class CustomerSiteController {
 
 	@PostMapping("/confirmOtpRegister")
 	public ModelAndView confirmRegister(ModelMap model, @ModelAttribute("KhachHang") KhachHangModel dto,
-			@RequestParam("passwd") String passwd, @RequestParam("otp") String otp) {
+										@RequestParam("passwd") String passwd, @RequestParam("otp") String otp) {
 		if (otp.equals(String.valueOf(session.getAttribute("otp")))) {
 			dto.setPasswd(bCryptPasswordEncoder.encode(passwd));
 			KhachHang kh = new KhachHang();
@@ -165,9 +165,9 @@ public class CustomerSiteController {
 
 	@PostMapping("/changePassword")
 	public ModelAndView changeForm(ModelMap model,
-			@Valid @ModelAttribute("changePassword") ChangePasswordModel changePassword, BindingResult result,
-			@RequestParam("email") String email, @RequestParam("newPasswd") String newPasswd,
-			@RequestParam("confirmPasswd") String confirmPasswd) {
+								   @Valid @ModelAttribute("changePassword") ChangePasswordModel changePassword, BindingResult result,
+								   @RequestParam("email") String email, @RequestParam("newPasswd") String newPasswd,
+								   @RequestParam("confirmPasswd") String confirmPasswd) {
 		if (result.hasErrors()) {
 
 			model.addAttribute("newPasswd", newPasswd);
@@ -221,7 +221,7 @@ public class CustomerSiteController {
 
 	@PostMapping("/KhachHang/editProfile")
 	public ModelAndView edit(ModelMap model, @Valid @ModelAttribute("KhachHang") KhachHangModel dto,
-			BindingResult result, @RequestParam("photo") MultipartFile photo, Principal principal) throws IOException {
+							 BindingResult result, @RequestParam("photo") MultipartFile photo, Principal principal) throws IOException {
 		/*
 		 * if (result.hasErrors()) { model.addAttribute("totalCartItems",
 		 * shoppingCartService.getCount()); return new ModelAndView("/site/editProfile",
@@ -346,23 +346,23 @@ public class CustomerSiteController {
 	 * OrderDetail(); od.setQuantity(i.getQuantity());
 	 * od.setUnitPrice(i.getPrice()); od.setProduct(p); od.setOrder(o);
 	 * orderDetailRepository.save(od); } }
-	 * 
+	 *
 	 * sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ KeyBoard Shop!",
 	 * "Chúng tôi sẽ sớm giao hàng cho bạn!", "Thông báo đặt hàng thành công!");
-	 * 
+	 *
 	 * shoppingCartService.clear(); return new
 	 * ModelAndView("forward:/customer/info"); }
-	 * 
+	 *
 	 * @RequestMapping("/customer/cancel/{id}") public ModelAndView cancel(ModelMap
 	 * model, @PathVariable("id") int id, Principal principal) { Optional<Order> o =
 	 * orderRepository.findById(id); if (o.isEmpty()) { return new
 	 * ModelAndView("forward:/customer/info"); } Order oReal = o.get();
 	 * oReal.setStatus((short) 3); orderRepository.save(oReal);
-	 * 
+	 *
 	 * sendMailAction(oReal, "Bạn đã huỷ 1 đơn hàng từ KeyBoard Shop!",
 	 * "Chúng tôi rất tiếc vì không làm hài lòng bạn!",
 	 * "Thông báo huỷ đơn hàng thành công!");
-	 * 
+	 *
 	 * return new ModelAndView("forward:/customer/info"); }
 	 */
 
@@ -429,7 +429,7 @@ public class CustomerSiteController {
 	 * public void sendMailAction(Order oReal, String status, String cmt, String
 	 * notifycation) { List<OrderDetail> list =
 	 * orderDetailRepository.findByOrderId(oReal.getOrderId());
-	 * 
+	 *
 	 * StringBuilder stringBuilder = new StringBuilder(); int index = 0;
 	 * stringBuilder.append("<h3>Xin chào " + oReal.getCustomer().getName() +
 	 * "!</h3>\r\n" + "    <h4>" + status + "</h4>\r\n" +
@@ -450,7 +450,7 @@ public class CustomerSiteController {
 	 * stringBuilder.append("\r\n" + "    </table>\r\n" + "    <h3>Tổng tiền: " +
 	 * format(String.valueOf(oReal.getAmount())) + "</h3>\r\n" + "    <hr>\r\n" +
 	 * "    <h5>" + cmt + "</h5>\r\n" + "    <h5>Chúc bạn 1 ngày tốt lành!</h5>");
-	 * 
+	 *
 	 * sendMailService.queue(oReal.getCustomer().getEmail().trim(), notifycation,
 	 * stringBuilder.toString()); }
 	 */

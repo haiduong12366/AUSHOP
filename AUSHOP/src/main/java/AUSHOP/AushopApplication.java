@@ -11,5 +11,4 @@ public class AushopApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AushopApplication.class, args);
 	}
-
 }
