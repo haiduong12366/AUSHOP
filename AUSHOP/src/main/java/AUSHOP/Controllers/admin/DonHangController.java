@@ -1,6 +1,8 @@
 package AUSHOP.Controllers.admin;
 
+import java.security.Principal;
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,11 +21,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import AUSHOP.entity.ChiTietDonHang;
 import AUSHOP.entity.DonHang;
+import AUSHOP.entity.HoaDonItem;
+import AUSHOP.entity.NhaCungCap;
 import AUSHOP.entity.SanPham;
 import AUSHOP.repository.ChiTietDonHangRepository;
 import AUSHOP.repository.DonHangRepository;
 import AUSHOP.repository.SanPhamRepository;
+import AUSHOP.services.HoaDonServiceImpl;
 import AUSHOP.services.SendMailService;
+
 
 @Controller
 @RequestMapping("/admin/donhang")
@@ -39,6 +46,9 @@ public class DonHangController {
 
 	@Autowired
 	SendMailService sendmailService;
+	
+	@Autowired
+	HoaDonServiceImpl hoadonService;
 
 	@RequestMapping("")
 	public ModelAndView donhang(ModelMap model) {
@@ -217,4 +227,67 @@ public class DonHangController {
 		
 		return new ModelAndView("forward:/admin/donhang", model);
 	}
+	
+	@RequestMapping("/chinhsua/{order-id}")
+	public ModelAndView chinhsua(ModelMap model, @PathVariable("order-id") int id) {
+	       
+	    List<ChiTietDonHang> listO = chitietdonhangRepository.findByMaDH(id);
+
+		model.addAttribute("amount", donhangRepository.findById(id).get().getTongTien());
+		model.addAttribute("orderDetail", listO);
+		model.addAttribute("orderId", id);
+	    return new ModelAndView("/admin/chinhsua_donhang", model); 
+		
+//		Collection<HoaDonItem> hoadon = hoadonService.getHoaDonItems();
+//		model.addAttribute("hoadonItems", hoadon);
+//		
+//		double amount = hoadonService.getAmount();
+//		model.addAttribute("amount", amount);
+//		
+//		model.addAttribute("total", hoadonService.getCount());
+//		
+//		return new ModelAndView("/admin/chinhsua_donhang", model); 
+	}
+
+	@RequestMapping("/chinhsua/xoa/{order-id}")
+	public ModelAndView xoa(@PathVariable("order-id") Integer id, ModelMap model, Principal principal) {
+//		Optional<ChiTietDonHang> opt = chitietdonhangRepository.findById(id);
+//		if (opt.isPresent()) {
+//
+//			chitietdonhangRepository.delete(opt.get());
+//			model.addAttribute("message", "Xoá thành công!");
+//
+//		} else {
+//			model.addAttribute("error", "Sản phẩm này không tồn tại!");
+//		}
+		
+		// Check if the ChiTietDonHang with the given id exists
+	    Optional<ChiTietDonHang> opt = chitietdonhangRepository.findById(id);
+	    
+	    if (opt.isPresent()) {
+	        // Perform the deletion using the custom query
+	        chitietdonhangRepository.deleteByMaCTTDH(id);
+	        model.addAttribute("message", "Xoá thành công!");
+	    } else {
+	        model.addAttribute("error", "Sản phẩm này không tồn tại!");
+	    }
+
+	    // Redirect to the appropriate page after deletion
+	    return new ModelAndView("forward:/admin/donhang/chinhsua", model);
+
+
+		
+//		hoadonService.remove(id);
+//		model.addAttribute("total", hoadonService.getCount());
+//		return new ModelAndView("forward:/admin/chinhsua", model);
+	}
+
+	@RequestMapping("/chinhsua/capnhat")
+	public ModelAndView capnhat (@RequestParam("id") Integer id, @RequestParam("quantity") int quantity, ModelMap model, Principal principal) {
+		
+		hoadonService.update(id, quantity);
+		model.addAttribute("total", hoadonService.getCount());
+		return new ModelAndView("forward:/admin/donhang/chinhsua",model);
+	}
+	
 }

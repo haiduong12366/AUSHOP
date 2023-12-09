@@ -60,7 +60,7 @@ public class SendMailServiceImpl implements SendMailService {
 	@Override
 	@Scheduled(fixedDelay = 5000)
 	public void run() {
-		System.out.println("tới run r");
+		//System.out.println("tới run r");
 		while (!list.isEmpty()) {
 			System.out.println("chuẩn bị send và remove add");
 			MailInfoModel mail = list.remove(0);
