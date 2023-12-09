@@ -31,7 +31,7 @@ public class LoadImageController {
 		}
 		return ResponseEntity.badRequest().build();
 	}
-	
+
 	@RequestMapping(value = "getcustomer/{photo}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<ByteArrayResource> getCustomer(@PathVariable("photo") String photo) {
