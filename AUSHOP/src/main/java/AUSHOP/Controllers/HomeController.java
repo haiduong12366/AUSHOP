@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,9 +31,10 @@ import AUSHOP.services.ShoppingCartService;
 
 
 
-
 @Controller
 public class HomeController {
+
+
 	@Autowired
 	SanPhamRepository productRepository;
 
@@ -299,5 +301,6 @@ public class HomeController {
 		model.addAttribute("products", listP);
 		model.addAttribute("slide", true);
 		return new ModelAndView("/site/index", model);
+
 	}
 }

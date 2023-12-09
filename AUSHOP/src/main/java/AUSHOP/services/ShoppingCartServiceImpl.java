@@ -12,6 +12,7 @@ import AUSHOP.Model.CartItem;
 
 
 
+
 @Service
 @SessionScope
 public class ShoppingCartServiceImpl implements ShoppingCartService{
@@ -69,5 +70,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
         }
         return map.values().size();
     }
+
 
 }
