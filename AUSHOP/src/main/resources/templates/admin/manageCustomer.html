@@ -14,7 +14,7 @@
 				<form th:action="@{/admin/customers/search}" class="input-group">
 					<input hidden="hidden" name="size" th:value="${customers.size}" />
 					<input type="text" class="form-control"
-						placeholder="Tên khách hàng" name="hoTen" th:value="${hoTen}"
+						placeholder="Tên khách hàng" name="name" th:value="${name}"
 						aria-label="Recipient's username" aria-describedby="basic-addon2">
 					<div class="input-group-append">
 						<button style="font-size: 13px;" class="btn btn-outline-secondary">
@@ -39,7 +39,7 @@
 		</div>
 		<form class="col-2 mt-4" th:action="@{/admin/customers/search}"
 			th:unless="${customers.totalElements==0}">
-			<input hidden="hidden" name="hoTen" th:value="${hoTen}" /> <input
+			<input hidden="hidden" name="name" th:value="${hoTen}" /> <input
 				hidden="hidden" name="page" th:value="${customers.number}" /> <input
 				hidden="hidden" name="size" th:value="${customers.size}" /> <select
 				class="custom-select" onchange="this.form.submit()" name="filter"
@@ -125,23 +125,23 @@
 			th:unless="${customers.totalElements==0}">
 			<ul class="pagination float-right ml-4">
 				<li class="page-item"><a
-					th:href="@{'/admin/customers/page?page=0&name='+${name}+'&size='+${customers.size}+'&filter='+${filter==null?0:filter}}"
+					th:href="@{'/admin/customers/page?page=0&name='+${hoTen}+'&size='+${customers.size}+'&filter='+${filter==null?0:filter}}"
 					class="page-link"><i class="fa fa-step-backward"></i></a></li>
 				<li class="page-item"><a
-					th:href="@{'/admin/customers/page?page='+${(customers.number-1<0)?0:customers.number-1}+'&name='+${name}+'&size='+${customers.size}+'&filter='+${filter==null?0:filter}}"
+					th:href="@{'/admin/customers/page?page='+${(customers.number-1<0)?0:customers.number-1}+'&name='+${hoTen}+'&size='+${customers.size}+'&filter='+${filter==null?0:filter}}"
 					class="page-link"><i class="fa fa-chevron-left"></i></a></li>
 				<li class="page-item"><a
-					th:href="@{'/admin/customers/page?page='+${(customers.number+1>customers.totalPages-1)?customers.totalPages-1:customers.number+1}+'&name='+${name}+'&size='+${customers.size}+'&filter='+${filter==null?0:filter}}"
+					th:href="@{'/admin/customers/page?page='+${(customers.number+1>customers.totalPages-1)?customers.totalPages-1:customers.number+1}+'&name='+${hoTen}+'&size='+${customers.size}+'&filter='+${filter==null?0:filter}}"
 					class="page-link"><i class="fa fa-chevron-right"></i></a></li>
 				<li class="page-item"><a
-					th:href="@{'/admin/customers/page?page='+${customers.totalPages-1}+'&name='+${name}+'&size='+${customers.size}+'&filter='+${filter==null?0:filter}}"
+					th:href="@{'/admin/customers/page?page='+${customers.totalPages-1}+'&name='+${hoTen}+'&size='+${customers.size}+'&filter='+${filter==null?0:filter}}"
 					class="page-link"><i class="fa fa-step-forward"></i></a></li>
 			</ul>
 
 			<form th:action="@{/admin/customers/page}" class="float-right p-2"
 				style="font-weight: 350;">
 				<input hidden="hidden" name="filter" th:value="${filter}" /> <input
-					hidden="hidden" name="name" th:value="${name}" /> 
+					hidden="hidden" name="name" th:value="${hoTen}" /> 
 <!-- 					<input hidden="hidden" name="page" th:value="${customers.number}" /> -->
 				<div class="form-inline">
 					<label>Hiển thị: </label> <select name="size"

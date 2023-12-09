@@ -2,6 +2,7 @@ package AUSHOP.Model;
 
 import java.util.Date;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -30,6 +31,9 @@ public class SanPhamModel {
 	@NotNull
 	@Min(value = 10000)
 	private double donGia;
+	@NotNull
+	@Min(value = 0)
+	@Max(value = 1)
 	private double discount;
 		
 	@NotNull

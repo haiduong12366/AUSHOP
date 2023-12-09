@@ -14,9 +14,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import AUSHOP.Model.KhachHangModel;
 import AUSHOP.entity.AppRole;
+import AUSHOP.entity.ChiTietDonHang;
+import AUSHOP.entity.DonHang;
 import AUSHOP.entity.KhachHang;
+import AUSHOP.entity.ThanhToan;
+import AUSHOP.entity.UserRole;
+import AUSHOP.repository.ChiTietDonHangRepository;
+import AUSHOP.repository.DonHangRepository;
 import AUSHOP.repository.KhachHangRepository;
 import AUSHOP.repository.RoleRepository;
+import AUSHOP.repository.ThanhToanRepository;
+import AUSHOP.repository.UserRoleRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,8 +54,17 @@ public class KhachHangController {
 	KhachHangRepository khachHangRepository;
 
 	@Autowired
+	UserRoleRepository userRoleRepository;
+
+	@Autowired
 	RoleRepository appRoleRepository;
-	
+
+	@Autowired
+	DonHangRepository donHangRepository;
+
+	@Autowired
+	ChiTietDonHangRepository chiTietDonHangRepository;
+
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -73,12 +90,12 @@ public class KhachHangController {
 	}
 
 	@PostMapping("/add")
-	public ModelAndView addd(ModelMap model, @Valid @ModelAttribute("customer") KhachHangModel dto, BindingResult result,
-			@RequestParam("hinhanhKH") String image, @RequestParam("photo") MultipartFile photo,
+	public ModelAndView addd(ModelMap model, @Valid @ModelAttribute("customer") KhachHangModel dto,
+			BindingResult result, @RequestParam("hinhanhKH") String image, @RequestParam("photo") MultipartFile photo,
 			@RequestParam("passwd") String passwd) throws IOException {
 		dto.setPasswd(bCryptPasswordEncoder.encode(passwd));
-		if(dto.isEdit()) {
-			if(passwd.equals(khachHangRepository.findById(dto.getMaKhachHang()).get().getPasswd())) {
+		if (dto.isEdit()) {
+			if (passwd.equals(khachHangRepository.findById(dto.getMaKhachHang()).get().getPasswd())) {
 				System.out.println("trung   ajaja");
 				dto.setPasswd(passwd);
 			}
@@ -120,8 +137,7 @@ public class KhachHangController {
 		}
 
 		khachHangRepository.save(c);
-		
-		
+
 		if (dto.isEdit()) {
 			model.addAttribute("message", "Sửa thành công !");
 
@@ -160,10 +176,21 @@ public class KhachHangController {
 
 		Optional<KhachHang> opt = khachHangRepository.findById(id);
 		if (opt.isPresent()) {
-//			customerRepository.deleteById(id);
-//			customerRepository.SetStatus(id);
 			KhachHang c = opt.get();
-			khachHangRepository.save(c);
+			Optional<UserRole> opt1 = userRoleRepository.findByMaKhachHang(c.getMaKhachHang());
+			Optional<DonHang> opt2 = donHangRepository.findByMaKhachHang(c.getMaKhachHang());
+			if (opt2.isPresent()) {
+				List<ChiTietDonHang> opt3 = chiTietDonHangRepository.findByMaDH(opt2.get().getMaDH());
+
+				for (ChiTietDonHang chiTietDonHang : opt3) {
+					chiTietDonHangRepository.delete(chiTietDonHang);
+				}
+			}
+			if (opt2.isPresent())
+				donHangRepository.delete(opt2.get());
+			if (opt1.isPresent())
+				userRoleRepository.delete(opt1.get());
+			khachHangRepository.delete(c);
 			model.addAttribute("message", "Xoá thành công!");
 		} else {
 			model.addAttribute("error", "Người dùng này không tồn tại!");
@@ -185,19 +212,19 @@ public class KhachHangController {
 			name = "";
 		}
 		Pageable pageable = PageRequest.of(currentPage, pageSize);
-		
+
 		if (filterPage == 0) {
 			pageable = PageRequest.of(currentPage, pageSize);
 		} else if (filterPage == 1) {
-			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, "name"));
+			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, "hoTen"));
 		} else if (filterPage == 2) {
-			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.DESC, "name"));
+			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.DESC, "hoTen"));
 		} else if (filterPage == 3) {
-			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, "registerDate"));
+			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, "ngayDangKy"));
 		} else if (filterPage == 4) {
-			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.DESC, "registerDate"));
+			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.DESC, "ngayDangKy"));
 		}
-		
+
 		Page<KhachHang> list = khachHangRepository.findByHoTenContaining(name, pageable);
 
 		model.addAttribute("customers", list);
@@ -214,17 +241,17 @@ public class KhachHangController {
 		int filterPage = filter.orElse(0);
 		int pageSize = size.orElse(5);
 		Pageable pageable = PageRequest.of(0, pageSize);
-		
+
 		if (filterPage == 0) {
 			pageable = PageRequest.of(0, pageSize);
 		} else if (filterPage == 1) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "name"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "hoTen"));
 		} else if (filterPage == 2) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "name"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "hoTen"));
 		} else if (filterPage == 3) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "registerDate"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "ngayDangKy"));
 		} else if (filterPage == 4) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "registerDate"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "ngayDangKy"));
 		}
 
 		Page<KhachHang> list = khachHangRepository.findByHoTenContaining(name, pageable);
