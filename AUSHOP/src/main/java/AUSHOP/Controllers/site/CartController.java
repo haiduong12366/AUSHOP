@@ -8,12 +8,14 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import AUSHOP.Model.CartItem;
 import AUSHOP.entity.KhachHang;
 import AUSHOP.entity.SanPham;
 import AUSHOP.entity.UserRole;
@@ -24,7 +26,7 @@ import AUSHOP.repository.UserRoleRepository;
 import AUSHOP.services.ShoppingCartService;
 
 
-
+@Controller
 public class CartController {
 	@Autowired
 	SanPhamRepository productRepository;
@@ -65,7 +67,7 @@ public class CartController {
 			CartItem item = new CartItem();
 			BeanUtils.copyProperties(p.get(), item);
 			item.setDateAdd(new Date());
-			item.setPrice(p.get().getUnitPrice() - p.get().getUnitPrice() * p.get().getDiscount() / 100);
+			item.setPrice(p.get().getDonGia() - p.get().getDonGia() * p.get().getDiscount() / 100);
 			item.setQuantity(1);
 			shoppingCartService.add(item);
 //			model.addAttribute("message", "Đã thêm vào giỏ hàng!");
@@ -87,9 +89,9 @@ public class CartController {
 		model.addAttribute("isLogin", isLogin);
 		
 		if(principal!=null) {
-			Optional<Customer> c = customerRepository.findByEmail(principal.getName());
-			Optional<UserRole> uRole = userRoleRepository.findByCustomerId(Long.valueOf(c.get().getCustomerId()));
-			if(uRole.get().getAppRole().getName().equals("ROLE_ADMIN")) {
+			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(c.get().getMaKhachHang());
+			if(uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
 				return new ModelAndView("forward:/admin/customers", model);
 			}
 		}
@@ -110,9 +112,9 @@ public class CartController {
 		model.addAttribute("isLogin", isLogin);
 		
 		if(principal!=null) {
-			Optional<Customer> c = customerRepository.findByEmail(principal.getName());
-			Optional<UserRole> uRole = userRoleRepository.findByCustomerId(Long.valueOf(c.get().getCustomerId()));
-			if(uRole.get().getAppRole().getName().equals("ROLE_ADMIN")) {
+			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(c.get().getMaKhachHang());
+			if(uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
 				return new ModelAndView("forward:/admin/customers", model);
 			}
 		}
@@ -133,9 +135,9 @@ public class CartController {
 		model.addAttribute("isLogin", isLogin);
 		
 		if(principal!=null) {
-			Optional<Customer> c = customerRepository.findByEmail(principal.getName());
-			Optional<UserRole> uRole = userRoleRepository.findByCustomerId(Long.valueOf(c.get().getCustomerId()));
-			if(uRole.get().getAppRole().getName().equals("ROLE_ADMIN")) {
+			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(c.get().getMaKhachHang());
+			if(uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
 				return new ModelAndView("forward:/admin/customers", model);
 			}
 		}
@@ -146,8 +148,7 @@ public class CartController {
 		double amount = shoppingCartService.getAmount();
 		model.addAttribute("amount", amount);
 
-		List<Category> listC = categoryRepository.findAll();
-		model.addAttribute("categories", listC);
+
 		model.addAttribute("totalCartItems", shoppingCartService.getCount());
 		return new ModelAndView("/site/cart");
 	}
