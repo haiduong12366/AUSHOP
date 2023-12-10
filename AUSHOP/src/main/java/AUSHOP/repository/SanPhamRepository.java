@@ -99,4 +99,20 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 	@Query(value = "SELECT nha_cung_cap.ten_nhacc FROM san_pham JOIN nha_cung_cap ON nha_cung_cap.ma_nhacc = san_pham.ma_nhacc WHERE san_pham.masp = ?", nativeQuery = true)
 	String getTenNhaCC(int masp);
 
+	@Query(value = "SELECT * FROM san_pham ORDER BY masp OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY", nativeQuery = true)
+	List<SanPham> getNext4(int offset);
+
+	@Query(value = "select top 8 * from san_pham order by masp desc", nativeQuery = true)
+	List<SanPham> get8Last();
+
+	@Query(value = "select top 4 * from san_pham", nativeQuery = true)
+	List<SanPham> gettop4();
+
+	@Query(value = "SELECT san_pham.masp, san_pham.tensp, san_pham.hinh_anh, san_pham.don_gia, san_pham.discount, san_pham.sl_ton_kho\r\n"
+			+ "FROM chi_tiet_don_hang  \r\n"
+			+ "JOIN san_pham  ON chi_tiet_don_hang.masp = san_pham.masp \r\n"
+			+ "GROUP BY san_pham.masp, san_pham.tensp, san_pham.hinh_anh, san_pham.don_gia, san_pham.discount, san_pham.sl_ton_kho\r\n"
+			+ "ORDER BY COUNT(chi_tiet_don_hang.so_luong) DESC", nativeQuery = true)
+	List<Object[]> getTopProducts(Pageable pageable);
+
 }

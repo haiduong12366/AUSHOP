@@ -108,7 +108,7 @@ public class CartController {
 		else
 			model.addAttribute("message", "Hết hàng!");
 		model.addAttribute("totalCartItems", shoppingCartService.getCount());
-		return new ModelAndView("forward:/shop", model);
+		return new ModelAndView("forward:/cart", model);
 	}
 
 	@RequestMapping("/cart/remove/{id}")
