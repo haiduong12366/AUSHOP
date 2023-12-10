@@ -372,7 +372,10 @@ public class CustomerSiteController {
 				od.setDonGia(i.getPrice());
 				od.setMaSP(p);
 				od.setMaDH(o);
-				chiTietDonHangRepository.save(od);				
+				chiTietDonHangRepository.save(od);
+				SanPham sp = opt.get();
+				sp.setSlTonKho(opt.get().getSlTonKho()-od.getSoLuong());
+				sanPhamRepository.save(sp);
 			}
 		}
 
