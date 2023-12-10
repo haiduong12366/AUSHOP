@@ -103,7 +103,7 @@ public class CartController {
 			}
 		}
 		Optional<SanPham> p = productRepository.findById(id);
-		if (quantity > p.get().getSlTonKho())
+		if (quantity < p.get().getSlTonKho())
 			shoppingCartService.update(id, quantity);
 		else
 			model.addAttribute("message", "Hết hàng!");
