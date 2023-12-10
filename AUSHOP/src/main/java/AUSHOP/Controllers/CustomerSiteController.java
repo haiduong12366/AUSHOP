@@ -355,7 +355,7 @@ public class CustomerSiteController {
 		donHangRepository.save(o);
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(
-				"<h3>Xin chào " + c.getHoTen() + "!</h3>\r\n" + "    <h4>Bạn có 1 đơn hàng từ KeyBoardShop</h4>\r\n"
+				"<h3>Xin chào " + c.getHoTen() + "!</h3>\r\n" + "    <h4>Bạn có 1 đơn hàng từ AUSHOP</h4>\r\n"
 						+ "    <table style=\"border: 1px solid gray;\">\r\n"
 						+ "        <tr style=\"width: 100%; border: 1px solid gray;\">\r\n"
 						+ "            <th style=\"border: 1px solid gray;\">STT</th>\r\n"
