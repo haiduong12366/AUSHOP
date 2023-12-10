@@ -72,7 +72,7 @@
 						th:href="@{'/admin/donhang/chitiet/'+${item.maDH}}"><i
 							class="fa fa-info-circle">Chi tiết</i></a></td>
 					<td class="text-center">
-						<div th:if="${item.tinhTrang=='0'}">
+						<div th:if="${item.tinhTrang==0}">
 							<a style="cursor: pointer; color: green;" th:data-id="${item.maDH}"
 								onclick="showConfigConfirmModalDialog(this.getAttribute('data-id'))"><i
 								class="fa fa-check-circle">Xác nhận</i></a> | <a
@@ -80,15 +80,15 @@
 								onclick="showConfigCancelModalDialog(this.getAttribute('data-id'))"><i
 								class="fa fa-remove text-danger">Huỷ đơn</i></a>
 						</div>
-						<div th:if="${item.tinhTrang=='1'}">
+						<div th:if="${item.tinhTrang==1}">
 							<a style="cursor: pointer; color: #007bff;" th:data-id="${item.maDH}"
 								onclick="showConfigDeliveredModalDialog(this.getAttribute('data-id'))"><i
 								class="fa fa-check-circle">Xác nhận đã giao</i></a>
 						</div>
-						<div th:if="${item.tinhTrang== '2'}">
+						<div th:if="${item.tinhTrang== 2}">
 							<i class="fa fa-check-circle">Đã thanh toán</i>
 						</div>
-						<div th:if="${item.tinhTrang=='3'}">
+						<div th:if="${item.tinhTrang==3}">
 							<i class="fa fa-remove">Đã huỷ</i>
 						</div>
 					</td>
