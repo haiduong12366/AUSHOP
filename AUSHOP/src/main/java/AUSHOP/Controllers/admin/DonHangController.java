@@ -126,7 +126,7 @@ public class DonHangController {
 		DonHang donHang = donhangRepository.findById(id).orElse(null); 
 
 		if (donHang != null) {
-		    String tinhTrang = donHang.getTinhTrang();  
+		    int tinhTrang = donHang.getTinhTrang();  
 		    model.addAttribute("tinhTrang", tinhTrang); 
 		}
 
