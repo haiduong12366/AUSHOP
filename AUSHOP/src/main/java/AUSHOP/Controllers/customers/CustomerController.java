@@ -98,7 +98,7 @@ public class CustomerController {
 		}
 		
 		DonHang dh1 = dh.get();
-		dh1.setTinhTrang((String)"3");
+		dh1.setTinhTrang(3);
 		donhangRepository.save(dh1);
 		
 		return new ModelAndView("forward:/khachhang/thongtin");

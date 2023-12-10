@@ -94,10 +94,10 @@
 		<nav aria-label="Page navigation example form-inline"
 			th:unless="${loaisanpham.totalElements==0}">			
 			<ul class="pagination float-right ml-4">
-				<li class="page-item"><a class="page-link" th:href="@{'/admin/loaisanpham/page?page=0&size='+${loaisanpham.size} + '&tenNhaCC=' + ${tenNhaCC}}"><i class="fa fa-step-backward"></i></a></li>
-				<li class="page-item"><a class="page-link" th:href="@{'/admin/loaisanpham/page?page='+${(loaisanpham.number-1 < 0) ? 0 : loaisanpham.number-1}+'&size='+${loaisanpham.size} + '&tenNhaCC=' + ${tenNhaCC}}"><i class="fa fa-chevron-left"></i></a></li>
-				<li class="page-item"><a class="page-link" th:href="@{'/admin/loaisanpham/page?page='+${(loaisanpham.number+1 > loaisanpham.totalPages-1) ? loaisanpham.totalPages-1 : loaisanpham.number+1}+'&size='+${loaisanpham.size} + '&tenNhaCC=' + ${tenNhaCC}}"><i class="fa fa-chevron-right"></i></a></li>
-				<li class="page-item"><a class="page-link" th:href="@{'/admin/loaisanpham/page?page='+${loaisanpham.totalPages-1}+'&size='+${loaisanpham.size} + '&tenNhaCC=' + ${tenNhaCC}}"><i class="fa fa-step-forward"></i></a></li>
+				<li class="page-item"><a class="page-link" th:href="@{'/admin/loaisanpham/page?page=0&size='+${loaisanpham.size} + '&tenLoaiSP=' + ${tenLoaiSP}}"><i class="fa fa-step-backward"></i></a></li>
+				<li class="page-item"><a class="page-link" th:href="@{'/admin/loaisanpham/page?page='+${(loaisanpham.number-1 < 0) ? 0 : loaisanpham.number-1}+'&size='+${loaisanpham.size} + '&tenLoaiSP=' + ${tenLoaiSP}}"><i class="fa fa-chevron-left"></i></a></li>
+				<li class="page-item"><a class="page-link" th:href="@{'/admin/loaisanpham/page?page='+${(loaisanpham.number+1 > loaisanpham.totalPages-1) ? loaisanpham.totalPages-1 : loaisanpham.number+1}+'&size='+${loaisanpham.size} + '&tenLoaiSP=' + ${tenLoaiSP}}"><i class="fa fa-chevron-right"></i></a></li>
+				<li class="page-item"><a class="page-link" th:href="@{'/admin/loaisanpham/page?page='+${loaisanpham.totalPages-1}+'&size='+${loaisanpham.size} + '&tenLoaiSP=' + ${tenLoaiSP}}"><i class="fa fa-step-forward"></i></a></li>
 			</ul>
 			
 			<form th:action="@{/admin/loaisanpham/page}" method="get" class="float-right p-2" style="font-weight: 350;">

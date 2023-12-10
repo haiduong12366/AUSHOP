@@ -11,14 +11,16 @@ public interface ShoppingCartService{
 
 	double getAmount();
 
-	void update(Long id, int quantity);
-
 	void clear();
 
 	Collection<CartItem> getCartItems();
 
-	void remove(Long id);
+	void remove(Integer id);
 
 	void add(CartItem item);
+
+	public void update(Integer id, int quantity);
+
+	int getMountById(int i);
 
 }
