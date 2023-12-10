@@ -13,11 +13,12 @@
 			<div class="col-md-6">
 				<h3>Chi tiết đơn hàng có mã [[${orderId}]]</h3>
 			</div>
-			<div class="col-md-6 text-right">
-				<td class="text-center"><a th:href="@{'/admin/donhang/chinhsua/' + ${orderId}}"
-				><i class="fa fa-edit">Chỉnh sửa</i></a></td>
-				
+
+
+			<div class="col-md-6 text-right" th:if="${tinhTrang == '0'}">
+				<a th:href="@{'/admin/donhang/chinhsua/' + ${orderId}}"><i class="fa fa-edit"></i>Chỉnh sửa</a>
 			</div>
+
 
 			<table class="table table-bordered">
 				<thead>
