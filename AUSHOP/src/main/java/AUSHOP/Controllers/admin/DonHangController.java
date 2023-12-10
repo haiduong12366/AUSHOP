@@ -172,7 +172,7 @@ public class DonHangController {
 		}
 
 		DonHang dh = o.get();
-		dh.setTinhTrang((String) "3");
+		dh.setTinhTrang(3);
 		donhangRepository.save(dh);
 
 		sendMailAction(dh, "Bạn đã bị huỷ 1 đơn hàng từ AUSHOP!", "Chúng tôi rất tiếc về vấn đề này!",
@@ -191,7 +191,7 @@ public class DonHangController {
 		}
 
 		DonHang dh = o.get();
-		dh.setTinhTrang((String) "1");
+		dh.setTinhTrang(1);
 		donhangRepository.save(dh);
 		
 		sendMailAction(dh, "Bạn có 1 đơn hàng ở AUSHOP đã được xác nhận!",
@@ -210,7 +210,7 @@ public class DonHangController {
 		}
 
 		DonHang dh = o.get();
-		dh.setTinhTrang((String) "2");
+		dh.setTinhTrang(2);
 		donhangRepository.save(dh);
 		
 		SanPham sp = null;

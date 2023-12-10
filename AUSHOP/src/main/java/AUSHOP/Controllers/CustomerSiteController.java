@@ -1,16 +1,28 @@
 package AUSHOP.Controllers;
 
+import AUSHOP.Model.CartItem;
 import AUSHOP.Model.ChangePasswordModel;
 import AUSHOP.Model.KhachHangModel;
 import AUSHOP.entity.AppRole;
+import AUSHOP.entity.ChiTietDonHang;
+import AUSHOP.entity.DonHang;
 import AUSHOP.entity.KhachHang;
+import AUSHOP.entity.SanPham;
 import AUSHOP.entity.UserRole;
 import AUSHOP.repository.AppRoleRepository;
+import AUSHOP.repository.ChiTietDonHangRepository;
+import AUSHOP.repository.DonHangRepository;
 import AUSHOP.repository.KhachHangRepository;
+import AUSHOP.repository.SanPhamRepository;
 import AUSHOP.repository.UserRoleRepository;
 import AUSHOP.services.SendMailService;
+import AUSHOP.services.ShoppingCartService;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -29,18 +41,25 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class CustomerSiteController {
+	
+	@Autowired
+	ShoppingCartService shoppingCartService;
 
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Autowired
 	KhachHangRepository khachHangRepository;
+	
+	@Autowired
+	SanPhamRepository sanPhamRepository;
 
 	@Autowired
 	AppRoleRepository appRoleRepository;
@@ -48,6 +67,12 @@ public class CustomerSiteController {
 	@Autowired
 	UserRoleRepository userRoleRepository;
 
+	@Autowired
+	DonHangRepository donHangRepository;
+	
+	@Autowired
+	ChiTietDonHangRepository chiTietDonHangRepository;
+	
 	@Autowired
 	SendMailService sendMailService;
 
@@ -242,51 +267,45 @@ public class CustomerSiteController {
 		return new ModelAndView("forward:/KhachHang/info");
 	}
 
-//	@RequestMapping("/customer/info")
-//	public ModelAndView info(ModelMap model, Principal principal) {
-//
-//		boolean isLogin = false;
-//		if (principal != null) {
-//			isLogin = true;
-//		}
-//		model.addAttribute("isLogin", isLogin);
-//
-//		if (principal != null) {
-//			Optional<KhachHang> kh = customerRepository.findByEmail(principal.getName());
-//			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(kh.get().getMaKhachHang()));
-//			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
-//				return new ModelAndView("forward:/admin/customers", model);
-//			}
-//		}
-//
-//		Optional<KhachHang> kh = customerRepository.findByEmail(principal.getName());
-//
-//		/*
-//		 * Page<Order> listO0 =
-//		 * orderRepository.findByCustomerId(c.get().getCustomerId(), 0,
-//		 * PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "order_id")));
-//		 * model.addAttribute("orders0", listO0);
-//		 * 
-//		 * Page<Order> listO1 =
-//		 * orderRepository.findByCustomerId(c.get().getCustomerId(), 1,
-//		 * PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "order_id")));
-//		 * model.addAttribute("orders1", listO1);
-//		 * 
-//		 * Page<Order> listO2 =
-//		 * orderRepository.findByCustomerId(c.get().getCustomerId(), 2,
-//		 * PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "order_id")));
-//		 * model.addAttribute("orders2", listO2);
-//		 * 
-//		 * Page<Order> listO3 =
-//		 * orderRepository.findByCustomerId(c.get().getCustomerId(), 3,
-//		 * PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "order_id")));
-//		 * model.addAttribute("orders3", listO3);
-//		 * 
-//		 * model.addAttribute("user", c.get()); model.addAttribute("totalCartItems",
-//		 * shoppingCartService.getCount()); return new ModelAndView("/site/infomation",
-//		 * model);
-//		 */
-//	}
+	@RequestMapping("/customer/info")
+	public ModelAndView info(ModelMap model, Principal principal) {
+
+		boolean isLogin = false;
+		if (principal != null) {
+			isLogin = true;
+		}
+		model.addAttribute("isLogin", isLogin);
+
+		if (principal != null) {
+			Optional<KhachHang> kh = khachHangRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(kh.get().getMaKhachHang()));
+			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
+				return new ModelAndView("forward:/admin/customers", model);
+			}
+		}
+
+		Optional<KhachHang> c = khachHangRepository.findByEmail(principal.getName());
+
+		Page<DonHang> listO0 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 0,
+				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
+		model.addAttribute("orders0", listO0);
+
+		Page<DonHang> listO1 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 1,
+				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
+		model.addAttribute("orders1", listO1);
+
+		Page<DonHang> listO2 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 2,
+				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
+		model.addAttribute("orders2", listO2);
+
+		Page<DonHang> listO3 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 3,
+				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
+		model.addAttribute("orders3", listO3);
+
+		model.addAttribute("user", c.get());
+		model.addAttribute("totalCartItems", shoppingCartService.getCount());
+		return new ModelAndView("/site/infomation", model);
+	}
 
 //	@GetMapping("/customer/changePassword")
 //	public ModelAndView changeForm(ModelMap model, Principal principal) {
@@ -324,74 +343,88 @@ public class CustomerSiteController {
 //		return new ModelAndView("forward:/customer/info", model);
 //	}
 
-	/*
-	 * @RequestMapping("/customer/checkout") public ModelAndView checkout(Principal
-	 * principal) { Collection<CartItem> listItem =
-	 * shoppingCartService.getCartItems(); Customer c =
-	 * customerRepository.FindByEmail(principal.getName()).get(); Order o = new
-	 * Order(); o.setAmount(shoppingCartService.getAmount()); o.setOrderDate(new
-	 * Date()); o.setCustomer(c); o.setStatus((short) 0); orderRepository.save(o);
-	 * StringBuilder stringBuilder = new StringBuilder(); stringBuilder.append(
-	 * "<h3>Xin chào " + c.getName() + "!</h3>\r\n" +
-	 * "    <h4>Bạn có 1 đơn hàng từ KeyBoardShop</h4>\r\n" +
-	 * "    <table style=\"border: 1px solid gray;\">\r\n" +
-	 * "        <tr style=\"width: 100%; border: 1px solid gray;\">\r\n" +
-	 * "            <th style=\"border: 1px solid gray;\">STT</th>\r\n" +
-	 * "            <th style=\"border: 1px solid gray;\">Tên sản phẩm</th>\r\n" +
-	 * "            <th style=\"border: 1px solid gray;\">Số lượng</th>\r\n" +
-	 * "            <th style=\"border: 1px solid gray;\">Đơn giá</th>\r\n" +
-	 * "        </tr>"); // Set<OrderDetail> set = null; for (CartItem i : listItem)
-	 * { Optional<Product> opt = productRepository.findById(i.getProductId());
-	 * if(opt.isPresent()) { Product p = opt.get(); OrderDetail od = new
-	 * OrderDetail(); od.setQuantity(i.getQuantity());
-	 * od.setUnitPrice(i.getPrice()); od.setProduct(p); od.setOrder(o);
-	 * orderDetailRepository.save(od); } }
-	 *
-	 * sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ KeyBoard Shop!",
-	 * "Chúng tôi sẽ sớm giao hàng cho bạn!", "Thông báo đặt hàng thành công!");
-	 *
-	 * shoppingCartService.clear(); return new
-	 * ModelAndView("forward:/customer/info"); }
-	 *
-	 * @RequestMapping("/customer/cancel/{id}") public ModelAndView cancel(ModelMap
-	 * model, @PathVariable("id") int id, Principal principal) { Optional<Order> o =
-	 * orderRepository.findById(id); if (o.isEmpty()) { return new
-	 * ModelAndView("forward:/customer/info"); } Order oReal = o.get();
-	 * oReal.setStatus((short) 3); orderRepository.save(oReal);
-	 *
-	 * sendMailAction(oReal, "Bạn đã huỷ 1 đơn hàng từ KeyBoard Shop!",
-	 * "Chúng tôi rất tiếc vì không làm hài lòng bạn!",
-	 * "Thông báo huỷ đơn hàng thành công!");
-	 *
-	 * return new ModelAndView("forward:/customer/info"); }
-	 */
+	@RequestMapping("/customer/checkout")
+	public ModelAndView checkout(Principal principal) {
+		Collection<CartItem> listItem = shoppingCartService.getCartItems();
+		KhachHang c = khachHangRepository.findByEmail(principal.getName()).get();
+		DonHang o = new DonHang();
+		o.setTongTien(shoppingCartService.getAmount());
+		o.setNgayDatHang(new Date());
+		o.setMaKhachHang(c);
+		o.setTinhTrang(0);
+		donHangRepository.save(o);
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(
+				"<h3>Xin chào " + c.getHoTen() + "!</h3>\r\n" + "    <h4>Bạn có 1 đơn hàng từ KeyBoardShop</h4>\r\n"
+						+ "    <table style=\"border: 1px solid gray;\">\r\n"
+						+ "        <tr style=\"width: 100%; border: 1px solid gray;\">\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">STT</th>\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">Tên sản phẩm</th>\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">Số lượng</th>\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">Đơn giá</th>\r\n" + "        </tr>");
+//		Set<OrderDetail> set = null;
+		for (CartItem i : listItem) {
+			Optional<SanPham> opt = sanPhamRepository.findById(i.getProductId());
+			if(opt.isPresent()) {
+				SanPham p = opt.get();
+				ChiTietDonHang od = new ChiTietDonHang();
+				od.setSoLuong(i.getQuantity());
+				od.setDonGia(i.getPrice());
+				od.setMaSP(p);
+				od.setMaDH(o);
+				chiTietDonHangRepository.save(od);				
+			}
+		}
 
-//	@RequestMapping("/customer/detail/{id}")
-//	public ModelAndView detail(ModelMap model, @PathVariable("id") int id, Principal principal) {
-//
-//		boolean isLogin = false;
-//		if (principal != null) {
-//			isLogin = true;
-//		}
-//		model.addAttribute("isLogin", isLogin);
-//
-//		if (principal != null) {
-//			Optional<KhachHang> kh = customerRepository.findByEmail(principal.getName());
-//			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(kh.get().getMaKhachHang()));
-//			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
-//				return new ModelAndView("forward:/admin/customers", model);
-//			}
-//		}
-//
-//		
-//		 List<OrderDetail> listO = orderDetailRepository.findByOrderId(id);
-//		 
-//		 model.addAttribute("amount", orderRepository.findById(id).get().getAmount());
-//		 model.addAttribute("orderDetail", listO); model.addAttribute("orderId", id);
-//		 model.addAttribute("totalCartItems", shoppingCartService.getCount()); return
-//		 new ModelAndView("/site/detail", model);
-//		 
-//	}
+		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ KeyBoard Shop!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
+				"Thông báo đặt hàng thành công!");
+
+		shoppingCartService.clear();
+		return new ModelAndView("forward:/customer/info");
+	}
+
+	@RequestMapping("/customer/cancel/{id}")
+	public ModelAndView cancel(ModelMap model, @PathVariable("id") int id, Principal principal) {
+		Optional<DonHang> o = donHangRepository.findById(id);
+		if (o.isEmpty()) {
+			return new ModelAndView("forward:/customer/info");
+		}
+		DonHang oReal = o.get();
+		oReal.setTinhTrang((short) 3);
+		donHangRepository.save(oReal);
+
+		sendMailAction(oReal, "Bạn đã huỷ 1 đơn hàng từ KeyBoard Shop!",
+				"Chúng tôi rất tiếc vì không làm hài lòng bạn!", "Thông báo huỷ đơn hàng thành công!");
+
+		return new ModelAndView("forward:/customer/info");
+	}
+	
+	@RequestMapping("/customer/detail/{id}")
+	public ModelAndView detail(ModelMap model, @PathVariable("id") int id, Principal principal) {
+
+		boolean isLogin = false;
+		if (principal != null) {
+			isLogin = true;
+		}
+		model.addAttribute("isLogin", isLogin);
+
+		if (principal != null) {
+			Optional<KhachHang> kh = khachHangRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(kh.get().getMaKhachHang()));
+			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
+				return new ModelAndView("forward:/admin/customers", model);
+			}
+		}
+
+		
+		 List<ChiTietDonHang> listO = chiTietDonHangRepository.findByMaDH(id);
+		 
+		 model.addAttribute("amount", donHangRepository.findById(id).get().getTongTien());
+		 model.addAttribute("orderDetail", listO); model.addAttribute("orderId", id);
+		 model.addAttribute("totalCartItems", shoppingCartService.getCount()); return
+		 new ModelAndView("/site/detail", model);
+		 
+	}
 
 	@RequestMapping("/403")
 	public String error() {
@@ -424,35 +457,31 @@ public class CustomerSiteController {
 		return formatter.format(Double.valueOf(number)) + " VNĐ";
 	}
 
-	// sendmail
-	/*
-	 * public void sendMailAction(Order oReal, String status, String cmt, String
-	 * notifycation) { List<OrderDetail> list =
-	 * orderDetailRepository.findByOrderId(oReal.getOrderId());
-	 *
-	 * StringBuilder stringBuilder = new StringBuilder(); int index = 0;
-	 * stringBuilder.append("<h3>Xin chào " + oReal.getCustomer().getName() +
-	 * "!</h3>\r\n" + "    <h4>" + status + "</h4>\r\n" +
-	 * "    <table style=\"border: 1px solid gray;\">\r\n" +
-	 * "        <tr style=\"width: 100%; border: 1px solid gray;\">\r\n" +
-	 * "            <th style=\"border: 1px solid gray;\">STT</th>\r\n" +
-	 * "            <th style=\"border: 1px solid gray;\">Tên sản phẩm</th>\r\n" +
-	 * "            <th style=\"border: 1px solid gray;\">Số lượng</th>\r\n" +
-	 * "            <th style=\"border: 1px solid gray;\">Đơn giá</th>\r\n" +
-	 * "        </tr>"); for (OrderDetail oD : list) { index++;
-	 * stringBuilder.append("<tr>\r\n" +
-	 * "            <td style=\"border: 1px solid gray;\">" + index + "</td>\r\n" +
-	 * "            <td style=\"border: 1px solid gray;\">" +
-	 * oD.getProduct().getName() + "</td>\r\n" +
-	 * "            <td style=\"border: 1px solid gray;\">" + oD.getQuantity() +
-	 * "</td>\r\n" + "            <td style=\"border: 1px solid gray;\">" +
-	 * format(String.valueOf(oD.getUnitPrice())) + "</td>\r\n" + "        </tr>"); }
-	 * stringBuilder.append("\r\n" + "    </table>\r\n" + "    <h3>Tổng tiền: " +
-	 * format(String.valueOf(oReal.getAmount())) + "</h3>\r\n" + "    <hr>\r\n" +
-	 * "    <h5>" + cmt + "</h5>\r\n" + "    <h5>Chúc bạn 1 ngày tốt lành!</h5>");
-	 *
-	 * sendMailService.queue(oReal.getCustomer().getEmail().trim(), notifycation,
-	 * stringBuilder.toString()); }
-	 */
+	public void sendMailAction(DonHang oReal, String status, String cmt, String notifycation) {
+		List<ChiTietDonHang> list = chiTietDonHangRepository.findByMaDH(oReal.getMaDH());
+
+		StringBuilder stringBuilder = new StringBuilder();
+		int index = 0;
+		stringBuilder.append("<h3>Xin chào " + oReal.getMaKhachHang().getHoTen() + "!</h3>\r\n" + "    <h4>" + status
+				+ "</h4>\r\n" + "    <table style=\"border: 1px solid gray;\">\r\n"
+				+ "        <tr style=\"width: 100%; border: 1px solid gray;\">\r\n"
+				+ "            <th style=\"border: 1px solid gray;\">STT</th>\r\n"
+				+ "            <th style=\"border: 1px solid gray;\">Tên sản phẩm</th>\r\n"
+				+ "            <th style=\"border: 1px solid gray;\">Số lượng</th>\r\n"
+				+ "            <th style=\"border: 1px solid gray;\">Đơn giá</th>\r\n" + "        </tr>");
+		for (ChiTietDonHang oD : list) {
+			index++;
+			stringBuilder.append("<tr>\r\n" + "            <td style=\"border: 1px solid gray;\">" + index + "</td>\r\n"
+					+ "            <td style=\"border: 1px solid gray;\">" + oD.getMaSP().getTenSP() + "</td>\r\n"
+					+ "            <td style=\"border: 1px solid gray;\">" + oD.getSoLuong() + "</td>\r\n"
+					+ "            <td style=\"border: 1px solid gray;\">" + format(String.valueOf(oD.getDonGia()))
+					+ "</td>\r\n" + "        </tr>");
+		}
+		stringBuilder.append("\r\n" + "    </table>\r\n" + "    <h3>Tổng tiền: "
+				+ format(String.valueOf(oReal.getTongTien())) + "</h3>\r\n" + "    <hr>\r\n" + "    <h5>" + cmt
+				+ "</h5>\r\n" + "    <h5>Chúc bạn 1 ngày tốt lành!</h5>");
+
+		sendMailService.queue(oReal.getMaKhachHang().getEmail().trim(), notifycation, stringBuilder.toString());
+	}
 
 }

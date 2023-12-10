@@ -44,8 +44,8 @@ public class DonHang implements Serializable{
     @Column(name = "diaChiGiaoHang", columnDefinition = "nvarchar(200)")
     private String diaChiGiaoHang;
     
-    @Column(name = "tinhTrang", columnDefinition = "nvarchar(20)")
-    private String tinhTrang;
+    @Column(name = "tinhTrang", columnDefinition = "int")
+    private int tinhTrang;
     
     private double tongTien;
 

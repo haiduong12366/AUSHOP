@@ -16,7 +16,7 @@ import AUSHOP.Model.CartItem;
 @Service
 @SessionScope
 public class ShoppingCartServiceImpl implements ShoppingCartService{
-    private Map<Long, CartItem> map = new HashMap<Long, CartItem>();
+    private Map<Integer, CartItem> map = new HashMap<Integer, CartItem>();
 
     @Override
     public void add(CartItem item) {
@@ -29,7 +29,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     }
 
     @Override
-    public void remove(Long id) {
+    public void remove(Integer id) {
         map.remove(id);
     }
 
@@ -44,7 +44,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     }
 
     @Override
-    public void update(Long id, int quantity) {
+    public void update(Integer id, int quantity) {
         CartItem item = map.get(id);
         item.setQuantity(quantity);
         if(item.getQuantity()<=0) {
@@ -55,8 +55,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     @Override
     public double getAmount() {
         double amount = 0;
-        Set<Long> listKey = map.keySet();
-        for(Long key : listKey) {
+        Set<Integer> listKey = map.keySet();
+        for(Integer key : listKey) {
             amount += map.get(key).getPrice() * map.get(key).getQuantity();
         }
 
@@ -69,6 +69,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
             return 0;
         }
         return map.values().size();
+    }
+
+    @Override
+    public int getMountById(int item) {
+        CartItem existedItem = map.get(item);
+        if (existedItem != null) {
+        	return existedItem.getQuantity();
+        } else {
+            return -1;
+        }
     }
 
 
