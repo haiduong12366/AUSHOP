@@ -298,9 +298,9 @@ public class HomeController {
 			} else if (filterPage == 2) {
 				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
 			} else if (filterPage == 3) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "don_gia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "donGia"));
 			} else if (filterPage == 4) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "don_gia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "donGia"));
 			}
 		} else {
 			if (filterPage == 0) {
@@ -310,9 +310,9 @@ public class HomeController {
 			} else if (filterPage == 2) {
 				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
 			} else if (filterPage == 3) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "don_gia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "donGia"));
 			} else if (filterPage == 4) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "don_gia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "donGia"));
 			}
 		}
 
@@ -378,9 +378,9 @@ public class HomeController {
 		} else if (filterPage == 2) {
 			pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
 		} else if (filterPage == 3) {
-			pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "don_gia"));
+			pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "dongia"));
 		} else if (filterPage == 4) {
-			pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.ASC, "don_gia"));
+			pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.ASC, "dongia"));
 		}
 		Page<SanPham> listP = productRepository.findBytenSPContaining(name, pageable);
 
