@@ -220,7 +220,7 @@ public class CustomerSiteController {
 		return new ModelAndView("/site/changePassword", model);
 	}
 
-	@GetMapping("/KhachHang/editProfile")
+	@GetMapping("/customer/editProfile")
 	public ModelAndView editForm(ModelMap model, Principal principal) {
 
 		boolean isLogin = false;
@@ -241,10 +241,10 @@ public class CustomerSiteController {
 		model.addAttribute("KhachHang", khachHangRepository.findByEmail(principal.getName()).get());
 
 		// model.addAttribute("totalCartItems", shoppingCartService.getCount());
-		return new ModelAndView("/site/editProfile");
+		return new ModelAndView("/khachhang/edit");
 	}
 
-	@PostMapping("/KhachHang/editProfile")
+	@PostMapping("/customer/editProfile")
 	public ModelAndView edit(ModelMap model, @Valid @ModelAttribute("KhachHang") KhachHangModel dto,
 							 BindingResult result, @RequestParam("photo") MultipartFile photo, Principal principal) throws IOException {
 		/*
@@ -264,7 +264,7 @@ public class CustomerSiteController {
 
 		khachHangRepository.save(kh);
 
-		return new ModelAndView("forward:/KhachHang/info");
+		return new ModelAndView("forward:/khachhang/thongtin");
 	}
 
 	@RequestMapping("/customer/info")
@@ -286,19 +286,19 @@ public class CustomerSiteController {
 
 		Optional<KhachHang> c = khachHangRepository.findByEmail(principal.getName());
 
-		Page<DonHang> listO0 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 0,
+		Page<DonHang> listO0 = donHangRepository.findByMaKhachHang1(c.get().getMaKhachHang(), 0,
 				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
 		model.addAttribute("orders0", listO0);
 
-		Page<DonHang> listO1 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 1,
+		Page<DonHang> listO1 = donHangRepository.findByMaKhachHang1(c.get().getMaKhachHang(), 1,
 				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
 		model.addAttribute("orders1", listO1);
 
-		Page<DonHang> listO2 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 2,
+		Page<DonHang> listO2 = donHangRepository.findByMaKhachHang1(c.get().getMaKhachHang(), 2,
 				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
 		model.addAttribute("orders2", listO2);
 
-		Page<DonHang> listO3 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 3,
+		Page<DonHang> listO3 = donHangRepository.findByMaKhachHang1(c.get().getMaKhachHang(), 3,
 				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
 		model.addAttribute("orders3", listO3);
 
