@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,7 +57,7 @@ public class HomeController {
 	@Autowired
 	UserRoleRepository userRoleRepository;
 
-	@RequestMapping(value = {"/home"})
+	@RequestMapping(value = {"/home",""})
 	public ModelAndView home(ModelMap model, Principal principal) {
 		boolean isLogin = false;
 		if (principal != null) {
@@ -84,7 +85,7 @@ public class HomeController {
 		return new ModelAndView("/site/index-home", model);
 	}
 
-	@RequestMapping(value = {"/load"}, method= RequestMethod.GET)
+	@GetMapping(value = {"/load"})
 	protected void load(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
 
 		response.setContentType("text/html;charset=UTF-8");
@@ -94,26 +95,27 @@ public class HomeController {
 		PrintWriter out = response.getWriter();
 
 		for (SanPham item : list) {
-			out.println("<div class=\"product col-lg-3 col-md-6 mb-4\">\n"
-					+ "						<div class=\"card h-100\">\n"
-					+ "							<a th:href=\"@{'/shop/item/'"+item.getMaSP()+"}\"><img class=\"card-img-top\"\n"
-					+ "									th:src=\"@{'/getproduct/'"+item.getHinhAnh()+"}\" alt=\"...\" /></a>\n"
-					+ "							<div class=\"card-body\">\n"
-					+ "								<h4 class=\"card-title text-center\">\n"
-					+ "									<a th:href=\"@{'/shop/item/'"+item.getMaSP()+"}\" th:text=\""+item.getTenSP()+"\"></a>\n"
-					+ "								</h4>\n"
-					+ "								<p class=\"text-center\">\n"
-					+ "									<small>(còn [["+item.getSlTonKho()+"]] sản phẩm)</small>\n"
-					+ "								</p>\n"
-					+ "								<p class=\"card-text text-center\">Bàn phím cơ chơi game. Sự lựa\n"
-					+ "									chọn tuyệt vời.</p>\n"
-					+ "							</div>\n"
-					+ "							<a class=\"card-footer text-center\" th:href=\"@{'/addCart/'"+item.getMaSP()+"}\"\n"
-					+ "								style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span\n"
-					+ "									style=\"margin: auto;\">Thêm vào giỏ hàng <i class=\"fa fa-shopping-cart\"></i></span>\n"
-					+ "							</a>\n"
-					+ "						</div>\n"
-					+ "					</div>");
+			out.println("<div class=\"product col-lg-3 col-md-6 mb-4\">\r\n"
+					+ "					<div class=\"card h-100\">\r\n"
+					+ "						<a href=\"/shop/item/"+item.getMaSP()+"\"><img class=\"card-img-top\"\r\n"
+					+ "								src=\"/getproduct/"+item.getHinhAnh()+"\" alt=\"...\" /></a>\r\n"
+					+ "						<div class=\"card-body\">\r\n"
+					+ "							<h4 class=\"card-title text-center\">\r\n"
+					+ "								<a href=\"/shop/item/"+item.getMaSP()+"\" >"+item.getTenSP()+"</a>\r\n"
+					+ "							</h4>\r\n"
+					+ "							<p class=\"text-center\">\r\n"
+					+ "								<small>(còn "+item.getSlTonKho()+" sản phẩm)</small>\r\n"
+					+ "							</p>\r\n"
+					+ "							<p class=\"card-text text-center\">Bàn phím cơ chơi game. Sự lựa\r\n"
+					+ "								chọn tuyệt vời.</p>\r\n"
+					+ "						</div>\r\n"
+					+ "						<a class=\"card-footer text-center\" href=\"/addCart/"+item.getMaSP()+"\"\r\n"
+					+ "							style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span\r\n"
+					+ "								style=\"margin: auto;\">Thêm\r\n"
+					+ "								vào giỏ hàng <i class=\"fa fa-shopping-cart\"></i></span>\r\n"
+					+ "						</a>\r\n"
+					+ "					</div>\r\n"
+					+ "				</div>");
 		}
 	}
 
