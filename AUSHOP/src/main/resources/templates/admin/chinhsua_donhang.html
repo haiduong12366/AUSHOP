@@ -20,7 +20,8 @@
 						<th>Tên sản phẩm</th>
 						<th>Số lượng</th>
 						<th>Đơn giá</th>
-						<th>Hành động</th>
+						<th>Xóa</th>
+						<th>Cập nhật</th>
 					</tr>
 				</thead>
 
@@ -36,7 +37,7 @@
 									name="soLuong" style="border: 1px solid rgba(128, 128, 128, 0.24);"
 									th:value="${item.soLuong}" class="quantity-input;"></td>
 							<td class="text-center"
-								th:text="${#numbers.formatDecimal(item.tong, 1, 'DEFAULT', 0, 'DEFAULT')}+' VNĐ'"></td>
+								th:text="${#numbers.formatDecimal(item.donGia, 1, 'DEFAULT', 0, 'DEFAULT')}+' VNĐ'"></td>
 							<td class="text-center"><a th:data-maChiTietDH="${item.maChiTietDH}"
 									th:data-tenSP="${item.maSP.tenSP}" style="cursor: pointer;color: #007bff;"
 									onclick="showConfigModalDialog(this.getAttribute('data-maChiTietDH'),this.getAttribute('data-tenSP'))"><span

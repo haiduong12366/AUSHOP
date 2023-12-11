@@ -35,7 +35,7 @@
 						<td th:text="${item.maSP.tenSP}"></td>
 						<td class="text-center" th:text="${item.soLuong}"></td>
 						<td class="text-center"
-							th:text="${#numbers.formatDecimal(item.tong, 1, 'DEFAULT', 0, 'DEFAULT')}+' VNĐ'"></td>
+							th:text="${#numbers.formatDecimal(item.donGia, 1, 'DEFAULT', 0, 'DEFAULT')}+' VNĐ'"></td>
 					</tr>
 				</tbody>
 			</table>
