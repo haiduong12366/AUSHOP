@@ -27,6 +27,14 @@
 		})
 
 	}
+	function addCart(id) {
+		console.log(id)
+		$.ajax({
+			url:"/addCart/"+id,
+			type:"get",
+		})
+
+	}
 </script>
 </head>
 
@@ -63,10 +71,10 @@
 						<p class="card-text text-center">Bàn phím cơ chơi game. Sự lựa
 							chọn tuyệt vời.</p>
 					</div>
-					<a class="card-footer text-center" th:href="@{'/addCart/'+${item.maSP}}"
-						style="cursor: pointer; text-decoration: none; color: gray;"> <span style="margin: auto;">Thêm
-							vào giỏ hàng <i class="fa fa-shopping-cart"></i></span>
-					</a>
+					<div class="card-footer text-center">
+   							 <button th:data-id="${item.maSP}" onclick="addCart(this.getAttribute('data-id'))" class="btn btn-default btn-sm" style="cursor: pointer; text-decoration: none; color: gray;"> <span style="margin: auto;">Thêm
+							vào giỏ hàng <i class="fa fa-shopping-cart"></i></span></button>
+  						</div>
 				</div>
 			</div>
 		</div>
@@ -101,10 +109,10 @@
 						<p class="card-text text-center">Bàn phím cơ chơi game. Sự lựa
 							chọn tuyệt vời.</p>
 					</div>
-					<a class="card-footer text-center" th:href="@{'/addCart/'+${item[0]}}"
-						style="cursor: pointer; text-decoration: none; color: gray;"> <span style="margin: auto;">Thêm
-							vào giỏ hàng <i class="fa fa-shopping-cart"></i></span>
-					</a>
+					<div class="card-footer text-center">
+   							 <button th:data-id="${item[0]}" onclick="addCart(this.getAttribute('data-id'))" class="btn btn-default btn-sm" style="cursor: pointer; text-decoration: none; color: gray;"> <span style="margin: auto;">Thêm
+							vào giỏ hàng <i class="fa fa-shopping-cart"></i></span></button>
+  						</div>
 				</div>
 			</div>
 		</div>
@@ -127,17 +135,18 @@
 							<p class="card-text text-center">Bàn phím cơ chơi game. Sự lựa
 								chọn tuyệt vời.</p>
 						</div>
-						<a class="card-footer text-center" th:href="@{'/addCart/'+${item.maSP}}"
-							style="cursor: pointer; text-decoration: none; color: gray;"> <span
-								style="margin: auto;">Thêm
-								vào giỏ hàng <i class="fa fa-shopping-cart"></i></span>
-						</a>
+						
+						<div class="card-footer text-center">
+   							 <button th:data-id="${item.maSP}" onclick="addCart(this.getAttribute('data-id'))" class="btn btn-default btn-sm" style="cursor: pointer; text-decoration: none; color: gray;"> <span style="margin: auto;">Thêm
+							vào giỏ hàng <i class="fa fa-shopping-cart"></i></span></button>
+  						</div>
+						
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+
 
 	
 </body>

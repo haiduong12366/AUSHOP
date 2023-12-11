@@ -77,7 +77,7 @@ public class HomeController {
 		List<SanPham> listtop4 = productRepository.gettop4();
 //		List<SanPham> listnext4 = productRepository.getNext4(1);
 		List<Object[]> listbest = productRepository.getTopProducts(PageRequest.of(0, 4));
-
+		model.addAttribute("totalCartItems", shoppingCartService.getCount());
 		model.addAttribute("products", list8Last);
 		model.addAttribute("products_top4", listtop4);
 		model.addAttribute("products_banchay", listbest);
@@ -109,11 +109,10 @@ public class HomeController {
 					+ "							<p class=\"card-text text-center\">Bàn phím cơ chơi game. Sự lựa\r\n"
 					+ "								chọn tuyệt vời.</p>\r\n"
 					+ "						</div>\r\n"
-					+ "						<a class=\"card-footer text-center\" href=\"/addCart/"+item.getMaSP()+"\"\r\n"
-					+ "							style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span\r\n"
-					+ "								style=\"margin: auto;\">Thêm\r\n"
-					+ "								vào giỏ hàng <i class=\"fa fa-shopping-cart\"></i></span>\r\n"
-					+ "						</a>\r\n"
+					+ "						<div class=\"card-footer text-center\">\r\n"
+					+ "   							 <button onclick=\"addCart(\"+item.getMaSP()+\")\" class=\"btn btn-default btn-sm\" style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span style=\"margin: auto;\">Thêm\r\n"
+					+ "							vào giỏ hàng <i class=\"fa fa-shopping-cart\"></i></span></button>\r\n"
+					+ "  						</div>\r\n"
 					+ "					</div>\r\n"
 					+ "				</div>");
 		}
@@ -183,6 +182,7 @@ public class HomeController {
 		model.addAttribute("slide", true);
 		return new ModelAndView("/site/index", model);
 	}
+	
 	@RequestMapping("/shop/item/{id}")
 	public ModelAndView item(ModelMap model, @PathVariable("id") int id,
 							 Principal principal) {
