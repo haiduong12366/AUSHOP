@@ -46,14 +46,12 @@ public class SendMailServiceImpl implements SendMailService {
 
 	@Override
 	public void queue(MailInfoModel mail) {
-		System.out.println("sendmail,add");
 		list.add(mail);
 		System.out.println(list);
 	}
 
 	@Override
 	public void queue(String to, String subject, String body) {
-		System.out.println("sendmail,queue");
 		queue(new MailInfoModel(to, subject, body));
 	}
 
@@ -62,14 +60,10 @@ public class SendMailServiceImpl implements SendMailService {
 	public void run() {
 		//System.out.println("tới run r");
 		while (!list.isEmpty()) {
-			System.out.println("chuẩn bị send và remove add");
 			MailInfoModel mail = list.remove(0);
 			try {
-				System.out.println("sendmail1");
 				this.send(mail);
-				System.out.println("sendmail2");
 			} catch (Exception e) {
-				System.out.println("ko sendmail");
 				e.printStackTrace();
 			}
 		}
