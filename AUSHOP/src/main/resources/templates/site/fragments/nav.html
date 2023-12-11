@@ -33,10 +33,10 @@
 							data-toggle="dropdown"> Tài khoản </a>
 
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-							<a class="dropdown-item" th:href="@{/khachhang/thongtin}"
+							<a class="dropdown-item" th:href="@{/customer/info}"
 							   th:if="${isLogin}">Thông tin cá nhân</a>
 							<!-- 									<a class="dropdown-item" th:href="@{/customer/changePassword}" th:if="${isLogin}">Đổi mật khẩu</a>  -->
-							<a class="dropdown-item" th:href="@{/khachhang/edit}" th:if="${isLogin}">Chỉnh
+							<a class="dropdown-item" th:href="@{/customer/editProfile}" th:if="${isLogin}">Chỉnh
 								sửa thông tin</a> <a class="dropdown-item" th:href="@{/logout}"
 													 th:if="${isLogin}">Đăng xuất</a> <a class="dropdown-item"
 																						 th:href="@{/login}" th:unless="${isLogin}">Đăng nhập</a> <a
