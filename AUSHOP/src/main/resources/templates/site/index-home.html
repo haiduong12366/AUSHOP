@@ -3,37 +3,36 @@
 	layout:decorate="~{site/dashboard-home.html}">
 
 <head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	
-	<script>
-		
-	$(window).scroll(()=>{
-    if($(window).scrollTop() + $(window).height() >= $(window).height())
-    {
-        loadMore();
-    }
-})
+<script>		
+	$(window).scroll(function(){
+	    if($(window).scrollTop()  >= $(document).height() - $(window).height() - 1)
+	    {
+	        loadMore();
+	    }
+	});
 	function loadMore() {
 		var amount = document.getElementsByClassName("product").length;
 		console.log(amount);
-		fetch(`http://localhost:9090/load?exits=${encodeURIComponent(amount)}`, {
-            method: 'get',
-            headers: {
-            'Content-Type': 'text/html;charset=UTF-8',
-          },
-          }
-        ).then(response => {
-    // Kiểm tra xem phản hồi có thành công hay không
-    if (!response.ok) {
-      throw new Error('Network response was not ok.');
-    }
-    console.log('Server response:', response);
-    // Đọc và trả về nội dung của phản hồi dưới dạng văn bản
-    return response.text();
-  }).then(data => {
-			console.log('Server response:', data);
-    		$("#contentSP").append(data);
-  		})
+		$.ajax({
+			url:"/load",
+			type:"get",
+			data:{
+				exits: amount
+			},
+			success : function(data){
+				$("#contentSP").append(data)
+			}
+			
+		})
+
+	}
+	function addCart(id) {
+		console.log(id)
+		$.ajax({
+			url:"/addCart/"+id,
+			type:"get",
+		})
 
 	}
 </script>
@@ -72,10 +71,10 @@
 						<p class="card-text text-center">Bàn phím cơ chơi game. Sự lựa
 							chọn tuyệt vời.</p>
 					</div>
-					<a class="card-footer text-center" th:href="@{'/addCart/'+${item.maSP}}"
-						style="cursor: pointer; text-decoration: none; color: gray;"> <span style="margin: auto;">Thêm
-							vào giỏ hàng <i class="fa fa-shopping-cart"></i></span>
-					</a>
+					<div class="card-footer text-center">
+   							 <button th:data-id="${item.maSP}" onclick="addCart(this.getAttribute('data-id'))" class="btn btn-default btn-sm" style="cursor: pointer; text-decoration: none; color: gray;"> <span style="margin: auto;">Thêm
+							vào giỏ hàng <i class="fa fa-shopping-cart"></i></span></button>
+  						</div>
 				</div>
 			</div>
 		</div>
@@ -110,10 +109,10 @@
 						<p class="card-text text-center">Bàn phím cơ chơi game. Sự lựa
 							chọn tuyệt vời.</p>
 					</div>
-					<a class="card-footer text-center" th:href="@{'/addCart/'+${item[0]}}"
-						style="cursor: pointer; text-decoration: none; color: gray;"> <span style="margin: auto;">Thêm
-							vào giỏ hàng <i class="fa fa-shopping-cart"></i></span>
-					</a>
+					<div class="card-footer text-center">
+   							 <button th:data-id="${item[0]}" onclick="addCart(this.getAttribute('data-id'))" class="btn btn-default btn-sm" style="cursor: pointer; text-decoration: none; color: gray;"> <span style="margin: auto;">Thêm
+							vào giỏ hàng <i class="fa fa-shopping-cart"></i></span></button>
+  						</div>
 				</div>
 			</div>
 		</div>
@@ -136,18 +135,18 @@
 							<p class="card-text text-center">Bàn phím cơ chơi game. Sự lựa
 								chọn tuyệt vời.</p>
 						</div>
-						<a class="card-footer text-center" th:href="@{'/addCart/'+${item.maSP}}"
-							style="cursor: pointer; text-decoration: none; color: gray;"> <span
-								style="margin: auto;">Thêm
-								vào giỏ hàng <i class="fa fa-shopping-cart"></i></span>
-						</a>
+						
+						<div class="card-footer text-center">
+   							 <button th:data-id="${item.maSP}" onclick="addCart(this.getAttribute('data-id'))" class="btn btn-default btn-sm" style="cursor: pointer; text-decoration: none; color: gray;"> <span style="margin: auto;">Thêm
+							vào giỏ hàng <i class="fa fa-shopping-cart"></i></span></button>
+  						</div>
+						
 					</div>
 				</div>
 			</div>
-			<button onclick="loadMore()" class="btn btn-primary" >Load more</button>
 		</div>
 	</div>
-	
+
 
 	
 </body>
