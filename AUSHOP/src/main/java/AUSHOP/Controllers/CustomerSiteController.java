@@ -379,7 +379,7 @@ public class CustomerSiteController {
 			}
 		}
 
-		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ KeyBoard Shop!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
+		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ AUSHOP!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
 				"Thông báo đặt hàng thành công!");
 
 		shoppingCartService.clear();
@@ -440,7 +440,7 @@ public class CustomerSiteController {
 		oReal.setTinhTrang((short) 3);
 		donHangRepository.save(oReal);
 
-		sendMailAction(oReal, "Bạn đã huỷ 1 đơn hàng từ KeyBoard Shop!",
+		sendMailAction(oReal, "Bạn đã huỷ 1 đơn hàng từ AUSHOP!",
 				"Chúng tôi rất tiếc vì không làm hài lòng bạn!", "Thông báo huỷ đơn hàng thành công!");
 
 		return new ModelAndView("forward:/customer/info");
