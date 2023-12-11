@@ -60,17 +60,17 @@ public class CustomerController {
 		Optional<KhachHang> kh = khachhangRepository.findByEmail(principal.getName());
 		model.addAttribute("user", kh.get());
 		
-		Page<DonHang> list0 = donhangRepository.findByMaKhachHang(kh.get().getMaKhachHang(), 0, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
+		Page<DonHang> list0 = donhangRepository.findByMaKhachHang1(kh.get().getMaKhachHang(), 0, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
 		model.addAttribute("orders0", list0);
 		
-		Page<DonHang> list1 = donhangRepository.findByMaKhachHang(kh.get().getMaKhachHang(), 1, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
+		Page<DonHang> list1 = donhangRepository.findByMaKhachHang1(kh.get().getMaKhachHang(), 1, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
 		model.addAttribute("orders1", list1);
 
 		
-		Page<DonHang> list2 = donhangRepository.findByMaKhachHang(kh.get().getMaKhachHang(), 2, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
+		Page<DonHang> list2 = donhangRepository.findByMaKhachHang1(kh.get().getMaKhachHang(), 2, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
 		model.addAttribute("orders2", list2);
 		
-		Page<DonHang> list3 = donhangRepository.findByMaKhachHang(kh.get().getMaKhachHang(), 3, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
+		Page<DonHang> list3 = donhangRepository.findByMaKhachHang1(kh.get().getMaKhachHang(), 3, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "madh")));
 		model.addAttribute("orders3", list3);
 		
 		return new ModelAndView("/khachhang/thongtin",model);
