@@ -3,37 +3,28 @@
 	layout:decorate="~{site/dashboard-home.html}">
 
 <head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	
-	<script>
-		
-	$(window).scroll(()=>{
-    if($(window).scrollTop() + $(window).height() >= $(window).height())
-    {
-        loadMore();
-    }
-})
+<script>		
+	$(window).scroll(function(){
+	    if($(window).scrollTop()  >= $(document).height() - $(window).height() - 1)
+	    {
+	        loadMore();
+	    }
+	});
 	function loadMore() {
 		var amount = document.getElementsByClassName("product").length;
 		console.log(amount);
-		fetch(`http://localhost:9090/load?exits=${encodeURIComponent(amount)}`, {
-            method: 'get',
-            headers: {
-            'Content-Type': 'text/html;charset=UTF-8',
-          },
-          }
-        ).then(response => {
-    // Kiểm tra xem phản hồi có thành công hay không
-    if (!response.ok) {
-      throw new Error('Network response was not ok.');
-    }
-    console.log('Server response:', response);
-    // Đọc và trả về nội dung của phản hồi dưới dạng văn bản
-    return response.text();
-  }).then(data => {
-			console.log('Server response:', data);
-    		$("#contentSP").append(data);
-  		})
+		$.ajax({
+			url:"/load",
+			type:"get",
+			data:{
+				exits: amount
+			},
+			success : function(data){
+				$("#contentSP").append(data)
+			}
+			
+		})
 
 	}
 </script>
