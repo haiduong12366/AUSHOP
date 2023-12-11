@@ -238,7 +238,7 @@ public class CustomerSiteController {
 			}
 		}
 
-		model.addAttribute("KhachHang", khachHangRepository.findByEmail(principal.getName()).get());
+		model.addAttribute("user", khachHangRepository.findByEmail(principal.getName()).get());
 
 		// model.addAttribute("totalCartItems", shoppingCartService.getCount());
 		return new ModelAndView("/khachhang/edit");
@@ -254,7 +254,7 @@ public class CustomerSiteController {
 		 */
 		KhachHang kh = khachHangRepository.findByEmail(principal.getName()).get();
 		if (!photo.getOriginalFilename().equals("")) {
-			upload(photo, "uploads/KhachHang");
+			upload(photo, "uploads/customers");
 			kh.setHinhanhKH(photo.getOriginalFilename());
 		}
 		kh.setHoTen(dto.getHoTen());
