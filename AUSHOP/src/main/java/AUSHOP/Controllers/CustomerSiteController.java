@@ -220,7 +220,7 @@ public class CustomerSiteController {
 		return new ModelAndView("/site/changePassword", model);
 	}
 
-	@GetMapping("/KhachHang/editProfile")
+	@GetMapping("/customer/editProfile")
 	public ModelAndView editForm(ModelMap model, Principal principal) {
 
 		boolean isLogin = false;
@@ -241,10 +241,10 @@ public class CustomerSiteController {
 		model.addAttribute("KhachHang", khachHangRepository.findByEmail(principal.getName()).get());
 
 		// model.addAttribute("totalCartItems", shoppingCartService.getCount());
-		return new ModelAndView("/site/editProfile");
+		return new ModelAndView("/khachhang/edit");
 	}
 
-	@PostMapping("/KhachHang/editProfile")
+	@PostMapping("/customer/editProfile")
 	public ModelAndView edit(ModelMap model, @Valid @ModelAttribute("KhachHang") KhachHangModel dto,
 							 BindingResult result, @RequestParam("photo") MultipartFile photo, Principal principal) throws IOException {
 		/*
@@ -264,7 +264,7 @@ public class CustomerSiteController {
 
 		khachHangRepository.save(kh);
 
-		return new ModelAndView("forward:/KhachHang/info");
+		return new ModelAndView("forward:/khachhang/thongtin");
 	}
 
 	@RequestMapping("/customer/info")
@@ -286,19 +286,19 @@ public class CustomerSiteController {
 
 		Optional<KhachHang> c = khachHangRepository.findByEmail(principal.getName());
 
-		Page<DonHang> listO0 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 0,
+		Page<DonHang> listO0 = donHangRepository.findByMaKhachHang1(c.get().getMaKhachHang(), 0,
 				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
 		model.addAttribute("orders0", listO0);
 
-		Page<DonHang> listO1 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 1,
+		Page<DonHang> listO1 = donHangRepository.findByMaKhachHang1(c.get().getMaKhachHang(), 1,
 				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
 		model.addAttribute("orders1", listO1);
 
-		Page<DonHang> listO2 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 2,
+		Page<DonHang> listO2 = donHangRepository.findByMaKhachHang1(c.get().getMaKhachHang(), 2,
 				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
 		model.addAttribute("orders2", listO2);
 
-		Page<DonHang> listO3 = donHangRepository.findByMaKhachHang(c.get().getMaKhachHang(), 3,
+		Page<DonHang> listO3 = donHangRepository.findByMaKhachHang1(c.get().getMaKhachHang(), 3,
 				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
 		model.addAttribute("orders3", listO3);
 
@@ -386,6 +386,50 @@ public class CustomerSiteController {
 		return new ModelAndView("forward:/customer/info");
 	}
 
+	
+	@RequestMapping("/customer/checkoutVNPAY")
+	public ModelAndView checkoutVNPAY(Principal principal) {
+		Collection<CartItem> listItem = shoppingCartService.getCartItems();
+		KhachHang c = khachHangRepository.findByEmail(principal.getName()).get();
+		DonHang o = new DonHang();
+		o.setTongTien(shoppingCartService.getAmount());
+		o.setNgayDatHang(new Date());
+		o.setMaKhachHang(c);
+		o.setTinhTrang(0);
+		donHangRepository.save(o);
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(
+				"<h3>Xin chào " + c.getHoTen() + "!</h3>\r\n" + "    <h4>Bạn có 1 đơn hàng từ AUSHOP</h4>\r\n"
+						+ "    <table style=\"border: 1px solid gray;\">\r\n"
+						+ "        <tr style=\"width: 100%; border: 1px solid gray;\">\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">STT</th>\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">Tên sản phẩm</th>\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">Số lượng</th>\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">Đơn giá</th>\r\n" + "        </tr>");
+//		Set<OrderDetail> set = null;
+		for (CartItem i : listItem) {
+			Optional<SanPham> opt = sanPhamRepository.findById(i.getProductId());
+			if(opt.isPresent()) {
+				SanPham p = opt.get();
+				ChiTietDonHang od = new ChiTietDonHang();
+				od.setSoLuong(i.getQuantity());
+				od.setDonGia(i.getPrice());
+				od.setMaSP(p);
+				od.setMaDH(o);
+				chiTietDonHangRepository.save(od);
+				SanPham sp = opt.get();
+				sp.setSlTonKho(opt.get().getSlTonKho()-od.getSoLuong());
+				sanPhamRepository.save(sp);
+			}
+		}
+
+		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ KeyBoard Shop!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
+				"Thông báo đặt hàng thành công!");
+
+		shoppingCartService.clear();
+		return new ModelAndView("redirect:/VNPAY?tongtien="+o.getTongTien()+"&maDH="+o.getMaDH());
+	}
+	
 	@RequestMapping("/customer/cancel/{id}")
 	public ModelAndView cancel(ModelMap model, @PathVariable("id") int id, Principal principal) {
 		Optional<DonHang> o = donHangRepository.findById(id);

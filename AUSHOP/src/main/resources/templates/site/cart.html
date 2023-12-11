@@ -59,6 +59,7 @@
 		<script>
 			function showConfigModalDialog() {
 				$('#yesOption').attr('href', '/customer/checkout');
+				$('#VNPAY').attr('href', '/customer/checkoutVNPAY');
 				$('#configmationId').modal('show');
 			}
 		</script>
@@ -75,12 +76,11 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<p>Bạn muốn đặt đơn hàng này?</p>
+						<p>Phương thức thanh toán?</p>
 					</div>
 					<div class="modal-footer">
-						<a id="yesOption" type="button" class="btn btn-primary">Có</a>
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">Không</button>
+						<a id="yesOption" type="button" class="btn btn-primary">COD</a>
+						<a id="VNPAY" type="button" class="btn btn-primary">VNPAY</a>
 					</div>
 				</div>
 			</div>

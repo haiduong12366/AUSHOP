@@ -14,18 +14,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import AUSHOP.entity.ChiTietDonHang;
 import AUSHOP.entity.DonHang;
-import AUSHOP.entity.HoaDonItem;
-import AUSHOP.entity.NhaCungCap;
+
 import AUSHOP.entity.SanPham;
 import AUSHOP.repository.ChiTietDonHangRepository;
 import AUSHOP.repository.DonHangRepository;
@@ -88,7 +87,7 @@ public class DonHangController {
 			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.DESC, "maDH"));
 			list1 = donhangRepository.findByStatus(3, pageable);
 		} else if (filterPage == 5) {
-			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.DESC, "tong_tien"));
+			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.DESC, "tongTien"));
 			list1 = donhangRepository.findAll(pageable);
 		}
 
@@ -102,19 +101,17 @@ public class DonHangController {
 
 	@RequestMapping("/timkiem")
 	public ModelAndView timkiem(ModelMap model, @RequestParam("id") String id) {
-
-		Page<DonHang> list1 = null;
+		Page<DonHang> listDH = null;
 		if (id == null || id.equals("") || id.equalsIgnoreCase("null")) {
-			list1 = donhangRepository.findAll(PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "maDH")));
+			listDH = donhangRepository.findAll(PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "maDH")));
 		} else {
-			list1 = donhangRepository.findByMaDH(Integer.valueOf(id),
-					PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "maDH")));
+			listDH = donhangRepository.findByMaDH(Integer.valueOf(id), PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "maDH")));
 		}
 
 		model.addAttribute("id", id);
-		model.addAttribute("orders", list1);
+		model.addAttribute("orders", listDH);
+		// set active front-end
 		model.addAttribute("menuO", "menu");
-
 		return new ModelAndView("/admin/donhang");
 	}
 
