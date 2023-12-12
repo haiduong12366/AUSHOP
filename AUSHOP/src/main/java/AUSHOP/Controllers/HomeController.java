@@ -112,7 +112,7 @@ public class HomeController {
 					+ "								chọn tuyệt vời.</p>\r\n"
 					+ "						</div>\r\n"
 					+ "						<div class=\"card-footer text-center\">\r\n"
-					+ "   							 <button onclick=\"addCart(\"+item.getMaSP()+\")\" class=\"btn btn-default btn-sm\" style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span style=\"margin: auto;\">Thêm\r\n"
+					+ "   							 <button onclick=\"addCart("+item.getMaSP()+")\" class=\"btn btn-default btn-sm\" style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span style=\"margin: auto;\">Thêm\r\n"
 					+ "							vào giỏ hàng <i class=\"fa fa-shopping-cart\"></i></span></button>\r\n"
 					+ "  						</div>\r\n"
 					+ "					</div>\r\n"
