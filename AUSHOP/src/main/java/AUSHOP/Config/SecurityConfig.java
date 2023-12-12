@@ -1,6 +1,5 @@
 package AUSHOP.Config;
 
-import AUSHOP.services.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +9,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import AUSHOP.oauth.CustomOAuth2UserService;
+import AUSHOP.oauth.OAuth2LoginSuccessHandler;
+import AUSHOP.services.UserDetailService;
+
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	UserDetailService userDetailService;
+	
+	@Autowired
+	private CustomOAuth2UserService customOAuth2UserService;
+	
+	@Autowired
+	OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
+	
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
@@ -34,10 +45,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
 
-		http.authorizeRequests().antMatchers("/login", "/logout", "/register", "/home/**", "/cart/**",
+		http.authorizeRequests().antMatchers("/login", "/oauth2/**", "/logout", "/register", "/home/**", "/cart/**",
 				"/addCart/**", "/assets/**", "/css/**", "/js/**").permitAll();
 
-		http.authorizeRequests().antMatchers("/KhachHang/**","/customer/**").access("hasRole('ROLE_USER')");
+		http.authorizeRequests().antMatchers("/customer/**","/khachhang/**","/khachHang/**").access("hasRole('ROLE_USER')");
 
 		http.authorizeRequests().antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')");
 
@@ -50,6 +61,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.failureUrl("/login?error=true")
 				.usernameParameter("email")
 				.passwordParameter("passwd")
+				.and()
+				.oauth2Login()
+					.loginPage("/login")
+					.userInfoEndpoint().userService(customOAuth2UserService).and()
+					.successHandler(oauth2LoginSuccessHandler)
 				.and()
 				.logout().logoutUrl("/logout").logoutSuccessUrl("/home");
 

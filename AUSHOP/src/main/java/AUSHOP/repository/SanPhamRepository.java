@@ -1,14 +1,17 @@
 package AUSHOP.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
 
 import AUSHOP.entity.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -115,10 +118,24 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 			+ "ORDER BY COUNT(chi_tiet_don_hang.so_luong) DESC", nativeQuery = true)
 	List<Object[]> getTopProducts(Pageable pageable);
 
+
 	@Query(value = "select san_pham.tensp , sum(chi_tiet_don_hang.don_gia) as 'Tổng tiền', COUNT(san_pham.sl_ton_kho) as 'Số lượng' from chi_tiet_don_hang \r\n"
 			+ "join don_hang on don_hang.madh = chi_tiet_don_hang.madh\r\n"
 			+ "join san_pham on chi_tiet_don_hang.masp = san_pham.masp \r\n" + "where don_hang.tinh_trang = '2'\r\n"
 			+ "AND san_pham.ma_nhacc = ?1\r\n" 
 			+ "group by san_pham.tensp\r\n" + "order by COUNT(san_pham.sl_ton_kho) desc", nativeQuery = true)
 	List<Object[]> getLoaiSanPhamBanChayTheoNhaCC(int maNhaCC);
+
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE san_pham SET discount = ?,don_gia = ?,hinh_anh = ?,mo_ta =? ,sl_ton_kho = ?,tensp = ?,tinh_trang = ?,ma_loaisp = ?,ma_nhacc = ? WHERE masp = ?  ", nativeQuery = true)
+	void update(double discount, double donGia, String hinhAnh, String moTa, int slTonKho,
+			String tenSP, boolean tinhTrang, int maLoaiSP, int maNhaCC, int maSP);
+
+	
+
+	@Query(value = "SELECT DISTINCT san_pham.masp, san_pham.discount, san_pham.don_gia, san_pham.hinh_anh, san_pham.mo_ta, san_pham.ngaynhaphang, san_pham.sl_ton_kho, san_pham.tensp, san_pham.tinh_trang, san_pham.ma_loaisp, san_pham.ma_nhacc FROM san_pham JOIN da_xem ON da_xem.masp = san_pham.masp WHERE ma_khach_hang = ?", nativeQuery = true)
+	List<SanPham> findSanPhamById(int id);
+
 }

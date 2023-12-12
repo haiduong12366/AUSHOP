@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import AUSHOP.Model.LoaiSanPhamModel;
 import AUSHOP.Model.SanPhamModel;
 import AUSHOP.entity.ChiTietDonHang;
 import AUSHOP.entity.LoaiSanPham;
@@ -91,20 +92,16 @@ public class SanPhamController {
 	}
 
 	@PostMapping("/reset")
-	public ModelAndView reset(ModelMap model) {
-		model.addAttribute("product", new SanPhamModel());
-		model.addAttribute("photo", "keyboard.png");
-		List<NhaCungCap> categories = nhaCungCapRepository.findAll();
-		model.addAttribute("categories", categories);
-
-		List<LoaiSanPham> listl = loaiSanPhamRepository.findAll();
-		model.addAttribute("loaisanpham", listl);
-
-		List<NhaCungCap> listC = nhaCungCapRepository.findAll();
-		model.addAttribute("categories", listC);
-		// set active front-end
-		model.addAttribute("menuP", "menu");
-		return new ModelAndView("/admin/addProduct", model);
+	public ModelAndView reset(ModelMap model, @Valid @ModelAttribute("products") SanPhamModel dto, BindingResult result) {
+		if (result.hasErrors()) {
+			return new ModelAndView("redirect:/admin/products/add", model);
+		}
+		dto.setEdit(true);
+		if (dto.isEdit()) {
+			return new ModelAndView("redirect:edit/"+dto.getMaSP(), model);
+		} else {
+			return new ModelAndView("redirect:/admin/products/add", model);
+		}
 	}
 
 	@PostMapping("/add")
@@ -130,8 +127,10 @@ public class SanPhamController {
 		}
 		SanPham p = new SanPham();
 		BeanUtils.copyProperties(dto, p);
-		p.setMaNhaCC(nhaCungCapRepository.findById(dto.getMaNhaCC()).get());
-		p.setMaLoaiSP(loaiSanPhamRepository.findById(dto.getMaLoaiSP()).get());
+		NhaCungCap nn = nhaCungCapRepository.findById(dto.getMaNhaCC()).get();
+		LoaiSanPham ll = loaiSanPhamRepository.findById(dto.getMaLoaiSP()).get();
+		p.setMaNhaCC(nn);
+		p.setMaLoaiSP(ll);
 		p.setNgaynhaphang(new Date());
 
 		if (photo.getOriginalFilename().equals("")) {
@@ -145,10 +144,12 @@ public class SanPhamController {
 			upload(photo, "uploads/products/", p.getHinhAnh());
 		}
 
-		sanPhamRepository.save(p);
+
 		if (dto.isEdit()) {
+			sanPhamRepository.update(dto.getDiscount(),dto.getDonGia(),dto.getHinhAnh(),dto.getMoTa(),dto.getSlTonKho(),dto.getTenSP(),dto.isTinhTrang(),dto.getMaLoaiSP(),dto.getMaNhaCC(),dto.getMaSP());
 			model.addAttribute("message", "Sửa thành công!");
 		} else {
+			sanPhamRepository.save(p);
 			model.addAttribute("message", "Thêm thành công!");
 		}
 

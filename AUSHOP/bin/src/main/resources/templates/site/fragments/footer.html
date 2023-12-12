@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap}" rel="stylesheet">
+    <link th:href="@{https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap}" rel="stylesheet">
+    <link th:href="@{https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/fonts/icomoon/style.css}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!-- Style CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer}" />
+</head>
+
+<body>
+<footer th:fragment="footer" class="footer-14398" style="background-color: #363237;">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-md-3 inner-1">
+                <p class="footer-site-logo">KẾT NỐI VỚI AUSHOP</p>
+                <div class="inner-img">
+                    <img th:src="@{/assets/logo.jpg}">
+                </div>
+                <br>
+                <p>FOLLOW US</p>
+                <a href="#">
+                    <div class="inner-HeThong">
+                        FACEBOOK CỬA HÀNG
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-2 ml-auto">
+                <h3>AUSHOP</h3>
+                <ul class="list-unstyled links">
+                    <li><a href="#">Giới thiệu</a></li>
+                    <li><a href="#">Về chúng tôi</a></li>
+                    <li><a href="#">Tuyển dụng</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 ml-auto">
+                <h3>CẢM HỨNG #AUSHOP</h3>
+                <ul class="list-unstyled links">
+                    <li><a href="#">Sản phẩm</a></li>
+                    <li><a href="#">Ý tưởng và cảm hứng</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 ml-auto">
+                <h3>NEWSLETTER</h3>
+                <ul class="list-unstyled links">
+                    <li>
+                        <p>Hãy để lại email của bạn để nhận được những ý tưởng trang trí mới và những thông tin, ưu
+                            đãi từ AUSHOP</p>
+                    </li>
+                    <li>
+                        <p>Email: aushop@gmail.com</p>
+                    </li>
+                    <li>
+                        <p>Hotline: 0123456789</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+
+</html>

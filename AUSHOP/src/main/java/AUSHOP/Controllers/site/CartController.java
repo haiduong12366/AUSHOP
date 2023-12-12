@@ -1,10 +1,13 @@
 package AUSHOP.Controllers.site;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +46,7 @@ public class CartController {
 	UserRoleRepository userRoleRepository;
 
 	@RequestMapping("/addCart/{id}")
-	public ModelAndView addCart(ModelMap model, @PathVariable("id") Integer id, Principal principal) {
+	public ModelAndView addCart(ModelMap model, @PathVariable("id") Integer id, Principal principal,HttpServletResponse response) throws IOException {
 
 		boolean isLogin = false;
 		if (principal != null) {
@@ -56,7 +59,7 @@ public class CartController {
 			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
 			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(c.get().getMaKhachHang());
 			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
-				return new ModelAndView("forward:/admin/customers", model);
+				response.sendRedirect("/admin/customers");
 			}
 		}
 
@@ -69,7 +72,7 @@ public class CartController {
 				item.setProductId(p.get().getMaSP());
 				item.setName(p.get().getTenSP());
 				item.setDateAdd(new Date());
-				item.setPrice(p.get().getDonGia() - p.get().getDonGia() * p.get().getDiscount() / 100);
+				item.setPrice(p.get().getDonGia() - p.get().getDonGia() * p.get().getDiscount());
 				item.setQuantity(1);
 				shoppingCartService.add(item);
 //			model.addAttribute("message", "Đã thêm vào giỏ hàng!");
@@ -81,7 +84,7 @@ public class CartController {
 			model.addAttribute("message", "Quá số lượng!");
 		}
 		model.addAttribute("totalCartItems", shoppingCartService.getCount());
-		return new ModelAndView("forward:/shop", model);
+		return new ModelAndView("forward:/home", model);
 	}
 
 	@RequestMapping("/cart/update")

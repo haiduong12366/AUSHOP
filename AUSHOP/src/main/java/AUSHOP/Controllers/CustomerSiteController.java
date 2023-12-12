@@ -320,7 +320,7 @@ public class CustomerSiteController {
 //		model.addAttribute("totalCartItems", shoppingCartService.getCount());
 //		return new ModelAndView("/site/changePassword", model);
 //	}
-
+//
 //	@PostMapping("/customer/changePassword")
 //	public ModelAndView changePassword(ModelMap model, Principal principal,
 //			@RequestParam("currentPassword") String currentPassword, @RequestParam("newPassword") String newPassword,
@@ -331,9 +331,9 @@ public class CustomerSiteController {
 //			isLogin = true;
 //		}
 //		model.addAttribute("isLogin", isLogin);
-//		Customer c = customerRepository.FindByEmail(principal.getName()).get();
+//		KhachHang c = khachHangRepository.findByEmail(principal.getName()).get();
 ////		String password = bCryptPasswordEncoder.encode(currentPassword);
-//		if (bCryptPasswordEncoder.encode(currentPassword).equals(c.getPassword())) {
+//		if (bCryptPasswordEncoder.encode(currentPassword).equals(c.getPasswd())) {
 //			System.out.println("trung");
 //		} else {
 //			System.out.println("ko trung");
@@ -379,13 +379,57 @@ public class CustomerSiteController {
 			}
 		}
 
-		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ KeyBoard Shop!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
+		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ AUSHOP!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
 				"Thông báo đặt hàng thành công!");
 
 		shoppingCartService.clear();
 		return new ModelAndView("forward:/customer/info");
 	}
 
+	
+	@RequestMapping("/customer/checkoutVNPAY")
+	public ModelAndView checkoutVNPAY(Principal principal) {
+		Collection<CartItem> listItem = shoppingCartService.getCartItems();
+		KhachHang c = khachHangRepository.findByEmail(principal.getName()).get();
+		DonHang o = new DonHang();
+		o.setTongTien(shoppingCartService.getAmount());
+		o.setNgayDatHang(new Date());
+		o.setMaKhachHang(c);
+		o.setTinhTrang(0);
+		donHangRepository.save(o);
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(
+				"<h3>Xin chào " + c.getHoTen() + "!</h3>\r\n" + "    <h4>Bạn có 1 đơn hàng từ AUSHOP</h4>\r\n"
+						+ "    <table style=\"border: 1px solid gray;\">\r\n"
+						+ "        <tr style=\"width: 100%; border: 1px solid gray;\">\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">STT</th>\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">Tên sản phẩm</th>\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">Số lượng</th>\r\n"
+						+ "            <th style=\"border: 1px solid gray;\">Đơn giá</th>\r\n" + "        </tr>");
+//		Set<OrderDetail> set = null;
+		for (CartItem i : listItem) {
+			Optional<SanPham> opt = sanPhamRepository.findById(i.getProductId());
+			if(opt.isPresent()) {
+				SanPham p = opt.get();
+				ChiTietDonHang od = new ChiTietDonHang();
+				od.setSoLuong(i.getQuantity());
+				od.setDonGia(i.getPrice());
+				od.setMaSP(p);
+				od.setMaDH(o);
+				chiTietDonHangRepository.save(od);
+				SanPham sp = opt.get();
+				sp.setSlTonKho(opt.get().getSlTonKho()-od.getSoLuong());
+				sanPhamRepository.save(sp);
+			}
+		}
+
+		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ KeyBoard Shop!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
+				"Thông báo đặt hàng thành công!");
+
+		shoppingCartService.clear();
+		return new ModelAndView("redirect:/VNPAY?tongtien="+o.getTongTien()+"&maDH="+o.getMaDH());
+	}
+	
 	@RequestMapping("/customer/cancel/{id}")
 	public ModelAndView cancel(ModelMap model, @PathVariable("id") int id, Principal principal) {
 		Optional<DonHang> o = donHangRepository.findById(id);
@@ -396,7 +440,7 @@ public class CustomerSiteController {
 		oReal.setTinhTrang((short) 3);
 		donHangRepository.save(oReal);
 
-		sendMailAction(oReal, "Bạn đã huỷ 1 đơn hàng từ KeyBoard Shop!",
+		sendMailAction(oReal, "Bạn đã huỷ 1 đơn hàng từ AUSHOP!",
 				"Chúng tôi rất tiếc vì không làm hài lòng bạn!", "Thông báo huỷ đơn hàng thành công!");
 
 		return new ModelAndView("forward:/customer/info");
@@ -429,6 +473,30 @@ public class CustomerSiteController {
 		 
 	}
 
+	@GetMapping("customer/seen")
+	public ModelAndView seen(ModelMap model, Principal principal) {
+
+		boolean isLogin = false;
+		if (principal != null) {
+			isLogin = true;
+		}
+		model.addAttribute("isLogin", isLogin);
+
+		if (principal != null) {
+			Optional<KhachHang> kh = khachHangRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(kh.get().getMaKhachHang()));
+			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
+				return new ModelAndView("forward:/admin/customers", model);
+			}
+		}
+
+		Optional<KhachHang> c = khachHangRepository.findByEmail(principal.getName());
+		List<SanPham> listSeen = sanPhamRepository.findSanPhamById(c.get().getMaKhachHang());
+
+		model.addAttribute("hangDaXem", listSeen);
+		return new ModelAndView("/khachhang/daxem", model);
+
+	}
 	@RequestMapping("/403")
 	public String error() {
 
