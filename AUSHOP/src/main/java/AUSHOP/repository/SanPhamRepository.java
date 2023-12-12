@@ -105,10 +105,10 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 	@Query(value = "SELECT * FROM san_pham ORDER BY masp OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY", nativeQuery = true)
 	List<SanPham> getNext4(int offset);
 
-	@Query(value = "select top 8 * from san_pham order by masp desc", nativeQuery = true)
+	@Query(value = "select top 8 * from san_pham where is_delete = 0 order by masp desc", nativeQuery = true)
 	List<SanPham> get8Last();
 
-	@Query(value = "select top 4 * from san_pham", nativeQuery = true)
+	@Query(value = "select top 4 * from san_pham where is_delete = 0", nativeQuery = true)
 	List<SanPham> gettop4();
 
 	@Query(value = "SELECT san_pham.masp, san_pham.tensp, san_pham.hinh_anh, san_pham.don_gia, san_pham.discount, san_pham.sl_ton_kho\r\n"
@@ -137,5 +137,13 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 
 	@Query(value = "SELECT DISTINCT san_pham.masp, san_pham.discount, san_pham.don_gia, san_pham.hinh_anh, san_pham.mo_ta, san_pham.ngaynhaphang, san_pham.sl_ton_kho, san_pham.tensp, san_pham.tinh_trang, san_pham.ma_loaisp, san_pham.ma_nhacc FROM san_pham JOIN da_xem ON da_xem.masp = san_pham.masp WHERE ma_khach_hang = ?", nativeQuery = true)
 	List<SanPham> findSanPhamById(int id);
+
+	@Modifying
+	@Transactional
+	@Query(value = "update san_pham set is_delete = 1 where masp = ?", nativeQuery = true)
+	void isDelete(Integer id);
+
+	@Query(value = "select * from san_pham where is_delete = 0", nativeQuery = true)
+	Page<SanPham> findWithIsDelete(Pageable pageable);
 
 }

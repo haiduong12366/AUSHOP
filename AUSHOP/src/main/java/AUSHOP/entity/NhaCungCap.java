@@ -33,6 +33,9 @@ public class NhaCungCap implements Serializable {
 	@Column(name = "diaChiNhaCC" , columnDefinition = "nvarchar(100)")
 	private String  diaChiNhaCC;
 	
+	@Column(name = "isDelete" , columnDefinition = "bit")
+	private boolean isDelete = false;
+	
 	@OneToMany(mappedBy = "maNhaCC", cascade = CascadeType.ALL)
 	private Set<SanPham> SanPham;
 
