@@ -194,7 +194,7 @@ public class CustomerSiteController {
 								   @RequestParam("email") String email, @RequestParam("newPasswd") String newPasswd,
 								   @RequestParam("confirmPasswd") String confirmPasswd) {
 		if (result.hasErrors()) {
-				
+
 			model.addAttribute("newPasswd", newPasswd);
 			model.addAttribute("newPasswd", confirmPasswd);
 //			model.addAttribute("changePasswd", changePasswd);
@@ -320,7 +320,7 @@ public class CustomerSiteController {
 //		model.addAttribute("totalCartItems", shoppingCartService.getCount());
 //		return new ModelAndView("/site/changePassword", model);
 //	}
-
+//
 //	@PostMapping("/customer/changePassword")
 //	public ModelAndView changePassword(ModelMap model, Principal principal,
 //			@RequestParam("currentPassword") String currentPassword, @RequestParam("newPassword") String newPassword,
@@ -331,9 +331,9 @@ public class CustomerSiteController {
 //			isLogin = true;
 //		}
 //		model.addAttribute("isLogin", isLogin);
-//		Customer c = customerRepository.FindByEmail(principal.getName()).get();
+//		KhachHang c = khachHangRepository.findByEmail(principal.getName()).get();
 ////		String password = bCryptPasswordEncoder.encode(currentPassword);
-//		if (bCryptPasswordEncoder.encode(currentPassword).equals(c.getPassword())) {
+//		if (bCryptPasswordEncoder.encode(currentPassword).equals(c.getPasswd())) {
 //			System.out.println("trung");
 //		} else {
 //			System.out.println("ko trung");
@@ -344,13 +344,7 @@ public class CustomerSiteController {
 //	}
 
 	@RequestMapping("/customer/checkout")
-	public ModelAndView checkout(ModelMap model,Principal principal) {
-		int count  = shoppingCartService.getCount();
-		if(count == 0)
-		{
-			return new ModelAndView("redirect:/home?error=giohang");
-		}
-		
+	public ModelAndView checkout(Principal principal) {
 		Collection<CartItem> listItem = shoppingCartService.getCartItems();
 		KhachHang c = khachHangRepository.findByEmail(principal.getName()).get();
 		DonHang o = new DonHang();
@@ -389,7 +383,7 @@ public class CustomerSiteController {
 				"Thông báo đặt hàng thành công!");
 
 		shoppingCartService.clear();
-		return new ModelAndView("redirect:/customer/info");
+		return new ModelAndView("forward:/customer/info");
 	}
 
 	
@@ -429,27 +423,20 @@ public class CustomerSiteController {
 			}
 		}
 
-		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ AUSHOP!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
+		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ KeyBoard Shop!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
 				"Thông báo đặt hàng thành công!");
 
 		shoppingCartService.clear();
-		return new ModelAndView("redirect:/payment-VNPAY?tongTien="+o.getTongTien()+"&maDH="+o.getMaDH());
+		return new ModelAndView("redirect:/VNPAY?tongtien="+o.getTongTien()+"&maDH="+o.getMaDH());
 	}
 	
 	@RequestMapping("/customer/cancel/{id}")
 	public ModelAndView cancel(ModelMap model, @PathVariable("id") int id, Principal principal) {
 		Optional<DonHang> o = donHangRepository.findById(id);
 		if (o.isEmpty()) {
-			return new ModelAndView("redirect:/customer/info");
+			return new ModelAndView("forward:/customer/info");
 		}
 		DonHang oReal = o.get();
-		List<ChiTietDonHang> od = chiTietDonHangRepository.findByMaDH(oReal.getMaDH());
-		for (ChiTietDonHang item : od) {
-			Optional<SanPham> s = sanPhamRepository.findById(item.getMaSP().getMaSP());
-			SanPham sp = s.get();
-			sp.setSlTonKho(sp.getSlTonKho()+item.getSoLuong());
-			sanPhamRepository.save(sp);
-		}
 		oReal.setTinhTrang((short) 3);
 		donHangRepository.save(oReal);
 
@@ -486,6 +473,30 @@ public class CustomerSiteController {
 		 
 	}
 
+	@RequestMapping("/customer/seen")
+	public ModelAndView seen(ModelMap model, Principal principal) {
+
+		boolean isLogin = false;
+		if (principal != null) {
+			isLogin = true;
+		}
+		model.addAttribute("isLogin", isLogin);
+
+		if (principal != null) {
+			Optional<KhachHang> kh = khachHangRepository.findByEmail(principal.getName());
+			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(kh.get().getMaKhachHang()));
+			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
+				return new ModelAndView("forward:/admin/customers", model);
+			}
+		}
+
+		Optional<KhachHang> c = khachHangRepository.findByEmail(principal.getName());
+		List<SanPham> listSeen = sanPhamRepository.findSanPhamById(c.get().getMaKhachHang());
+
+		model.addAttribute("hangDaXem", listSeen);
+		return new ModelAndView("/khachhang/daxem", model);
+
+	}
 	@RequestMapping("/403")
 	public String error() {
 
