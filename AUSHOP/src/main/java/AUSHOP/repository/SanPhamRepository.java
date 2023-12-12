@@ -34,7 +34,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 			+ "group by loai_san_pham.ten_loaisp\r\n" + "order by COUNT(san_pham.sl_ton_kho) desc", nativeQuery = true)
 	List<Object[]> getLoaiSanPhamBanChay();
 
-	@Query(value = "select san_pham.tensp , sum(chi_tiet_don_hang.don_gia) as 'Tổng tiền', COUNT(san_pham.sl_ton_kho) as 'Số lượng' from chi_tiet_don_hang \r\n"
+	@Query(value = "select  san_pham.tensp , sum(chi_tiet_don_hang.don_gia) as 'Tổng tiền', COUNT(san_pham.sl_ton_kho) as 'Số lượng' from chi_tiet_don_hang \r\n"
 			+ "join don_hang on don_hang.madh = chi_tiet_don_hang.madh\r\n"
 			+ "join san_pham on chi_tiet_don_hang.masp = san_pham.masp \r\n" + "where don_hang.tinh_trang = '2'\r\n"
 			+ "group by san_pham.tensp\r\n" + "order by COUNT(san_pham.sl_ton_kho) desc", nativeQuery = true)
@@ -119,6 +119,14 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 	List<Object[]> getTopProducts(Pageable pageable);
 
 
+	@Query(value = "select san_pham.tensp , sum(chi_tiet_don_hang.don_gia) as 'Tổng tiền', COUNT(san_pham.sl_ton_kho) as 'Số lượng' from chi_tiet_don_hang \r\n"
+			+ "join don_hang on don_hang.madh = chi_tiet_don_hang.madh\r\n"
+			+ "join san_pham on chi_tiet_don_hang.masp = san_pham.masp \r\n" + "where don_hang.tinh_trang = '2'\r\n"
+			+ "AND san_pham.ma_nhacc = ?1\r\n" 
+			+ "group by san_pham.tensp\r\n" + "order by COUNT(san_pham.sl_ton_kho) desc", nativeQuery = true)
+	List<Object[]> getLoaiSanPhamBanChayTheoNhaCC(int maNhaCC);
+
+
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE san_pham SET discount = ?,don_gia = ?,hinh_anh = ?,mo_ta =? ,sl_ton_kho = ?,tensp = ?,tinh_trang = ?,ma_loaisp = ?,ma_nhacc = ? WHERE masp = ?  ", nativeQuery = true)
@@ -129,7 +137,5 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 
 	@Query(value = "SELECT DISTINCT san_pham.masp, san_pham.discount, san_pham.don_gia, san_pham.hinh_anh, san_pham.mo_ta, san_pham.ngaynhaphang, san_pham.sl_ton_kho, san_pham.tensp, san_pham.tinh_trang, san_pham.ma_loaisp, san_pham.ma_nhacc FROM san_pham JOIN da_xem ON da_xem.masp = san_pham.masp WHERE ma_khach_hang = ?", nativeQuery = true)
 	List<SanPham> findSanPhamById(int id);
-
-
 
 }
