@@ -47,11 +47,11 @@ public class PaymentVNPAYController {
 						.orElseThrow(() -> new NotFoundException("Không tồn tại đơn hàng này!"));
 				donHang.setTinhTrang(2);
 				donHangRepository.save(donHang);
-				response.sendRedirect("http://localhost:9090/customer/checkout");
+				response.sendRedirect("http://localhost:9090/customer/info");
 			} else {
 				// Giao dịch thất bại
 				// Thực hiện các xử lý cần thiết, ví dụ: không cập nhật CSDL\
-				response.sendRedirect("http://localhost:9090/customer/checkout");
+				response.sendRedirect("http://localhost:9090/customer/info");
 			}
 		}
 	}
