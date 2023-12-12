@@ -4,12 +4,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import AUSHOP.entity.NhaCungCap;
+import AUSHOP.entity.SanPham;
+import AUSHOP.repository.NhaCungCapRepository;
 import AUSHOP.repository.SanPhamRepository;
 
 @Controller
@@ -19,9 +25,40 @@ public class ThongKeController {
 	@Autowired
 	SanPhamRepository sanphamRepository;
 	
+	@Autowired
+	NhaCungCapRepository nhaCungCapRepository;
+	
 	@RequestMapping("/hangtonkho")
 	public ModelAndView hangtonkho(ModelMap model) {
-		model.addAttribute("hangtonkho", sanphamRepository.getTonKhoByLoaiSanPham());
+		Pageable pageable = PageRequest.of(0, 5);		
+		Page<SanPham> listp = sanphamRepository.findAll(pageable);
+		model.addAttribute("products", listp);
+		model.addAttribute("categories", nhaCungCapRepository.findAll());
+		
+		model.addAttribute("menuI", "menu");
+		return new ModelAndView("/admin/hangtonkho",model);
+	}
+	
+	@RequestMapping("/hangtonkho/page")
+	public ModelAndView hangtonkhoPage(ModelMap model,@RequestParam("page") Optional<Integer> page,
+			 @RequestParam("size") Optional<Integer> size,
+			 @RequestParam("brand") Optional<Long> brandPage) {
+		
+		int currentPage = page.orElse(0);
+		int pageSize = size.orElse(5);
+		Long ma_nhacc = brandPage.orElse(0L);
+		
+		Pageable pageable = PageRequest.of(currentPage, pageSize);	
+		Page<SanPham> list = null;
+		if (ma_nhacc == 0) {
+			list = sanphamRepository.findAll(pageable);
+		}
+		else {
+			list = sanphamRepository.findSanPhamByMaNhaCCContaining(ma_nhacc, pageable);
+		}
+		model.addAttribute("brand", ma_nhacc);
+		model.addAttribute("products", list);
+		model.addAttribute("categories", nhaCungCapRepository.findAll());
 		
 		model.addAttribute("menuI", "menu");
 		return new ModelAndView("/admin/hangtonkho",model);

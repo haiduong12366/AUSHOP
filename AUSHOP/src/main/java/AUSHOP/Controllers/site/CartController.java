@@ -128,7 +128,7 @@ public class CartController {
 			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
 			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(c.get().getMaKhachHang());
 			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
-				return new ModelAndView("forward:/admin/customers", model);
+				return new ModelAndView("redirect:/admin/customers", model);
 			}
 		}
 
