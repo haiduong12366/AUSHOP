@@ -7,12 +7,17 @@
 	<script>		
 	
 	function addCart(id) {
-		console.log(id)
+		var countElement = document.getElementById("countt")
+		var value = parseInt(countElement.innerHTML)+1;
+		console.log(value)
 		$.ajax({
 			url:"/addCart/"+id,
 			type:"get",
 			success : function(){
 				alert("Thêm thành công");
+				countElement.innerHTML = value;
+				
+				
 			}
 		})
 	}

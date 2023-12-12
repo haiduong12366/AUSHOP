@@ -130,8 +130,10 @@ public class SanPhamController {
 		}
 		SanPham p = new SanPham();
 		BeanUtils.copyProperties(dto, p);
-		p.setMaNhaCC(nhaCungCapRepository.findById(dto.getMaNhaCC()).get());
-		p.setMaLoaiSP(loaiSanPhamRepository.findById(dto.getMaLoaiSP()).get());
+		NhaCungCap nn = nhaCungCapRepository.findById(dto.getMaNhaCC()).get();
+		LoaiSanPham ll = loaiSanPhamRepository.findById(dto.getMaLoaiSP()).get();
+		p.setMaNhaCC(nn);
+		p.setMaLoaiSP(ll);
 		p.setNgaynhaphang(new Date());
 
 		if (photo.getOriginalFilename().equals("")) {
@@ -145,10 +147,12 @@ public class SanPhamController {
 			upload(photo, "uploads/products/", p.getHinhAnh());
 		}
 
-		sanPhamRepository.save(p);
+
 		if (dto.isEdit()) {
+			sanPhamRepository.update(dto.getDiscount(),dto.getDonGia(),dto.getHinhAnh(),dto.getMoTa(),dto.getSlTonKho(),dto.getTenSP(),dto.isTinhTrang(),dto.getMaLoaiSP(),dto.getMaNhaCC(),dto.getMaSP());
 			model.addAttribute("message", "Sửa thành công!");
 		} else {
+			sanPhamRepository.save(p);
 			model.addAttribute("message", "Thêm thành công!");
 		}
 

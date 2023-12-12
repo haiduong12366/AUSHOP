@@ -1,14 +1,17 @@
 package AUSHOP.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
 
 import AUSHOP.entity.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -114,5 +117,13 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 			+ "GROUP BY san_pham.masp, san_pham.tensp, san_pham.hinh_anh, san_pham.don_gia, san_pham.discount, san_pham.sl_ton_kho\r\n"
 			+ "ORDER BY COUNT(chi_tiet_don_hang.so_luong) DESC", nativeQuery = true)
 	List<Object[]> getTopProducts(Pageable pageable);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE san_pham SET discount = ?,don_gia = ?,hinh_anh = ?,mo_ta =? ,sl_ton_kho = ?,tensp = ?,tinh_trang = ?,ma_loaisp = ?,ma_nhacc = ? WHERE masp = ?  ", nativeQuery = true)
+	void update(double discount, double donGia, String hinhAnh, String moTa, int slTonKho,
+			String tenSP, boolean tinhTrang, int maLoaiSP, int maNhaCC, int maSP);
+
+	
 
 }
