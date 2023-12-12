@@ -21,6 +21,6 @@ public class LoaiSanPhamModel {
 	@NotEmpty
 	private String tenLoaiSP;
 	private Set<SanPham> SanPham;
-
+	private boolean isDelete = false;
 	private boolean isEdit = false; 
 }

@@ -55,6 +55,8 @@ public class SanPham implements Serializable {
 	@Column(name = "tinhTrang" , columnDefinition = "bit")
 	private boolean  tinhTrang;	
 	
+	@Column(name = "isDelete" , columnDefinition = "bit")
+	private boolean isDelete = false;
 	
 	@OneToMany(mappedBy = "maSP", cascade = CascadeType.ALL)
 	private Set<DanhGia> DanhGia;

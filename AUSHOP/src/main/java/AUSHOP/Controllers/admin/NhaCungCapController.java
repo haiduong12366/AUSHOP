@@ -119,6 +119,7 @@ public class NhaCungCapController {
 		
 		NhaCungCap c = new NhaCungCap();
 		BeanUtils.copyProperties(dto, c);
+		c.setDelete(false);
 		capRepository.save(c);
 		if (dto.isEdit()) {
 			model.addAttribute("message", "Sửa thành công!");
@@ -153,7 +154,7 @@ public class NhaCungCapController {
 		Optional<NhaCungCap> opt = capRepository.findById(id);
 		if (opt.isPresent()) {
 
-			capRepository.delete(opt.get());
+			capRepository.isDelete(opt.get().getMaNhaCC());
 			model.addAttribute("message", "Xoá thành công!");
 
 		} else {
@@ -198,7 +199,7 @@ public class NhaCungCapController {
 	public String list(ModelMap model, @RequestParam("size") Optional<Integer> size) {
 		int pageSize = size.orElse(5);
 		Pageable pageable = PageRequest.of(0, pageSize);
-		Page<NhaCungCap> list = capRepository.findAll(pageable);
+		Page<NhaCungCap> list = capRepository.findWithIsDelete(pageable);
 		model.addAttribute("categories", list);
 		
 		model.addAttribute("menuCa", "menu");

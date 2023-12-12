@@ -41,6 +41,8 @@ public class KhachHangModel{
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "YYYY-MM-DD hh:mi:ss")
 	private boolean is_admin;
+	
+	private boolean isDelete = false;
 	private boolean isEdit = false;
 
 }

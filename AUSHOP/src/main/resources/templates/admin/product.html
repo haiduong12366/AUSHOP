@@ -108,7 +108,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="item : ${products}">
+				<tr th:each="item : ${products}" th:unless="${item.isDelete}">
 					<td width="7%" class="text-center" th:text="${item.maSP}"></td>
 					<td class="text-center"><img
 						th:src="@{'/getproduct/'+${item.hinhAnh}}" width="100px"
