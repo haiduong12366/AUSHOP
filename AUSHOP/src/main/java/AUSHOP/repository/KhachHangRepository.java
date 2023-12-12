@@ -15,7 +15,7 @@ import AUSHOP.entity.KhachHang;
 
 public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
 
-
+	@Query(value = "select * from khach_hang where is_delete = 0 and ho_ten like %?%", nativeQuery = true)
 	public Page<KhachHang> findByHoTenContaining(String HoTen, Pageable pageable);
 
 	@Query(value = "select * from khach_hang where is_delete = 0 and email = ?", nativeQuery = true)

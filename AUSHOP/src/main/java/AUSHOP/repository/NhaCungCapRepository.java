@@ -15,7 +15,7 @@ import AUSHOP.entity.NhaCungCap;
 @Repository
 public interface NhaCungCapRepository extends JpaRepository<NhaCungCap,Integer> {
 
-
+	@Query(value = "select * from nha_cung_cap where is_delete = 0 and ten_nhacc like %?%", nativeQuery = true)
 	Page<NhaCungCap> findBytenNhaCCContaining(String tenNhaCC, Pageable pageable);
 
 	@Modifying
