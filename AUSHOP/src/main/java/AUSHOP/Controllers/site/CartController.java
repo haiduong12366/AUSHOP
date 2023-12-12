@@ -72,7 +72,7 @@ public class CartController {
 				item.setProductId(p.get().getMaSP());
 				item.setName(p.get().getTenSP());
 				item.setDateAdd(new Date());
-				item.setPrice(p.get().getDonGia() - p.get().getDonGia() * p.get().getDiscount() / 100);
+				item.setPrice(p.get().getDonGia() - p.get().getDonGia() * p.get().getDiscount());
 				item.setQuantity(1);
 				shoppingCartService.add(item);
 //			model.addAttribute("message", "Đã thêm vào giỏ hàng!");
@@ -128,7 +128,7 @@ public class CartController {
 			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
 			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(c.get().getMaKhachHang());
 			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
-				return new ModelAndView("redirect:/admin/customers", model);
+				return new ModelAndView("forward:/admin/customers", model);
 			}
 		}
 

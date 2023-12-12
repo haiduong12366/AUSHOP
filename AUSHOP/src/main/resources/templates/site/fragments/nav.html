@@ -1,48 +1,83 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top"
-	 style="background-color: #2d4262 !important; margin-bottom: 30%;"
-	 th:fragment="nav">
-	<div class="container">
-		<a class="navbar-brand col-3 p-0" th:href="@{/home}"><img
-				th:src="@{/../assets/favicon.ico}" width="15%"
+	<nav class="navbar navbar-expand-md bg-white fixed-top"
+		  th:fragment="nav">
+		<div class="container">
+			<a class="navbar-brand " th:href="@{/home}"><img th:src="@{/../assets/logo.jpg}" width="90px"
+																									 class="img-fluid p-0 mr-2" alt=""></a>
+			<ul class="navbar-nav navbar-expand-md d-flex justify-content-between">
+				<li class="nav-item p-2" >
+					<a class="nav-link" th:href="@{/home}">Trang chủ <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item p-2">
+					<a class="nav-link" th:href="@{/shop}">Sản Phẩm</a>
+				</li>
 
-				class="img-fluid p-0 mr-2" alt="">AUSHOP</a>
-		<a class="navbar-brand col-3 p-0" th:href="@{/shop}">Shop</a>
-		<div class="col-3 p-0">
-			<button class="navbar-toggler float-right" type="button"
-					data-toggle="collapse" data-target="#navbarResponsive"
-					aria-controls="navbarResponsive" aria-expanded="false"
+			</ul>
+			<nav class="navbar-nav navbar-right col-4 p-0 ">
+				<div class="container-fluid d-flex justify-content-end">
+					<form th:action="@{/shop/search}" method="post" class="form-inline my-2 my-lg-0">
+						<div class="input-group input-group-sm">
+							<input  type="text" class="form-control" placeholder="Tên sản phẩm" name="name"
+									th:value="${name}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+							<button  type="submit" class="btn search-submit" >
+								<span style="font-size: 28px;" class="fa fa-search" ></span>
+							</button>
+
+						</div>
+					</form>
+
+				<!--					 <ul class="navbar-nav navbar-right">-->
+				<!--                    <form th:action="@{/shop/search}" method="post" class="form-inline my-2 my-lg-0">-->
+				<!--                        <div class="input-group input-group-sm">-->
+				<!--                            <input  type="text" class="form-control" placeholder="Tên sản phẩm" name="name"-->
+				<!--								th:value="${name}" aria-label="Recipient's username" aria-describedby="basic-addon2">-->
+				<!--                            <button  type="submit" class="btn search-submit" >-->
+				<!--                                <span style="font-size: 28px;" class="fa fa-search" ></span>-->
+				<!--                            </button>-->
+
+				<!--                        </div>-->
+				<!--                    </form>-->
+				<!--                </ul>-->
+
+
+
+			</div>
+		</nav>
+		<div class="col-2 p-0 d-flex justify-content-start">
+			<button class="navbar-toggler float-right" type="button" data-toggle="collapse"
+					data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
 					aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><a class="nav-link" th:href="@{/cart}"><i
-                            class="fa fa-shopping-cart" style="font-size: 25px;"></i><small
-                            class="badge badge-light">[[${totalCartItems}]]</small></a></li>
-					<li class="nav-item dropdown pl-1"><a
-
-							class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink"
-							data-toggle="dropdown"> Tài khoản </a>
+					<li class="nav-item"><a class="nav-link" th:href="@{/cart}"><i class="fa fa-shopping-cart"
+																				   style="font-size: 25px;"></i><small
+							class="badge badge-light">[[${totalCartItems}]]</small></a></li>
+					<li class="nav-item dropdown pl-1"><a class="nav-link dropdown-toggle" href="#"
+														  id="dropdownMenuLink" data-toggle="dropdown"> Tài khoản </a>
 
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-							<a class="dropdown-item" th:href="@{/customer/info}"
-							   th:if="${isLogin}">Thông tin cá nhân</a>
+							<a class="dropdown-item" th:href="@{/customer/info}" th:if="${isLogin}">Thông tin cá
+								nhân</a>
 							<!-- 									<a class="dropdown-item" th:href="@{/customer/changePassword}" th:if="${isLogin}">Đổi mật khẩu</a>  -->
+							<a class="dropdown-item" th:href="@{customer/seen}" th:if="${isLogin}">Hàng đã xem</a>
 							<a class="dropdown-item" th:href="@{/customer/editProfile}" th:if="${isLogin}">Chỉnh
 								sửa thông tin</a> <a class="dropdown-item" th:href="@{/logout}"
-													 th:if="${isLogin}">Đăng xuất</a> <a class="dropdown-item"
-																						 th:href="@{/login}" th:unless="${isLogin}">Đăng nhập</a> <a
-								class="dropdown-item" th:href="@{/register}" th:unless="${isLogin}">Đăng kí</a>
-							<a class="dropdown-item" th:href="@{/forgotPassword}" th:unless="${isLogin}">Quên mật khẩu</a>
-						</div></li>
+													 th:if="${isLogin}">Đăng xuất</a> <a class="dropdown-item" th:href="@{/login}"
+																						 th:unless="${isLogin}">Đăng nhập</a> <a class="dropdown-item" th:href="@{/register}"
+																																 th:unless="${isLogin}">Đăng kí</a>
+							<a class="dropdown-item" th:href="@{/forgotPassword}" th:unless="${isLogin}">Quên mật
+								khẩu</a>
+						</div>
+					</li>
 				</ul>
 			</div>
 		</div>

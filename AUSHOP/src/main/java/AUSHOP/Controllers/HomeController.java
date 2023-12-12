@@ -8,6 +8,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import AUSHOP.entity.*;
+import AUSHOP.repository.*;
+import AUSHOP.services.IDaXemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,14 +26,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import AUSHOP.entity.KhachHang;
-import AUSHOP.entity.LoaiSanPham;
-import AUSHOP.entity.SanPham;
-import AUSHOP.entity.UserRole;
-import AUSHOP.repository.KhachHangRepository;
-import AUSHOP.repository.LoaiSanPhamRepository;
-import AUSHOP.repository.SanPhamRepository;
-import AUSHOP.repository.UserRoleRepository;
 import AUSHOP.services.ShoppingCartService;
 
 import javax.servlet.ServletException;
@@ -57,8 +52,14 @@ public class HomeController {
 	@Autowired
 	UserRoleRepository userRoleRepository;
 
+	@Autowired
+	IDaXemService daxemService;
+
+	@Autowired
+	DaXemRepository daXemRepository;
+
 	@RequestMapping(value = {"/home",""})
-	public ModelAndView home(ModelMap model, Principal principal,@RequestParam(value="error",required = false) String error) {
+	public ModelAndView home(ModelMap model, Principal principal) {
 		boolean isLogin = false;
 		if (principal != null) {
 			isLogin = true;
@@ -72,9 +73,7 @@ public class HomeController {
 				return new ModelAndView("forward:/admin/customers", model);
 			}
 		}
-		if (error != null) {
-			model.addAttribute("error", "Giỏ hàng chưa có sản phẩm");
-		}
+
 		List<SanPham> list8Last = productRepository.get8Last();
 		List<SanPham> listtop4 = productRepository.gettop4();
 //		List<SanPham> listnext4 = productRepository.getNext4(1);
@@ -108,11 +107,9 @@ public class HomeController {
 					+ "							<p class=\"text-center\">\r\n"
 					+ "								<small>(còn "+item.getSlTonKho()+" sản phẩm)</small>\r\n"
 					+ "							</p>\r\n"
-					+ "							<p class=\"card-text text-center\">Bàn phím cơ chơi game. Sự lựa\r\n"
-					+ "								chọn tuyệt vời.</p>\r\n"
 					+ "						</div>\r\n"
 					+ "						<div class=\"card-footer text-center\">\r\n"
-					+ "   							 <button onclick=\"addCart("+item.getMaSP()+")\" class=\"btn btn-default btn-sm\" style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span style=\"margin: auto;\">Thêm\r\n"
+					+ "   							 <button onclick=\"addCart(\"+item.getMaSP()+\")\" class=\"btn btn-default btn-sm\" style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span style=\"margin: auto;\">Thêm\r\n"
 					+ "							vào giỏ hàng <i class=\"fa fa-shopping-cart\"></i></span></button>\r\n"
 					+ "  						</div>\r\n"
 					+ "					</div>\r\n"
@@ -141,8 +138,6 @@ public class HomeController {
 					+ "								<p class=\"text-center\">\n"
 					+ "									<small>(còn [["+item.getSlTonKho()+"]] sản phẩm)</small>\n"
 					+ "								</p>\n"
-					+ "								<p class=\"card-text text-center\">Bàn phím cơ chơi game. Sự lựa\n"
-					+ "									chọn tuyệt vời.</p>\n"
 					+ "							</div>\n"
 					+ "							<a class=\"card-footer text-center\" th:href=\"@{'/addCart/'"+item.getMaSP()+"}\"\n"
 					+ "								style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span\n"
@@ -196,15 +191,14 @@ public class HomeController {
 		}
 		model.addAttribute("isLogin", isLogin);
 
+		Optional<SanPham> p = productRepository.findById(id);
+
 		if (principal != null) {
-			Optional<KhachHang> c = customerRepository.findByEmail(principal.getName());
-			Optional<UserRole> uRole = userRoleRepository.findByMaKhachHang(Integer.valueOf(c.get().getMaKhachHang()));
-			if (uRole.get().getRoleId().getTen().equals("ROLE_ADMIN")) {
-				return new ModelAndView("forward:/admin/customers", model);
-			}
+			Optional<KhachHang> kh = customerRepository.findByEmail(principal.getName());
+			DaXem seen = new DaXem(0,kh.get(),p.get());
+			daxemService.add(seen);
 		}
 
-		Optional<SanPham> p = productRepository.findById(id);
 		String cateName = productRepository.getTenLoaiSP(id);
 		String supName = productRepository.getTenNhaCC(id);
 
@@ -302,9 +296,9 @@ public class HomeController {
 			} else if (filterPage == 2) {
 				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
 			} else if (filterPage == 3) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "don_gia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "donGia"));
 			} else if (filterPage == 4) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "don_gia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "donGia"));
 			}
 		} else {
 			if (filterPage == 0) {
@@ -314,9 +308,9 @@ public class HomeController {
 			} else if (filterPage == 2) {
 				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
 			} else if (filterPage == 3) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "don_gia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "donGia"));
 			} else if (filterPage == 4) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "don_gia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "donGia"));
 			}
 		}
 
