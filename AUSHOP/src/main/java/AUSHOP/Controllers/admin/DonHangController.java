@@ -273,12 +273,16 @@ public class DonHangController {
 	@PostMapping("/chinhsua/capnhat/{id}")
 	public ModelAndView chinhsuaCapNhat(@PathVariable("id") Integer id, @RequestParam("soLuong") int soLuong, ModelMap model) {
 	    Optional<ChiTietDonHang> opt = chitietdonhangRepository.findById(id);
-
+	    Optional<DonHang> opt1 = donhangRepository.findById(opt.get().getMaDH().getMaDH());
 	    if (opt.isPresent()) {
 	        ChiTietDonHang chitiet = opt.get();
 	        chitiet.setSoLuong(soLuong);
+	        
+	        DonHang donhang = opt1.get();
+	        donhang.setTongTien(donhang.getTongTien()-chitiet.getTong()+chitiet.getSoLuong()*chitiet.getDonGia());
+	        chitiet.setTong(chitiet.getSoLuong()*chitiet.getDonGia());
 	        chitietdonhangRepository.save(chitiet);
-	    	
+	    	donhangRepository.save(donhang);
 	        int orderId = chitiet.getMaDH().getMaDH();
 	    	model.addAttribute("orderId", orderId);
 	    	return new ModelAndView("redirect:/admin/donhang/chinhsua/{orderId}", model);

@@ -264,7 +264,7 @@ public class CustomerSiteController {
 
 		khachHangRepository.save(kh);
 
-		return new ModelAndView("forward:/khachhang/thongtin");
+		return new ModelAndView("forward:/customer/info");
 	}
 
 	@RequestMapping("/customer/info")
@@ -301,7 +301,7 @@ public class CustomerSiteController {
 		Page<DonHang> listO3 = donHangRepository.findByMaKhachHang1(c.get().getMaKhachHang(), 3,
 				PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "maDH")));
 		model.addAttribute("orders3", listO3);
-
+		
 		model.addAttribute("user", c.get());
 		model.addAttribute("totalCartItems", shoppingCartService.getCount());
 		return new ModelAndView("/site/infomation", model);
@@ -372,6 +372,7 @@ public class CustomerSiteController {
 				od.setDonGia(i.getPrice());
 				od.setMaSP(p);
 				od.setMaDH(o);
+				od.setTong(od.getSoLuong()*od.getDonGia());
 				chiTietDonHangRepository.save(od);
 				SanPham sp = opt.get();
 				sp.setSlTonKho(opt.get().getSlTonKho()-od.getSoLuong());
@@ -423,11 +424,11 @@ public class CustomerSiteController {
 			}
 		}
 
-		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ KeyBoard Shop!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
+		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ AUSHOP!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
 				"Thông báo đặt hàng thành công!");
 
 		shoppingCartService.clear();
-		return new ModelAndView("redirect:/VNPAY?tongtien="+o.getTongTien()+"&maDH="+o.getMaDH());
+		return new ModelAndView("redirect:/payment-VNPAY?tongTien="+o.getTongTien()+"&maDH="+o.getMaDH());
 	}
 	
 	@RequestMapping("/customer/cancel/{id}")
