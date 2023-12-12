@@ -473,7 +473,7 @@ public class CustomerSiteController {
 		 
 	}
 
-	@RequestMapping("/customer/seen")
+	@GetMapping("customer/seen")
 	public ModelAndView seen(ModelMap model, Principal principal) {
 
 		boolean isLogin = false;

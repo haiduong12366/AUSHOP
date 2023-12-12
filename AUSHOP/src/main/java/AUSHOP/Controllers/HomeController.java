@@ -109,7 +109,7 @@ public class HomeController {
 					+ "							</p>\r\n"
 					+ "						</div>\r\n"
 					+ "						<div class=\"card-footer text-center\">\r\n"
-					+ "   							 <button onclick=\"addCart(\"+item.getMaSP()+\")\" class=\"btn btn-default btn-sm\" style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span style=\"margin: auto;\">Thêm\r\n"
+					+ "   							 <button onclick=\"addCart("+item.getMaSP()+")\" class=\"btn btn-default btn-sm\" style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span style=\"margin: auto;\">Thêm\r\n"
 					+ "							vào giỏ hàng <i class=\"fa fa-shopping-cart\"></i></span></button>\r\n"
 					+ "  						</div>\r\n"
 					+ "					</div>\r\n"
@@ -117,36 +117,7 @@ public class HomeController {
 		}
 	}
 
-	@RequestMapping(value = {"/load"}, method=RequestMethod.POST)
-	public void loadPost(HttpServletRequest request, HttpServletResponse response)throws IOException {
-
-		response.setContentType("text/html;charset=UTF-8");
-		String amount = request.getParameter("exits");
-		int iamount = Integer.parseInt(amount);
-		List<SanPham> list = productRepository.getNext4(iamount);
-		PrintWriter out = response.getWriter();
-
-		for (SanPham item : list) {
-			out.println("<div class=\"product col-lg-3 col-md-6 mb-4\">\n"
-					+ "						<div class=\"card h-100\">\n"
-					+ "							<a th:href=\"@{'/shop/item/'"+item.getMaSP()+"}\"><img class=\"card-img-top\"\n"
-					+ "									th:src=\"@{'/getproduct/'"+item.getHinhAnh()+"}\" alt=\"...\" /></a>\n"
-					+ "							<div class=\"card-body\">\n"
-					+ "								<h4 class=\"card-title text-center\">\n"
-					+ "									<a th:href=\"@{'/shop/item/'"+item.getMaSP()+"}\" th:text=\""+item.getTenSP()+"\"></a>\n"
-					+ "								</h4>\n"
-					+ "								<p class=\"text-center\">\n"
-					+ "									<small>(còn [["+item.getSlTonKho()+"]] sản phẩm)</small>\n"
-					+ "								</p>\n"
-					+ "							</div>\n"
-					+ "							<a class=\"card-footer text-center\" th:href=\"@{'/addCart/'"+item.getMaSP()+"}\"\n"
-					+ "								style=\"cursor: pointer; text-decoration: none; color: gray;\"> <span\n"
-					+ "									style=\"margin: auto;\">Thêm vào giỏ hàng <i class=\"fa fa-shopping-cart\"></i></span>\n"
-					+ "							</a>\n"
-					+ "						</div>\n"
-					+ "					</div>");
-		}
-	}
+	
 	@RequestMapping(value = {"/shop"})
 	public ModelAndView shop(ModelMap model, Principal principal) {
 		boolean isLogin = false;
