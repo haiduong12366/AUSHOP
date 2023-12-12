@@ -77,7 +77,7 @@ public class SanPhamController {
 	@GetMapping("/add")
 	public ModelAndView add(ModelMap model) {
 		model.addAttribute("product", new SanPhamModel());
-		model.addAttribute("photo", "keyboard.png");
+		model.addAttribute("photo", "logo.jpg");
 		List<NhaCungCap> categories = nhaCungCapRepository.findAll();
 		model.addAttribute("categories", categories);
 
@@ -114,7 +114,7 @@ public class SanPhamController {
 				model.addAttribute("photo", img);
 				dto.setHinhAnh(img);
 			} else {
-				model.addAttribute("photo", "keyboard.png");
+				model.addAttribute("photo", "logo.jpg");
 			}
 			List<LoaiSanPham> listl = loaiSanPhamRepository.findAll();
 			model.addAttribute("loaisanpham", listl);
@@ -136,11 +136,15 @@ public class SanPhamController {
 		if (photo.getOriginalFilename().equals("")) {
 			if (!img.equals("")) {
 				p.setHinhAnh(img);
+				dto.setHinhAnh(img);
+
 			} else {
-				p.setHinhAnh("keyboard.png");
+				p.setHinhAnh("logo.jpg");
+				dto.setHinhAnh("logo.jpg");
 			}
 		} else {
 			p.setHinhAnh(photo.getOriginalFilename());
+			dto.setHinhAnh(photo.getOriginalFilename());
 			upload(photo, "uploads/products/", p.getHinhAnh());
 		}
 

@@ -23,22 +23,7 @@
 
 			</div>
 		</div>
-		<div>
-			<label for="" class="ml-1">Tìm kiếm:</label>
-
-			<form th:action="@{/shop/search}" method="post">
-
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Tên sản phẩm" name="name" th:value="${name}"
-						aria-label="Recipient's username" aria-describedby="basic-addon2">
-					<div class="input-group-append">
-						<button style="font-size: 13px;" class="btn btn-outline-secondary">
-							<span class="fa fa-search"></span>
-						</button>
-					</div>
-				</div>
-			</form>
-		</div>
+		
 
 		<form th:action="@{/shop/page}" method="get">
 
