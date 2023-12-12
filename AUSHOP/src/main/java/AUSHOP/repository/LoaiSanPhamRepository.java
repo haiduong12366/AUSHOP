@@ -15,6 +15,7 @@ import AUSHOP.entity.NhaCungCap;
 @Repository
 public interface LoaiSanPhamRepository extends JpaRepository<LoaiSanPham,Integer> {
 
+	@Query(value = "select * from loai_san_pham where is_delete = 0 and ten_loaisp like %?%", nativeQuery = true)
 	Page<LoaiSanPham> findBytenLoaiSPContaining(String tenLoaiSP, Pageable pageable);
 
 	@Modifying

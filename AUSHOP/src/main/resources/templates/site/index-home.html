@@ -96,18 +96,18 @@
 							<a th:href="@{'/shop/item/'+${item[0]}}" th:text="${item[1]}"></a>
 						</h4>
 						<h5 class="text-center" th:unless="${item[4]>0}"
-							th:text="${#numbers.formatDecimal(item[3] - (item[3] * item[4]/100), 1, 'DEFAULT', 0, 'DEFAULT')}+ ' VNĐ'">
+							th:text="${#numbers.formatDecimal(item[3] - (item[3] * item[4]), 1, 'DEFAULT', 0, 'DEFAULT')}+ ' VNĐ'">
 						</h5>
 						<div style="display: flex;" class="text-center" th:if="${item[4]>0}">
 							<p style="font-size: 12px;text-decoration: line-through;"
 								th:text="${#numbers.formatDecimal(item[3], 1, 'DEFAULT', 0, 'DEFAULT')}">
 							</p>
 							<h5
-								th:text="${#numbers.formatDecimal(item[3] - (item[3] * item[4]/100), 1, 'DEFAULT', 0, 'DEFAULT')}+ ' VNĐ'">
+								th:text="${#numbers.formatDecimal(item[3] - (item[3] * item[4]), 1, 'DEFAULT', 0, 'DEFAULT')}+ ' VNĐ'">
 							</h5>
 						</div>
 						<div th:if="${item[4]>0}" class="text-center">
-							<small class="badge badge-danger m-0">-[[${#numbers.formatDecimal(item[4], 1,
+							<small class="badge badge-danger m-0">-[[${#numbers.formatDecimal(item[4]*100, 1,
 								'DEFAULT', 0, 'DEFAULT')}+'%']]</small>
 						</div>
 						<p class="text-center">

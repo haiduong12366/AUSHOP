@@ -3,6 +3,20 @@
     color: rgb(73, 73, 73);
 }
 
+.carousel-item img {
+    max-width: 1920px;
+    max-height: 951px;
+    width: 100%;
+    height: 800px; /* Đảm bảo ảnh giữ nguyên tỷ lệ khung hình */
+    transition: all 0.2s linear;
+    overflow: hidden;
+    transition: transform 1 ease-in-out;
+}
+
+.carousel-item:hover img {
+    transform: scale(1.1); /* Kích thước ảnh khi hover (tăng 10%) */
+}
+
 .info {
     border: none;
     background-color: white !important;
