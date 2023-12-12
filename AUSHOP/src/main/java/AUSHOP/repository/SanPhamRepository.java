@@ -118,6 +118,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 			+ "ORDER BY COUNT(chi_tiet_don_hang.so_luong) DESC", nativeQuery = true)
 	List<Object[]> getTopProducts(Pageable pageable);
 
+
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE san_pham SET discount = ?,don_gia = ?,hinh_anh = ?,mo_ta =? ,sl_ton_kho = ?,tensp = ?,tinh_trang = ?,ma_loaisp = ?,ma_nhacc = ? WHERE masp = ?  ", nativeQuery = true)
@@ -125,5 +126,10 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 			String tenSP, boolean tinhTrang, int maLoaiSP, int maNhaCC, int maSP);
 
 	
+
+	@Query(value = "SELECT DISTINCT san_pham.masp, san_pham.discount, san_pham.don_gia, san_pham.hinh_anh, san_pham.mo_ta, san_pham.ngaynhaphang, san_pham.sl_ton_kho, san_pham.tensp, san_pham.tinh_trang, san_pham.ma_loaisp, san_pham.ma_nhacc FROM san_pham JOIN da_xem ON da_xem.masp = san_pham.masp WHERE ma_khach_hang = ?", nativeQuery = true)
+	List<SanPham> findSanPhamById(int id);
+
+
 
 }

@@ -10,8 +10,8 @@ spring:
               - email
               - public_profile
           google:
-            client-id: 923402040067-jiavde8van2mq2v0brk31mqr6ia5u9im.apps.googleusercontent.com
-            client-secret: Gm8RoHJLu7UIbQf_ra2KFu5v
+            client-id: 1087786803850-90j6mbul1vogi8ca1c74shhni0j3prub.apps.googleusercontent.com
+            client-secret: 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
             scope:
               - email
               - profile

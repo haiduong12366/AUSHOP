@@ -1,35 +1,328 @@
 .list-group-item {
-  text-decoration: none !important;
-  color: rgb(73, 73, 73);
+    text-decoration: none !important;
+    color: rgb(73, 73, 73);
 }
 
 .info {
-  border: none; 
-  background-color: white !important; 
-  /* box-shadow: 0 0 2px rgba(119, 119, 119, 0.295); */
-  font-weight: 500;
+    border: none;
+    background-color: white !important;
+    /* box-shadow: 0 0 2px rgba(119, 119, 119, 0.295); */
+    font-weight: 500;
 }
 
 .content {
-  background-color: rgba(245, 245, 245, 0.295);
-  box-shadow: 0 2px 3px rgba(161, 161, 161, 0.377);
+    background-color: rgba(245, 245, 245, 0.295);
+    box-shadow: 0 2px 3px rgba(161, 161, 161, 0.377);
 }
 
-.fa-step-backward, .fa-chevron-left, .fa-chevron-right, .fa-step-forward {
-	font-size: 12px;
-	color: gray;
+.fa-step-backward,
+.fa-chevron-left,
+.fa-chevron-right,
+.fa-step-forward {
+    font-size: 12px;
+    color: gray;
 }
 
-#menu{
-	color: white;
-	background: #84afbe;;
+#menu {
+    color: white;
+    background: #84afbe;
+;
 }
 
 #brand {
-	background: antiquewhite;
-	color: brown;
+    background: antiquewhite;
+    color: brown;
 }
 
 .page-link {
-	color: gray;
+    color: gray;
 }
+
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #6a11cb;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+}
+
+.footer-14398 {
+    padding: 3rem 0;
+    background: #000;
+    color: #fff;
+}
+
+.footer-14398 .footer-site-logo {
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.footer-14398 .inner-1 a {
+    color: #fff;
+}
+
+.footer-14398 .inner-HeThong {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    border: 3px solid #fff;
+    margin-top: 15px;
+}
+
+.footer-14398 img {
+    width: 120px;
+    height: 120px;
+}
+
+.footer-14398 .social {
+    display: flex;
+    justify-content: left;
+}
+
+.footer-14398 h3 {
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.footer-14398 .links li {
+    margin-bottom: 10px;
+}
+
+.footer-14398 .links li a {
+    color: #fff;
+}
+
+.footer-14398 .links li a:hover {
+    color: #fff;
+}
+
+.footer-14398 .link-menu li {
+    display: inline-block;
+}
+
+.footer-14398 .link-menu li a {
+    color: #fff;
+    display: inline-block;
+    padding: 10px;
+}
+
+.footer-14398 .nav-left li:first-child a {
+    padding-left: 0;
+}
+
+.footer-14398 .link-menu.nav-right li:last-child a {
+    padding-left: 0;
+}
+
+.footer-14398 .social li {
+    display: inline-block;
+}
+
+.footer-14398 .social li a {
+    display: inline-block;
+    padding: 10px;
+    color: #ccc;
+}
+
+.footer-14398 .social li:last-child a {
+    padding-right: 0;
+}
+
+.footer-14398 .line {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-14398 a {
+    text-decoration: none;
+}
+@font-face {
+    font-family: OpenSans;
+    src: url('https://fonts.google.com/specimen/Open+Sans?query=open+sans');
+}
+.bloc_left_price {
+    color: #c01508;
+    text-align: center;
+    font-weight: bold;
+    font-size: 150%;
+}
+.category_block li:hover {
+    background-color: #007bff;
+}
+.category_block li:hover a {
+    color: #ffffff;
+}
+.category_block li a {
+    color: #343a40;
+}
+.add_to_cart_block .price {
+    color: #c01508;
+    text-align: center;
+    font-weight: bold;
+    font-size: 200%;
+    margin-bottom: 0;
+}
+.add_to_cart_block .price_discounted {
+    color: #343a40;
+    text-align: center;
+    text-decoration: line-through;
+    font-size: 140%;
+}
+.product_rassurance {
+    padding: 10px;
+    margin-top: 15px;
+    background: #ffffff;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+}
+.product_rassurance .list-inline {
+    margin-bottom: 0;
+    text-transform: uppercase;
+    text-align: center;
+}
+.product_rassurance .list-inline li:hover {
+    color: #343a40;
+}
+.reviews_product .fa-star {
+    color: gold;
+}
+.pagination {
+    margin-top: 20px;
+}
+footer {
+    background: #343a40;
+    padding: 40px;
+}
+footer a {
+    color: #f8f9fa!important
+}
+.nav-item > a.nav-link{
+    font-size:120%;
+    font-family:"Roboto", sans-serif;
+    font-weight: lighter;
+    color: #4B4B4B;
+}
+.form-inline > .input-group > input{
+    border-radius: 25px;
+    width: 273px;
+    height: 40px;
+    padding-left: 15px;
+}
+
+.search-submit{
+    text-align: center;
+    padding: 10px 10px;
+}
+
+.form-inline > .input-group >button {
+    padding: 0;
+    width: 50px;
+    height: 40px;
+    border: none;
+    background: none;
+}
+
+.form-inline > .input-group >button> img{
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+}
+
+.form-inline > a > img{
+
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+.navbar-nav > li > a{
+    color:#343a40 !important;
+}
+
+.navbar-nav > li > a:hover{
+    color:#e9bd1c !important;
+}
+body {
+    padding-top: 56px; /* Đặt khoảng cách từ top để tránh bị đè lên bởi thanh header */
+}
+.header-wrapper {
+    height: 56px; /* Đặt chiều cao của header */
+}
+
+.carousel-item img {
+    max-width: 1920px;
+    max-height: 951px;
+    width: 100%; /* Đảm bảo ảnh giữ nguyên tỷ lệ khung hình */
+    height: auto; /* Đảm bảo ảnh giữ nguyên tỷ lệ khung hình */
+    transition: all 0.2s linear;
+    overflow: hidden;
+    transition: transform 1 ease-in-out;
+}
+
+.carousel-item:hover img {
+    transform: scale(1.1); /* Kích thước ảnh khi hover (tăng 10%) */
+}
+
+.carousel-caption {
+    position: absolute;
+    top: 59%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.carousel-caption span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 45px;
+    color: #ffffff;;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-weight: 600 !important;
+    -webkit-text-stroke-color: #000;
+    -webkit-text-stroke-width: 0.4px;
+}
+
+.card-header {
+    background-color: rgba(255, 255, 255, 0.7); /* Màu nền trong suốt (trong suốt có thể điều chỉnh qua giá trị alpha) */
+    color: #000; /* Màu chữ màu đen */
+}
+
+.card-header > span{
+    font-family: sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 22px;
+    color: #4B4B4B;
+}
+
+.form-container{
+    background-color: #f0f0f0;
+    padding: 24px;
+    width: 1200px;
+    height: 540px;
+}
+
+.form-container > form >button{
+    background-color: #000;
+    border-color: #fff;
+}
+
+.form-container > form >button:hover{
+    background-color: #f0f0f0;
+    color: #000;
+    border-color: #000;
+}
+
+.side-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 50px;
+}
+
+
