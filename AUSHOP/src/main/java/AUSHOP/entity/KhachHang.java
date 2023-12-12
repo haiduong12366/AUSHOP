@@ -61,6 +61,9 @@ public class KhachHang implements Serializable {
 
 	@Column(name = "is_admin" , columnDefinition = "bit")
 	private Boolean is_admin;
+	
+	@Column(name = "isDelete" , columnDefinition = "bit")
+	private boolean isDelete = false;
 
 //	@JsonIgnore
 //	@OneToMany(mappedBy = "maKhachHang", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

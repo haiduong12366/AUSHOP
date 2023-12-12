@@ -61,7 +61,7 @@ public class SanPhamController {
 	@RequestMapping("")
 	public ModelAndView list(ModelMap model) {
 		Pageable pageable = PageRequest.of(0, 5);
-		Page<SanPham> list = sanPhamRepository.findAll(pageable);
+		Page<SanPham> list = sanPhamRepository.findWithIsDelete(pageable);
 
 		model.addAttribute("products", list);
 		List<NhaCungCap> listC = nhaCungCapRepository.findAll();
@@ -92,13 +92,14 @@ public class SanPhamController {
 	}
 
 	@PostMapping("/reset")
-	public ModelAndView reset(ModelMap model, @Valid @ModelAttribute("products") SanPhamModel dto, BindingResult result) {
+	public ModelAndView reset(ModelMap model, @Valid @ModelAttribute("products") SanPhamModel dto,
+			BindingResult result) {
 		if (result.hasErrors()) {
 			return new ModelAndView("redirect:/admin/products/add", model);
 		}
 		dto.setEdit(true);
 		if (dto.isEdit()) {
-			return new ModelAndView("redirect:edit/"+dto.getMaSP(), model);
+			return new ModelAndView("redirect:edit/" + dto.getMaSP(), model);
 		} else {
 			return new ModelAndView("redirect:/admin/products/add", model);
 		}
@@ -132,7 +133,7 @@ public class SanPhamController {
 		p.setMaNhaCC(nn);
 		p.setMaLoaiSP(ll);
 		p.setNgaynhaphang(new Date());
-
+		p.setDelete(false);
 		if (photo.getOriginalFilename().equals("")) {
 			if (!img.equals("")) {
 				p.setHinhAnh(img);
@@ -148,9 +149,10 @@ public class SanPhamController {
 			upload(photo, "uploads/products/", p.getHinhAnh());
 		}
 
-
 		if (dto.isEdit()) {
-			sanPhamRepository.update(dto.getDiscount(),dto.getDonGia(),dto.getHinhAnh(),dto.getMoTa(),dto.getSlTonKho(),dto.getTenSP(),dto.isTinhTrang(),dto.getMaLoaiSP(),dto.getMaNhaCC(),dto.getMaSP());
+			sanPhamRepository.update(dto.getDiscount(), dto.getDonGia(), dto.getHinhAnh(), dto.getMoTa(),
+					dto.getSlTonKho(), dto.getTenSP(), dto.isTinhTrang(), dto.getMaLoaiSP(), dto.getMaNhaCC(),
+					dto.getMaSP());
 			model.addAttribute("message", "Sửa thành công!");
 		} else {
 			sanPhamRepository.save(p);
@@ -164,13 +166,10 @@ public class SanPhamController {
 	public ModelAndView delete(@PathVariable("id") Integer id, ModelMap model) {
 		Optional<SanPham> p = sanPhamRepository.findById(id);
 		if (p.isPresent()) {
-			List<ChiTietDonHang> listOD = chiTietDonHangRepository.findBymaSP(id);
-			if (listOD.size() > 0) {
-				model.addAttribute("error", "Không thể xoá sản phẩm này!");
-			} else {
-				sanPhamRepository.deleteById(id);
-				model.addAttribute("message", "Xoá thành công!");
-			}
+
+			sanPhamRepository.isDelete(id);
+			model.addAttribute("message", "Xoá thành công!");
+
 		} else {
 			model.addAttribute("error", "Sản phẩm không tồn tại!");
 		}
@@ -256,11 +255,10 @@ public class SanPhamController {
 		if (tenSP.equalsIgnoreCase("null")) {
 			tenSP = "";
 		}
-		
 
 		Long ma_nhacc = brandPage.orElse(0L);
 		Long ma_loaisp = typePage.orElse(0L);
-		
+
 		Pageable pageable = PageRequest.of(currentPage, pageSize);
 
 		if (filterPage == 0) {
@@ -276,23 +274,22 @@ public class SanPhamController {
 		}
 
 		Page<SanPham> list = null;
-		
+
 		if (ma_nhacc == 0) {
-			if(ma_loaisp==0) {
+			if (ma_loaisp == 0) {
 				list = sanPhamRepository.findBytenSPContaining(tenSP, pageable);
+			} else {
+				list = sanPhamRepository.findByTenSPAndMaLoaiSPContaining(tenSP, ma_loaisp, pageable);
 			}
-			else {
-				list = sanPhamRepository.findByTenSPAndMaLoaiSPContaining(tenSP,ma_loaisp,pageable);
-			}
-			
+
 		} else {
-			if(ma_loaisp==0) {
-				list = sanPhamRepository.findSanPhamByTenSPAndMaNhaCCContaining(tenSP,ma_nhacc, pageable);
+			if (ma_loaisp == 0) {
+				list = sanPhamRepository.findSanPhamByTenSPAndMaNhaCCContaining(tenSP, ma_nhacc, pageable);
+			} else {
+				list = sanPhamRepository.findSanPhamByTenSPAndMaNhaCCAndMaLoaiSPContaining(tenSP, ma_nhacc, ma_loaisp,
+						pageable);
 			}
-			else {
-				list = sanPhamRepository.findSanPhamByTenSPAndMaNhaCCAndMaLoaiSPContaining(tenSP,ma_nhacc,ma_loaisp, pageable);
-			}
-			
+
 		}
 		model.addAttribute("type", ma_loaisp);
 		model.addAttribute("brand", ma_nhacc);

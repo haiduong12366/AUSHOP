@@ -71,7 +71,7 @@ public class KhachHangController {
 	@RequestMapping("")
 	public ModelAndView form(ModelMap model) {
 		Pageable pageable = PageRequest.of(0, 5);
-		Page<KhachHang> list = khachHangRepository.findAll(pageable);
+		Page<KhachHang> list = khachHangRepository.findAllwithIsdelete(0,pageable);
 
 		model.addAttribute("customers", list);
 		// set active front-end
@@ -124,7 +124,7 @@ public class KhachHangController {
 		KhachHang c = new KhachHang();
 		BeanUtils.copyProperties(dto, c);
 		c.setNgayDangKy(new Date());
-
+		c.setDelete(false);
 		if (photo.getOriginalFilename().equals("")) {
 			if (image.equals("")) {
 				c.setHinhanhKH("user.png");
@@ -177,20 +177,8 @@ public class KhachHangController {
 		Optional<KhachHang> opt = khachHangRepository.findById(id);
 		if (opt.isPresent()) {
 			KhachHang c = opt.get();
-			Optional<UserRole> opt1 = userRoleRepository.findByMaKhachHang(c.getMaKhachHang());
-			Optional<DonHang> opt2 = donHangRepository.findByMaKhachHang(c.getMaKhachHang());
-			if (opt2.isPresent()) {
-				List<ChiTietDonHang> opt3 = chiTietDonHangRepository.findByMaDH(opt2.get().getMaDH());
-
-				for (ChiTietDonHang chiTietDonHang : opt3) {
-					chiTietDonHangRepository.delete(chiTietDonHang);
-				}
-			}
-			if (opt2.isPresent())
-				donHangRepository.delete(opt2.get());
-			if (opt1.isPresent())
-				userRoleRepository.delete(opt1.get());
-			khachHangRepository.delete(c);
+			c.setDelete(true);
+			khachHangRepository.isDelete(c.getMaKhachHang());
 			model.addAttribute("message", "Xoá thành công!");
 		} else {
 			model.addAttribute("error", "Người dùng này không tồn tại!");

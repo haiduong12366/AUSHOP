@@ -26,6 +26,8 @@ public class LoaiSanPham implements Serializable {
 	@Column(name = "tenLoaiSP" , columnDefinition = "nvarchar(100)")
 	private String tenLoaiSP;
 	
+	@Column(name = "isDelete" , columnDefinition = "bit")
+	private boolean isDelete = false;
 	
 	@OneToMany(mappedBy = "maLoaiSP", cascade = CascadeType.ALL)
 	private Set<SanPham> SanPham;

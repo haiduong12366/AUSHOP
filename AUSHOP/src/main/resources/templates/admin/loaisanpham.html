@@ -47,7 +47,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="item, count : ${loaisanpham}">
+				<tr th:each="item, count : ${loaisanpham}" th:unless="${item.isDelete}">
 					<td class="text-center" th:text="${item.maLoaiSP}"></td>
 					<td th:text="${item.tenLoaiSP}"></td>
 					

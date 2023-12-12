@@ -65,22 +65,22 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 			+ "order by year(ngay_dat_hang) desc", nativeQuery = true)
 	List<Object[]> getThongKeTheoNam();
 
-
+	@Query(value = "select * from san_pham where is_delete = 0 and tensp like %?%", nativeQuery = true)
 	Page<SanPham> findBytenSPContaining(String tenSP, Pageable pageable);
 
-	@Query(value = "select * from san_pham where ma_nhacc = ?", nativeQuery = true)
+	@Query(value = "select * from san_pham where ma_nhacc = ? and is_delete = 0", nativeQuery = true)
 	Page<SanPham> findSanPhamByMaNhaCCContaining(Long brand, Pageable pageable);
 
-	@Query(value = "select * from san_pham where tensp like %?% AND ma_loaisp = ?", nativeQuery = true)
+	@Query(value = "select * from san_pham where tensp like %?% AND ma_loaisp = ? and is_delete = 0", nativeQuery = true)
 	Page<SanPham> findByTenSPAndMaLoaiSPContaining(String tenSP, Long maloaisp, Pageable pageable);
 
-	@Query(value = "select * from san_pham where tensp like %?% and ma_nhacc = ? and ma_loaisp = ? ", nativeQuery = true)
+	@Query(value = "select * from san_pham where tensp like %?% and ma_nhacc = ? and ma_loaisp = ? and is_delete = 0", nativeQuery = true)
 	Page<SanPham> findSanPhamByTenSPAndMaNhaCCAndMaLoaiSPContaining(String tenSP, Long ma_nhacc, Long ma_loaisp, Pageable pageable);
 
-	@Query(value = "select * from san_pham where tensp like %?% and ma_nhacc = ?", nativeQuery = true)
+	@Query(value = "select * from san_pham where tensp like %?% and ma_nhacc = ? and is_delete = 0", nativeQuery = true)
 	Page<SanPham> findSanPhamByTenSPAndMaNhaCCContaining(String tenSP, Long ma_nhacc, Pageable pageable);
 
-	@Query(value = "select * from san_pham where ma_loaisp = ?", nativeQuery = true)
+	@Query(value = "select * from san_pham where ma_loaisp = ? and is_delete = 0", nativeQuery = true)
 	Page<SanPham> findAllProductByCategoryId(int id, Pageable pageable);
 
 	@Query(value = "select san_pham.masp, san_pham.tensp, san_pham.hinh_anh, san_pham.don_gia, san_pham.discount, san_pham.sl_ton_kho , sum(chi_tiet_don_hang.don_gia) as 'Tổng tiền', COUNT(san_pham.sl_ton_kho) as 'Số lượng' from chi_tiet_don_hang \r\n"
@@ -105,10 +105,10 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 	@Query(value = "SELECT * FROM san_pham ORDER BY masp OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY", nativeQuery = true)
 	List<SanPham> getNext4(int offset);
 
-	@Query(value = "select top 8 * from san_pham order by masp desc", nativeQuery = true)
+	@Query(value = "select top 8 * from san_pham where is_delete = 0 order by masp desc", nativeQuery = true)
 	List<SanPham> get8Last();
 
-	@Query(value = "select top 4 * from san_pham", nativeQuery = true)
+	@Query(value = "select top 4 * from san_pham where is_delete = 0", nativeQuery = true)
 	List<SanPham> gettop4();
 
 	@Query(value = "SELECT san_pham.masp, san_pham.tensp, san_pham.hinh_anh, san_pham.don_gia, san_pham.discount, san_pham.sl_ton_kho\r\n"
@@ -137,5 +137,13 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 
 	@Query(value = "SELECT DISTINCT san_pham.masp, san_pham.discount, san_pham.don_gia, san_pham.hinh_anh, san_pham.mo_ta, san_pham.ngaynhaphang, san_pham.sl_ton_kho, san_pham.tensp, san_pham.tinh_trang, san_pham.ma_loaisp, san_pham.ma_nhacc FROM san_pham JOIN da_xem ON da_xem.masp = san_pham.masp WHERE ma_khach_hang = ?", nativeQuery = true)
 	List<SanPham> findSanPhamById(int id);
+
+	@Modifying
+	@Transactional
+	@Query(value = "update san_pham set is_delete = 1 where masp = ?", nativeQuery = true)
+	void isDelete(Integer id);
+
+	@Query(value = "select * from san_pham where is_delete = 0", nativeQuery = true)
+	Page<SanPham> findWithIsDelete(Pageable pageable);
 
 }

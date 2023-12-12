@@ -112,6 +112,7 @@ public class LoaiSanPhamController {
 
 		LoaiSanPham c = new LoaiSanPham();
 		BeanUtils.copyProperties(dto, c);
+		c.setDelete(false);
 		loaiSanPhamRepository.save(c);
 		if (dto.isEdit()) {
 			model.addAttribute("message", "Sửa thành công!");
@@ -145,7 +146,7 @@ public class LoaiSanPhamController {
 		Optional<LoaiSanPham> opt = loaiSanPhamRepository.findById(id);
 		if (opt.isPresent()) {
 
-			loaiSanPhamRepository.delete(opt.get());
+			loaiSanPhamRepository.isDelete(opt.get().getMaLoaiSP());
 			model.addAttribute("message", "Xoá thành công!");
 
 		} else {
@@ -191,7 +192,7 @@ public class LoaiSanPhamController {
 	public String list(ModelMap model, @RequestParam("size") Optional<Integer> size) {
 		int pageSize = size.orElse(5);
 		Pageable pageable = PageRequest.of(0, pageSize);
-		Page<LoaiSanPham> list = loaiSanPhamRepository.findAll(pageable);
+		Page<LoaiSanPham> list = loaiSanPhamRepository.findAllisDeleteContainning(pageable);
 		model.addAttribute("loaisanpham", list);
 
 		model.addAttribute("menuLa", "menu");
