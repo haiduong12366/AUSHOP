@@ -8,25 +8,85 @@
 <body>
 	<div layout:fragment="content" class="col-lg-10 my-4"
 		style="min-height: 600px; border: 1px solid rgba(128, 128, 128, 0.212);">
+		
+		<div style="display: flex">
+			
+			<label class="mt-4 pt-1" style="max-width: 10%" >Nhà cung cấp:</label>
+			<form class="col-2 mt-4" th:action="@{/admin/hangtonkho/page}"
+				method="get" >
+			<select class="custom-select" onchange="this.form.submit()" name="brand"
+					style="width: 85%">
+					<option th:selected="${brand==0}" value="0">Tất cả</option>
+					<option th:each="item : ${categories}"
+						th:value="${item.maNhaCC}"
+						th:selected="${brand==item.maNhaCC}">[[${item.tenNhaCC}]]
+						</option>
+				</select>
+			</form>
+		</div>
+		
+		
+		
 		<table class="table table-bordered mt-3">
 			<thead>
 				<tr class="text-center">
-					<th width="8%">STT</th>
-					<th>Tên thương hiệu</th>
+					<th width="8%">Mã sản phẩm</th>
+					<th>Tên sản phẩm</th>
+					<th>Tên nhà cung cấp</th>
 					<th width="20%">Tổng số lượng sản phẩm</th>
+					<th>Đơn Giá</th>
 					<th>Tổng tiền</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="item, count : ${hangtonkho}">
-					<td class="text-center" th:text="${count.index+1}"></td>
-					<td th:text="${item.group.tenLoaiSP}"></td>
-					<td class="text-center" th:text="${item.count}"></td>
-					<td class="text-center" th:text="${#numbers.formatDecimal(item.sum, 1, 'DEFAULT', 0, 'DEFAULT')}+' VNĐ'"></td>
+				<tr th:each="item : ${products}">
+					<td class="text-center" th:text="${item.MaSP}"></td>
+					<td th:text="${item.tenSP}"></td>
+					<td th:text="${item.maNhaCC.tenNhaCC}"></td>
+					<td class="text-center" th:text="${item.slTonKho}"></td>
+					<td class="text-center" th:text="${#numbers.formatDecimal(item.donGia, 1, 'DEFAULT', 0, 'DEFAULT')}+' VNĐ'"></td>
+					<td class="text-center" th:text="${#numbers.formatDecimal(item.donGia*item.slTonKho, 1, 'DEFAULT', 0, 'DEFAULT')}+' VNĐ'"></td>
 				</tr>
 			</tbody>
 		</table>
 
+		<nav aria-label="Page navigation example form-inline"
+			th:if="${products.totalElements>0}">
+			<ul class="pagination float-right ml-4">
+				<li class="page-item"><a class="page-link"
+					th:href="@{'/admin/hangtonkho/page?page=0&tenSP='+${tenSP}+'&size='+${products.size}+'&filter='+${filter==null?0:filter}+'&brand='+${brand==null?0:brand}}"><i
+						class="fa fa-step-backward"></i></a></li>
+				<li class="page-item"><a class="page-link"
+					th:href="@{'/admin/hangtonkho/page?page='+${(products.number-1 < 0) ? 0 : products.number-1}+'&tenSP='+${tenSP}+'&size='+${products.size}+'&filter='+${filter==null?0:filter}+'&brand='+${brand==null?0:brand}}"><i
+						class="fa fa-chevron-left"></i></a></li>
+				<li class="page-item"><a class="page-link"
+					th:href="@{'/admin/hangtonkho/page?page='+${(products.number+1 > products.totalPages-1) ? products.totalPages-1 : products.number+1}+'&tenSP='+${tenSP}+'&size='+${products.size}+'&filter='+${filter==null?0:filter}+'&brand='+${brand==null?0:brand}}"><i
+						class="fa fa-chevron-right"></i></a></li>
+				<li class="page-item"><a class="page-link"
+					th:href="@{'/admin/hangtonkho/page?page='+${products.totalPages-1}+'&tenSP='+${tenSP}+'&size='+${products.size}+'&filter='+${filter==null?0:filter}+'&brand='+${brand==null?0:brand}}"><i
+						class="fa fa-step-forward"></i></a></li>
+			</ul>
+
+			<form th:action="@{/admin/hangtonkho/page}" method="get"
+				class="float-right p-2" style="font-weight: 350;">
+				 <input
+					hidden="hidden" name="brand" th:value="${brand==null?0:brand}" /><input
+					hidden="hidden" name="page" th:value="0" />
+				<div class="form-inline">
+					<label>Hiển thị: </label> <select name="size"
+						style="border: none; box-shadow: 0 0 1px gray; width: 50px; border-radius: 3px;"
+						onchange="this.form.submit()">
+						<option th:selected="${products.size == 5}" value="5">5</option>
+						<option th:selected="${products.size == 10}" value="10">10</option>
+						<option th:selected="${products.size == 15}" value="15">15</option>
+					</select> <label> mục</label> <small class="ml-4 p-1">[[${products.number*products.size+1}]]-[[${(products.number*products.size+products.size
+						> products.totalElements) ? products.totalElements :
+						products.number*products.size+products.size}]] trong
+						[[${products.totalElements}]] mục</small>
+				</div>
+			</form>
+		</nav>
+		
 	</div>
 </body>
 

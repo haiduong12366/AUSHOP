@@ -194,7 +194,7 @@ public class CustomerSiteController {
 								   @RequestParam("email") String email, @RequestParam("newPasswd") String newPasswd,
 								   @RequestParam("confirmPasswd") String confirmPasswd) {
 		if (result.hasErrors()) {
-
+				
 			model.addAttribute("newPasswd", newPasswd);
 			model.addAttribute("newPasswd", confirmPasswd);
 //			model.addAttribute("changePasswd", changePasswd);
@@ -344,7 +344,13 @@ public class CustomerSiteController {
 //	}
 
 	@RequestMapping("/customer/checkout")
-	public ModelAndView checkout(Principal principal) {
+	public ModelAndView checkout(ModelMap model,Principal principal) {
+		int count  = shoppingCartService.getCount();
+		if(count == 0)
+		{
+			return new ModelAndView("redirect:/home?error=giohang");
+		}
+		
 		Collection<CartItem> listItem = shoppingCartService.getCartItems();
 		KhachHang c = khachHangRepository.findByEmail(principal.getName()).get();
 		DonHang o = new DonHang();
@@ -383,7 +389,7 @@ public class CustomerSiteController {
 				"Thông báo đặt hàng thành công!");
 
 		shoppingCartService.clear();
-		return new ModelAndView("forward:/customer/info");
+		return new ModelAndView("redirect:/customer/info");
 	}
 
 	
@@ -423,20 +429,27 @@ public class CustomerSiteController {
 			}
 		}
 
-		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ KeyBoard Shop!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
+		sendMailAction(o, "Bạn đã đặt thành công 1 đơn hàng từ AUSHOP!", "Chúng tôi sẽ sớm giao hàng cho bạn!",
 				"Thông báo đặt hàng thành công!");
 
 		shoppingCartService.clear();
-		return new ModelAndView("redirect:/VNPAY?tongtien="+o.getTongTien()+"&maDH="+o.getMaDH());
+		return new ModelAndView("redirect:/payment-VNPAY?tongTien="+o.getTongTien()+"&maDH="+o.getMaDH());
 	}
 	
 	@RequestMapping("/customer/cancel/{id}")
 	public ModelAndView cancel(ModelMap model, @PathVariable("id") int id, Principal principal) {
 		Optional<DonHang> o = donHangRepository.findById(id);
 		if (o.isEmpty()) {
-			return new ModelAndView("forward:/customer/info");
+			return new ModelAndView("redirect:/customer/info");
 		}
 		DonHang oReal = o.get();
+		List<ChiTietDonHang> od = chiTietDonHangRepository.findByMaDH(oReal.getMaDH());
+		for (ChiTietDonHang item : od) {
+			Optional<SanPham> s = sanPhamRepository.findById(item.getMaSP().getMaSP());
+			SanPham sp = s.get();
+			sp.setSlTonKho(sp.getSlTonKho()+item.getSoLuong());
+			sanPhamRepository.save(sp);
+		}
 		oReal.setTinhTrang((short) 3);
 		donHangRepository.save(oReal);
 

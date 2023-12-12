@@ -58,7 +58,7 @@ public class HomeController {
 	UserRoleRepository userRoleRepository;
 
 	@RequestMapping(value = {"/home",""})
-	public ModelAndView home(ModelMap model, Principal principal) {
+	public ModelAndView home(ModelMap model, Principal principal,@RequestParam(value="error",required = false) String error) {
 		boolean isLogin = false;
 		if (principal != null) {
 			isLogin = true;
@@ -72,7 +72,9 @@ public class HomeController {
 				return new ModelAndView("forward:/admin/customers", model);
 			}
 		}
-
+		if (error != null) {
+			model.addAttribute("error", "Giỏ hàng chưa có sản phẩm");
+		}
 		List<SanPham> list8Last = productRepository.get8Last();
 		List<SanPham> listtop4 = productRepository.gettop4();
 //		List<SanPham> listnext4 = productRepository.getNext4(1);
