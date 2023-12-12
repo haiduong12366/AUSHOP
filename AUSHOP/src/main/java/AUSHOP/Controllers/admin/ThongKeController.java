@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import AUSHOP.entity.NhaCungCap;
+import AUSHOP.repository.NhaCungCapRepository;
 import AUSHOP.repository.SanPhamRepository;
 
 @Controller
@@ -18,6 +20,10 @@ public class ThongKeController {
 
 	@Autowired
 	SanPhamRepository sanphamRepository;
+	
+	@Autowired
+	NhaCungCapRepository nhaCungCapRepository;
+
 	
 	@RequestMapping("/hangtonkho")
 	public ModelAndView hangtonkho(ModelMap model) {
@@ -58,14 +64,34 @@ public class ThongKeController {
 	}
 
 	@RequestMapping("/baocao/san-pham-ban-chay")
-	public ModelAndView sanphambanchay(ModelMap model) {
-		List<Object[]> listBestSellingProduct = sanphamRepository.getSanPhamBanChay();
+	public ModelAndView sanphambanchay(ModelMap model, @RequestParam(value = "maNhaCC", required = false, defaultValue = "-1") int maNhaCC
+			,@RequestParam("reports") Optional<Integer> reports) {
+		//List<Object[]> listBestSellingProduct = sanphamRepository.getSanPhamBanChay();
 
-		model.addAttribute("list1", listBestSellingProduct);
+		//List<Object[]> listBestSellingProductByNhaCC = sanphamRepository.getSanPhamTheoNhaCC();
+		
+		if (maNhaCC == -1) { // Nếu không có mã nhà cung cấp
+	        List<Object[]> listBestSellingProduct = sanphamRepository.getSanPhamBanChay();
+	        model.addAttribute("list1", listBestSellingProduct);
+	    } else { // Nếu có mã nhà cung cấp
+	        List<Object[]> listBestSellingProductByNhaCC = sanphamRepository.getLoaiSanPhamBanChayTheoNhaCC(maNhaCC);
+	        model.addAttribute("list1", listBestSellingProductByNhaCC);
+	    }
+		//model.addAttribute("list1", listBestSellingProduct);
 		// set active front-end
 		model.addAttribute("menuR", "menu");
+		
+		List<NhaCungCap> listC = nhaCungCapRepository.findAll();
+		model.addAttribute("categories", listC);
+		model.addAttribute("maNhaCC", maNhaCC);
+		model.addAttribute("reports", reports);
+		//model.addAttribute("reports", reports.orElse(2));
+		
+		//model.addAttribute("report", reports);
 		return new ModelAndView("/admin/san-pham-ban-chay");
 	}
+	
+	
 
 	@RequestMapping("/baocao/khach-hang-mua-nhieu")
 	public ModelAndView bestBuyer(ModelMap model) {
@@ -95,6 +121,9 @@ public class ThongKeController {
 		model.addAttribute("menuR", "menu");
 		return new ModelAndView("/admin/statistical-day");
 	}
+	
+	
+	
 	
 	@RequestMapping("/baocao/thongke/ngay")
 	public ModelAndView statisticalByDay(ModelMap model) {

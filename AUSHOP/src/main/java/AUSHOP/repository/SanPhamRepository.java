@@ -31,7 +31,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 			+ "group by loai_san_pham.ten_loaisp\r\n" + "order by COUNT(san_pham.sl_ton_kho) desc", nativeQuery = true)
 	List<Object[]> getLoaiSanPhamBanChay();
 
-	@Query(value = "select san_pham.tensp , sum(chi_tiet_don_hang.don_gia) as 'Tổng tiền', COUNT(san_pham.sl_ton_kho) as 'Số lượng' from chi_tiet_don_hang \r\n"
+	@Query(value = "select  san_pham.tensp , sum(chi_tiet_don_hang.don_gia) as 'Tổng tiền', COUNT(san_pham.sl_ton_kho) as 'Số lượng' from chi_tiet_don_hang \r\n"
 			+ "join don_hang on don_hang.madh = chi_tiet_don_hang.madh\r\n"
 			+ "join san_pham on chi_tiet_don_hang.masp = san_pham.masp \r\n" + "where don_hang.tinh_trang = '2'\r\n"
 			+ "group by san_pham.tensp\r\n" + "order by COUNT(san_pham.sl_ton_kho) desc", nativeQuery = true)
@@ -115,4 +115,10 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 			+ "ORDER BY COUNT(chi_tiet_don_hang.so_luong) DESC", nativeQuery = true)
 	List<Object[]> getTopProducts(Pageable pageable);
 
+	@Query(value = "select san_pham.tensp , sum(chi_tiet_don_hang.don_gia) as 'Tổng tiền', COUNT(san_pham.sl_ton_kho) as 'Số lượng' from chi_tiet_don_hang \r\n"
+			+ "join don_hang on don_hang.madh = chi_tiet_don_hang.madh\r\n"
+			+ "join san_pham on chi_tiet_don_hang.masp = san_pham.masp \r\n" + "where don_hang.tinh_trang = '2'\r\n"
+			+ "AND san_pham.ma_nhacc = ?1\r\n" 
+			+ "group by san_pham.tensp\r\n" + "order by COUNT(san_pham.sl_ton_kho) desc", nativeQuery = true)
+	List<Object[]> getLoaiSanPhamBanChayTheoNhaCC(int maNhaCC);
 }
