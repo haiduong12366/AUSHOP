@@ -219,13 +219,13 @@ public class SanPhamController {
 		if (filterPage == 0) {
 			pageable = PageRequest.of(0, pageSize);
 		} else if (filterPage == 1) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "enteredDate"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "ngaynhaphang"));
 		} else if (filterPage == 2) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "enteredDate"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
 		} else if (filterPage == 3) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "unitPrice"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "don_gia"));
 		} else if (filterPage == 4) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "unitPrice"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "don_gia"));
 		}
 
 		Page<SanPham> list = sanPhamRepository.findBytenSPContaining(tenSP, pageable);
@@ -268,9 +268,9 @@ public class SanPhamController {
 		} else if (filterPage == 2) {
 			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
 		} else if (filterPage == 3) {
-			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, "donGia"));
+			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, "don_gia"));
 		} else if (filterPage == 4) {
-			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.DESC, "donGia"));
+			pageable = PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.DESC, "don_gia"));
 		}
 
 		Page<SanPham> list = null;

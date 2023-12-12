@@ -233,13 +233,13 @@ public class KhachHangController {
 		if (filterPage == 0) {
 			pageable = PageRequest.of(0, pageSize);
 		} else if (filterPage == 1) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "hoTen"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "ho_ten"));
 		} else if (filterPage == 2) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "hoTen"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "ho_ten"));
 		} else if (filterPage == 3) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "ngayDangKy"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, "ngay_dang_ky"));
 		} else if (filterPage == 4) {
-			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "ngayDangKy"));
+			pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "ngay_dang_ky"));
 		}
 
 		Page<KhachHang> list = khachHangRepository.findByHoTenContaining(name, pageable);
