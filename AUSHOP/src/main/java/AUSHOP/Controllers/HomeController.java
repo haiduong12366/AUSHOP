@@ -266,9 +266,9 @@ public class HomeController {
 			} else if (filterPage == 2) {
 				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
 			} else if (filterPage == 3) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "donGia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "don_gia"));
 			} else if (filterPage == 4) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "donGia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "don_gia"));
 			}
 		} else {
 			if (filterPage == 0) {
@@ -278,9 +278,9 @@ public class HomeController {
 			} else if (filterPage == 2) {
 				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "ngaynhaphang"));
 			} else if (filterPage == 3) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "donGia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.DESC, "don_gia"));
 			} else if (filterPage == 4) {
-				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "donGia"));
+				pageable = PageRequest.of(currentPage, 6, Sort.by(Sort.Direction.ASC, "don_gia"));
 			}
 		}
 
