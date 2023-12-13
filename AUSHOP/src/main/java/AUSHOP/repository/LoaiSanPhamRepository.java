@@ -1,5 +1,7 @@
 package AUSHOP.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -25,6 +27,12 @@ public interface LoaiSanPhamRepository extends JpaRepository<LoaiSanPham,Integer
 
 	@Query(value = "select * from loai_san_pham where is_delete = 0", nativeQuery = true)
 	Page<LoaiSanPham> findAllisDeleteContainning(Pageable pageable);
+
+	@Query(value = "select * from loai_san_pham where is_delete = 0", nativeQuery = true)
+	List<LoaiSanPham> findAllisDeleteContainning();
+
+	@Query(value = "select * from loai_san_pham where is_delete = 0", nativeQuery = true)
+	List<LoaiSanPham> findAllwithIsdelete();
 
 	
 	// khai báo thêm những hàm không có trong repository

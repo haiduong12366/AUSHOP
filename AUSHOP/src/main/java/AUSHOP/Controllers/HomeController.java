@@ -133,7 +133,7 @@ public class HomeController {
 			}
 		}
 
-		Page<SanPham> listP = productRepository.findAll(PageRequest.of(0, 6));
+		Page<SanPham> listP = productRepository.findWithIsDelete(PageRequest.of(0, 6));
 
 		int totalPage = listP.getTotalPages();
 		if (totalPage > 0) {
@@ -143,7 +143,7 @@ public class HomeController {
 			model.addAttribute("pageNumbers", pageNumbers);
 		}
 		model.addAttribute("totalCartItems", shoppingCartService.getCount());
-		List<LoaiSanPham> listC = categoryRepository.findAll();
+		List<LoaiSanPham> listC = categoryRepository.findAllisDeleteContainning();
 		model.addAttribute("categories", listC);
 		model.addAttribute("products", listP);
 		model.addAttribute("slide", true);
@@ -225,7 +225,7 @@ public class HomeController {
 			model.addAttribute("pageNumbers", pageNumbers);
 		}
 		model.addAttribute("totalCartItems", shoppingCartService.getCount());
-		List<LoaiSanPham> listC = categoryRepository.findAll();
+		List<LoaiSanPham> listC = categoryRepository.findAllisDeleteContainning();
 		model.addAttribute("categories", listC);
 		model.addAttribute("brand", categoryId);
 		model.addAttribute("products", listP);
@@ -307,7 +307,7 @@ public class HomeController {
 		}
 
 		model.addAttribute("totalCartItems", shoppingCartService.getCount());
-		List<LoaiSanPham> listC = categoryRepository.findAll();
+		List<LoaiSanPham> listC = categoryRepository.findAllisDeleteContainning();
 		model.addAttribute("categories", listC);
 		model.addAttribute("brand", brand);
 		model.addAttribute("filter", filterPage);
@@ -362,7 +362,7 @@ public class HomeController {
 		model.addAttribute("totalCartItems", shoppingCartService.getCount());
 
 		model.addAttribute("name", name);
-		List<LoaiSanPham> listC = categoryRepository.findAll();
+		List<LoaiSanPham> listC = categoryRepository.findAllisDeleteContainning();
 		model.addAttribute("categories", listC);
 		model.addAttribute("filter", filterPage);
 		model.addAttribute("products", listP);

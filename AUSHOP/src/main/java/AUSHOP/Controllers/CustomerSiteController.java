@@ -155,7 +155,7 @@ public class CustomerSiteController {
 
 	@PostMapping("/forgotPassword")
 	public ModelAndView forgotPassowrd(ModelMap model, @RequestParam("email") String email) {
-		List<KhachHang> listKh = khachHangRepository.findAll();
+		List<KhachHang> listKh = khachHangRepository.findAllwithIsdelete();
 		for (KhachHang kh : listKh) {
 			if (email.trim().equals(kh.getEmail())) {
 				session.removeAttribute("otp");
@@ -307,41 +307,7 @@ public class CustomerSiteController {
 		return new ModelAndView("/site/infomation", model);
 	}
 
-//	@GetMapping("/customer/changePassword")
-//	public ModelAndView changeForm(ModelMap model, Principal principal) {
-//
-//		boolean isLogin = false;
-//		if (principal != null) {
-//			isLogin = true;
-//		}
-//		model.addAttribute("isLogin", isLogin);
-//
-//		model.addAttribute("email", principal.getName());
-//		model.addAttribute("totalCartItems", shoppingCartService.getCount());
-//		return new ModelAndView("/site/changePassword", model);
-//	}
-//
-//	@PostMapping("/customer/changePassword")
-//	public ModelAndView changePassword(ModelMap model, Principal principal,
-//			@RequestParam("currentPassword") String currentPassword, @RequestParam("newPassword") String newPassword,
-//			@RequestParam("confirm") String confirm) {
-//
-//		boolean isLogin = false;
-//		if (principal != null) {
-//			isLogin = true;
-//		}
-//		model.addAttribute("isLogin", isLogin);
-//		KhachHang c = khachHangRepository.findByEmail(principal.getName()).get();
-////		String password = bCryptPasswordEncoder.encode(currentPassword);
-//		if (bCryptPasswordEncoder.encode(currentPassword).equals(c.getPasswd())) {
-//			System.out.println("trung");
-//		} else {
-//			System.out.println("ko trung");
-//		}
-//
-//		model.addAttribute("totalCartItems", shoppingCartService.getCount());
-//		return new ModelAndView("forward:/customer/info", model);
-//	}
+
 
 	@RequestMapping("/customer/checkout")
 	public ModelAndView checkout(Principal principal) {

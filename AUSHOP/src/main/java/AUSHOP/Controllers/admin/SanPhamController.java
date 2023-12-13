@@ -64,10 +64,10 @@ public class SanPhamController {
 		Page<SanPham> list = sanPhamRepository.findWithIsDelete(pageable);
 
 		model.addAttribute("products", list);
-		List<NhaCungCap> listC = nhaCungCapRepository.findAll();
+		List<NhaCungCap> listC = nhaCungCapRepository.findWithIsDelete();
 		model.addAttribute("categories", listC);
 
-		List<LoaiSanPham> listl = loaiSanPhamRepository.findAll();
+		List<LoaiSanPham> listl = loaiSanPhamRepository.findAllisDeleteContainning();
 		model.addAttribute("loaisanpham", listl);
 		// set active front-end
 		model.addAttribute("menuP", "menu");
@@ -78,13 +78,11 @@ public class SanPhamController {
 	public ModelAndView add(ModelMap model) {
 		model.addAttribute("product", new SanPhamModel());
 		model.addAttribute("photo", "logo.jpg");
-		List<NhaCungCap> categories = nhaCungCapRepository.findAll();
+		List<NhaCungCap> categories = nhaCungCapRepository.findWithIsDelete();
 		model.addAttribute("categories", categories);
 
-		List<NhaCungCap> listC = nhaCungCapRepository.findAll();
-		model.addAttribute("categories", listC);
 
-		List<LoaiSanPham> listl = loaiSanPhamRepository.findAll();
+		List<LoaiSanPham> listl = loaiSanPhamRepository.findAllisDeleteContainning();
 		model.addAttribute("loaisanpham", listl);
 		// set active front-end
 		model.addAttribute("menuP", "menu");
@@ -182,7 +180,7 @@ public class SanPhamController {
 		Optional<SanPham> p = sanPhamRepository.findById(id);
 		SanPhamModel dto = new SanPhamModel();
 		if (p.isPresent()) {
-			List<NhaCungCap> categories = nhaCungCapRepository.findAll();
+			List<NhaCungCap> categories = nhaCungCapRepository.findWithIsDelete();
 			model.addAttribute("categories", categories);
 
 			BeanUtils.copyProperties(p.get(), dto);
@@ -194,11 +192,9 @@ public class SanPhamController {
 
 			model.addAttribute("photo", dto.getHinhAnh());
 
-			List<LoaiSanPham> listl = loaiSanPhamRepository.findAll();
+			List<LoaiSanPham> listl = loaiSanPhamRepository.findAllisDeleteContainning();
 			model.addAttribute("loaisanpham", listl);
 
-			List<NhaCungCap> listC = nhaCungCapRepository.findAll();
-			model.addAttribute("categories", listC);
 			// set active front-end
 			model.addAttribute("menuP", "menu");
 			return new ModelAndView("/admin/addProduct", model);

@@ -102,7 +102,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 	@Query(value = "SELECT nha_cung_cap.ten_nhacc FROM san_pham JOIN nha_cung_cap ON nha_cung_cap.ma_nhacc = san_pham.ma_nhacc WHERE san_pham.masp = ?", nativeQuery = true)
 	String getTenNhaCC(int masp);
 
-	@Query(value = "SELECT * FROM san_pham ORDER BY masp OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY", nativeQuery = true)
+	@Query(value = "SELECT * FROM san_pham where is_delete = 0 ORDER BY masp OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY", nativeQuery = true)
 	List<SanPham> getNext4(int offset);
 
 	@Query(value = "select top 8 * from san_pham where is_delete = 0 order by masp desc", nativeQuery = true)

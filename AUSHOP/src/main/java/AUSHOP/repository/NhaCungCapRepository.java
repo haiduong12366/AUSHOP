@@ -1,5 +1,7 @@
 package AUSHOP.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -25,7 +27,10 @@ public interface NhaCungCapRepository extends JpaRepository<NhaCungCap,Integer> 
 
 	@Query(value = "select * from nha_cung_cap where is_delete = 0", nativeQuery = true)
 	Page<NhaCungCap> findWithIsDelete(Pageable pageable);
+
+	@Query(value = "select * from nha_cung_cap where is_delete = 0", nativeQuery = true)
+	List<NhaCungCap> findWithIsDelete();
 	
-	// khai báo thêm những hàm không có trong repository
+
 	
 }

@@ -1,5 +1,6 @@
 package AUSHOP.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -29,6 +30,9 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
 	
 	@Query(value = "select * from khach_hang where is_delete = 0", nativeQuery = true)
 	public Page<KhachHang> findAllwithIsdelete(int i, Pageable pageable);
+
+	@Query(value = "select * from khach_hang where is_delete = 0", nativeQuery = true)
+	public List<KhachHang> findAllwithIsdelete();
 
 
 	

@@ -41,7 +41,6 @@ public class NhaCungCapController {
 	public String add(ModelMap model) {
 		NhaCungCapModel n = new NhaCungCapModel();
 		n.setEdit(false);
-		List<LoaiSanPham> l =loaiSanPhamRepository.findAll();
 		model.addAttribute("menuCa", "menu");
 		
 		model.addAttribute("category", n);
