@@ -30,6 +30,9 @@ public interface NhaCungCapRepository extends JpaRepository<NhaCungCap,Integer> 
 
 	@Query(value = "select * from nha_cung_cap where is_delete = 0", nativeQuery = true)
 	List<NhaCungCap> findWithIsDelete();
+
+	@Query(value = "select * from nha_cung_cap where ma_nhacc = ?", nativeQuery = true)
+	Page<NhaCungCap> findBymaNhaCCContaining(Long brandable, Pageable pageable);
 	
 
 	
