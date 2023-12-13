@@ -146,4 +146,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 	@Query(value = "select * from san_pham where is_delete = 0", nativeQuery = true)
 	Page<SanPham> findWithIsDelete(Pageable pageable);
 
+	@Query(value = "select * from san_pham where ma_nhacc = ?", nativeQuery = true)
+	Page<SanPham> findbyNcc(Long ma_nhacc, Pageable pageable);
+
 }
